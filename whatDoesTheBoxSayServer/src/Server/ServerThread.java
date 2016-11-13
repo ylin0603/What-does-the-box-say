@@ -78,7 +78,7 @@ public class ServerThread extends Thread {
 	}
 
 	// 攻擊
-	private static void attack() {
+	private void attack() {
 		// TODO Auto-generated method stub
 
 	}
