@@ -1,4 +1,4 @@
-package box;
+package gui;
 
 import java.awt.Dimension;
 import java.awt.GridBagLayout;

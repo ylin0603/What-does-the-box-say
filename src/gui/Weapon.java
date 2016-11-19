@@ -1,4 +1,4 @@
-package box;
+package gui;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
