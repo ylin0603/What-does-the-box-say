@@ -65,7 +65,7 @@ public class JoinRoomPanel extends JPanel {
 				myName = nameText.getText();
 				frame.getContentPane().removeAll();
 				frame.getContentPane().repaint();
-				frame.add(new waitingStartPanel(
+				frame.add(new WaitingStartPanel(
 						frame, myName, rooms[selectedRoom]));
 				frame.setVisible(true);
 			}

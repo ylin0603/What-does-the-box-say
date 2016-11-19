@@ -16,14 +16,14 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 @SuppressWarnings("serial")
-public class waitingStartPanel extends JPanel implements ActionListener{
+public class WaitingStartPanel extends JPanel implements ActionListener{
 	
 	private JFrame frame;
 	private Object[] room = new Object[3];
 	public String myName;
 	public String[] playersName = {"已加入的玩家：", "hello", "hehe"};
 
-	public waitingStartPanel(JFrame frame, String name, Object room[]) {
+	public WaitingStartPanel(JFrame frame, String name, Object room[]) {
 		this.frame = frame;
 		this.myName = name;
 		this.room = room;

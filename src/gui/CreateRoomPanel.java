@@ -50,7 +50,7 @@ public class CreateRoomPanel extends JPanel{
 				room[2] = ownerName.getText();
 				frame.getContentPane().removeAll();
 				frame.getContentPane().repaint();
-				frame.add(new waitingStartPanel(
+				frame.add(new WaitingStartPanel(
 						frame, room[2].toString(), room));
 				frame.setVisible(true);
 			}
