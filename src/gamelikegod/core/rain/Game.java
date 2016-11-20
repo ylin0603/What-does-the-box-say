@@ -1,7 +1,6 @@
 package gamelikegod.core.rain;
 
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
@@ -9,10 +8,13 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import gamelikegod.core.graphics.Screen;
+import gamelikegod.core.input.Keyboard;
+import gamelikegod.core.rain.entity.mob.Player;
 import gamelikegod.core.rain.level.Level;
-import gamelikegod.core.rain.level.RandomLevel;
+import gamelikegod.core.rain.level.SpawnLevel;
 
 public class Game extends Canvas implements Runnable {
 
@@ -22,9 +24,11 @@ public class Game extends Canvas implements Runnable {
 	public static int scale = 3;
 
 	private JFrame frame;
+	private Keyboard key;
 	private Thread thread;
 	private boolean running = false;
 	private Level level;
+	private Player player;
 	private Screen screen;
 
 	private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -33,9 +37,13 @@ public class Game extends Canvas implements Runnable {
 	public Game() {
 		Dimension size = new Dimension(width * scale, height * scale);
 		setPreferredSize(size);
+		key = new Keyboard();
 		frame = new JFrame();
 		screen = new Screen(width, height);
-		level = new RandomLevel(64, 64);
+		level = Level.SPAWN;
+		player = new Player(key);
+
+		this.addKeyListener(key);
 	}
 
 	public synchronized void start() {
@@ -83,10 +91,10 @@ public class Game extends Canvas implements Runnable {
 			}
 		}
 	}
-
-	private int X = 0, Y = 0;
-
+	
 	public void update() {
+		key.update();
+		player.update();
 
 	}
 
@@ -97,7 +105,10 @@ public class Game extends Canvas implements Runnable {
 			return;
 		}
 		screen.clear();
-		level.render(X, Y, screen);
+		int xScroll = player.x - screen.getWidth() / 2;
+		int yScroll = player.y - screen.getHeight() / 2;
+		level.render(xScroll, yScroll, screen);
+		player.render(screen);
 		System.arraycopy(screen.pixels, 0, pixels, 0, pixels.length);
 
 		Graphics g = bs.getDrawGraphics();

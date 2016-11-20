@@ -11,6 +11,9 @@ public class SpriteSheet {
 	private int[] pixels;
 	
 	public static SpriteSheet tiles = new SpriteSheet("/textures/spritesheet.png", 256);
+	public static SpriteSheet character = new SpriteSheet("/textures/character.png", 256);
+	public static SpriteSheet SPWAN_LEVEL = new SpriteSheet("/levels/spwanLevel.png", 48);
+
 	
 	public SpriteSheet(String path, int size){
 		this.path = path;

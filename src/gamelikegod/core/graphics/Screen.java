@@ -2,6 +2,7 @@ package gamelikegod.core.graphics;
 
 import java.util.Random;
 
+import gamelikegod.core.rain.entity.mob.Player;
 import gamelikegod.core.rain.level.tile.Tile;
 
 public class Screen {
@@ -35,17 +36,33 @@ public class Screen {
 		}
 	}
 
-
 	public void renderTile(int xp, int yp, Tile tile) {
 		xp -= xOffset;
-		yp -= xOffset;
+		yp -= yOffset;
 		for (int y = 0; y < tile.sprite.SIZE; y++) {
 			int ya = y + yp;
 			for (int x = 0; x < tile.sprite.SIZE; x++) {
 				int xa = x + xp;
 				if (xa < -tile.sprite.SIZE || xa >= width || ya < 0 || ya >= height) break;
-				if(xa<0) xa = 0;
-				pixels[xa + ya * width] = tile.sprite.pixels[x + y * tile.sprite.SIZE];
+				if (xa < 0) xa = 0;
+				int color = tile.sprite.pixels[x + y * tile.sprite.SIZE];
+				if (color != 0xffffffff) pixels[xa + ya * width] = color;
+			}
+		}
+
+	}
+
+	public void renderPlayer(int xp, int yp, Sprite sprite) {
+		xp -= xOffset;
+		yp -= yOffset;
+		for (int y = 0; y < sprite.SIZE; y++) {
+			int ya = y + yp;
+			for (int x = 0; x < sprite.SIZE; x++) {
+				int xa = x + xp;
+				if (xa < sprite.SIZE || xa >= width || ya < 0 || ya >= height) break;
+				if (xa < 0) xa = 0;
+				int color = sprite.pixels[x + y * sprite.SIZE];
+				if (color != 0xffffffff) pixels[xa + ya * width] = color;
 			}
 		}
 
