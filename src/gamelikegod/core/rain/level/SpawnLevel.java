@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import gamelikegod.core.rain.level.tile.Tile;
+import gamelikegod.core.scenerendermodule.level.tile.Tile;
 
 public class SpawnLevel extends Level {
 

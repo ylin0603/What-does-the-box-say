@@ -1,7 +1,7 @@
 package gamelikegod.core.rain.level;
 
 import gamelikegod.core.graphics.Screen;
-import gamelikegod.core.rain.level.tile.Tile;
+import gamelikegod.core.scenerendermodule.level.tile.Tile;
 
 public class Level {
 

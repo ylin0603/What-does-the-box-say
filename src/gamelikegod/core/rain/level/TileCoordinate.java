@@ -1,6 +1,6 @@
 package gamelikegod.core.rain.level;
 
-import gamelikegod.core.rain.level.tile.Tile;
+import gamelikegod.core.scenerendermodule.level.tile.Tile;
 
 public class TileCoordinate {
 	private int TILE_SIZE = 16;

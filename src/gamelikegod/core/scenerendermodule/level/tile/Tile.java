@@ -1,4 +1,4 @@
-package gamelikegod.core.rain.level.tile;
+package gamelikegod.core.scenerendermodule.level.tile;
 
 import gamelikegod.core.graphics.Screen;
 import gamelikegod.core.graphics.Sprite;

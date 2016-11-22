@@ -1,14 +1,12 @@
-package gamelikegod.core.graphics;
+package gamelikegod.data.scenedatamodule;
 
-import java.util.Random;
-
-import gamelikegod.core.rain.entity.mob.Player;
+import gamelikegod.core.graphics.Sprite;
 import gamelikegod.core.scenerendermodule.level.tile.Tile;
 
-public class Screen {
+public class SceneManager {
 	private int width;
 	private int height;
-	public int[] pixels;
+	private int[] pixels;
 
 	public final int MAP_SIZE = 256 * 256;
 	public final int MAP_SQUARE_SIDE = 256;
@@ -17,8 +15,7 @@ public class Screen {
 
 	public int[] tiles = new int[MAP_SIZE];
 
-
-	public Screen(int width, int height) {
+	public SceneManager(int width, int height) {
 		this.width = width;
 		this.height = height;
 		pixels = new int[width * height];
@@ -70,8 +67,13 @@ public class Screen {
 		return height;
 	}
 
+	public int[] getPixels() {
+		return pixels;
+	}
+
 	public void setOffset(int xOffset, int yOffset) {
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
 	}
+
 }

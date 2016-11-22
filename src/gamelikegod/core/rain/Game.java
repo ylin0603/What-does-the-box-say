@@ -14,12 +14,13 @@ import gamelikegod.core.input.Keyboard;
 import gamelikegod.core.rain.entity.mob.Player;
 import gamelikegod.core.rain.level.Level;
 import gamelikegod.core.rain.level.TileCoordinate;
+import gamelikegod.core.scenerendermodule.RenderEngine;
 
 public class Game extends Canvas implements Runnable {
 
 	private static final long serialVersionUID = 1L;
-	public static int width = 300;
-	public static int height = width / 16 * 9;
+	public final static int WIDTH = 300;
+	public final static int HEIGHT = WIDTH / 16 * 9;
 	public static int scale = 3;
 
 	private JFrame frame;
@@ -30,15 +31,14 @@ public class Game extends Canvas implements Runnable {
 	private Player player;
 	private Screen screen;
 
-	private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+	
 
 	public Game() {
-		Dimension size = new Dimension(width * scale, height * scale);
+		Dimension size = new Dimension(WIDTH * scale, HEIGHT * scale);
 		setPreferredSize(size);
 		key = new Keyboard();
 		frame = new JFrame();
-		screen = new Screen(width, height);
+		screen = new Screen(WIDTH, HEIGHT);
 		level = Level.SPAWN;
 		TileCoordinate playerSpawn = new TileCoordinate(19, 62);
 		player = new Player(playerSpawn.x(),playerSpawn.y(),key);
@@ -77,11 +77,11 @@ public class Game extends Canvas implements Runnable {
 			delta += (now - lastTime) / ns; // how many frame 1 = 60frame
 			lastTime = now;
 			while (delta >= 1) {
-				update();
+				update(); // 60 times per second
 				updates++;
 				delta--;
 			}
-			render(); // As much as you can
+			RenderEngine.getInstance().render(this); // As much as you can
 			frames++;
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
@@ -105,10 +105,13 @@ public class Game extends Canvas implements Runnable {
 			return;
 		}
 		screen.clear();
+		
 		int xScroll = player.x - screen.getWidth() / 2;
 		int yScroll = player.y - screen.getHeight() / 2;
+		
 		level.render(xScroll,yScroll, screen);
 		player.render(screen);
+		
 		System.arraycopy(screen.pixels, 0, pixels, 0, pixels.length);
 
 		Graphics g = bs.getDrawGraphics();

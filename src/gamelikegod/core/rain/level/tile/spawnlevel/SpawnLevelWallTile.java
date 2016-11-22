@@ -2,7 +2,7 @@ package gamelikegod.core.rain.level.tile.spawnlevel;
 
 import gamelikegod.core.graphics.Screen;
 import gamelikegod.core.graphics.Sprite;
-import gamelikegod.core.rain.level.tile.Tile;
+import gamelikegod.core.scenerendermodule.level.tile.Tile;
 
 public class SpawnLevelWallTile extends Tile {
 
