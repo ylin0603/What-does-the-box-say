@@ -27,7 +27,6 @@ public class Game extends Canvas implements Runnable {
 	private Keyboard key;
 	private Thread thread;
 	private boolean running = false;
-	private Level level;
 	private Player player;
 	private Screen screen;
 
@@ -39,7 +38,6 @@ public class Game extends Canvas implements Runnable {
 		key = new Keyboard();
 		frame = new JFrame();
 		screen = new Screen(WIDTH, HEIGHT);
-		level = Level.SPAWN;
 		TileCoordinate playerSpawn = new TileCoordinate(19, 62);
 		player = new Player(playerSpawn.x(),playerSpawn.y(),key);
 		player.init(level);
@@ -99,25 +97,7 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	public void render() {
-		BufferStrategy bs = getBufferStrategy();
-		if (bs == null) {
-			createBufferStrategy(3);
-			return;
-		}
-		screen.clear();
-		
-		int xScroll = player.x - screen.getWidth() / 2;
-		int yScroll = player.y - screen.getHeight() / 2;
-		
-		level.render(xScroll,yScroll, screen);
-		player.render(screen);
-		
-		System.arraycopy(screen.pixels, 0, pixels, 0, pixels.length);
-
-		Graphics g = bs.getDrawGraphics();
-		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
-		g.dispose();
-		bs.show();
+		RenderEngine.getInstance().render(this);
 	}
 
 	public static void main(String[] args) {

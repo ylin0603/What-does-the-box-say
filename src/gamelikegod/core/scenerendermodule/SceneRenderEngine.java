@@ -2,16 +2,17 @@ package gamelikegod.core.scenerendermodule;
 
 import gamelikegod.core.rain.Game;
 import gamelikegod.core.scenerendermodule.level.tile.Tile;
+import gamelikegod.data.scenedatamodule.SceneManager;
 
 public class SceneRenderEngine {
 	private int[] pixels;
 
 	public void SceneRenderEngine() {
-
 	}
 
 	public void renderScene(int[] pixels) {
 		this.pixels = pixels;
+		SceneManager.getInstance().getLevel().render(xScroll, yScroll, screen);
 	}
 	
 	public void renderTile(Tile tile) {
