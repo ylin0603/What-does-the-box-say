@@ -8,13 +8,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import gamelikegod.core.graphics.Screen;
 import gamelikegod.core.input.Keyboard;
 import gamelikegod.core.rain.entity.mob.Player;
 import gamelikegod.core.rain.level.Level;
-import gamelikegod.core.rain.level.SpawnLevel;
+import gamelikegod.core.rain.level.TileCoordinate;
 
 public class Game extends Canvas implements Runnable {
 
@@ -41,8 +40,9 @@ public class Game extends Canvas implements Runnable {
 		frame = new JFrame();
 		screen = new Screen(width, height);
 		level = Level.SPAWN;
-		player = new Player(key);
-
+		TileCoordinate playerSpawn = new TileCoordinate(19, 62);
+		player = new Player(playerSpawn.x(),playerSpawn.y(),key);
+		player.init(level);
 		this.addKeyListener(key);
 	}
 
@@ -107,7 +107,7 @@ public class Game extends Canvas implements Runnable {
 		screen.clear();
 		int xScroll = player.x - screen.getWidth() / 2;
 		int yScroll = player.y - screen.getHeight() / 2;
-		level.render(xScroll, yScroll, screen);
+		level.render(xScroll,yScroll, screen);
 		player.render(screen);
 		System.arraycopy(screen.pixels, 0, pixels, 0, pixels.length);
 

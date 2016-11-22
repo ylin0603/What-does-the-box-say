@@ -3,6 +3,7 @@ package gamelikegod.core.rain.entity.mob;
 import gamelikegod.core.graphics.Screen;
 import gamelikegod.core.graphics.Sprite;
 import gamelikegod.core.input.Keyboard;
+import gamelikegod.core.rain.level.TileCoordinate;
 
 public class Player extends Mob {
 	private Sprite curSprite;
