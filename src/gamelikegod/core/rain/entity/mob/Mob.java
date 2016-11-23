@@ -2,6 +2,8 @@ package gamelikegod.core.rain.entity.mob;
 
 import gamelikegod.core.graphics.Sprite;
 import gamelikegod.core.rain.entity.Entity;
+import gamelikegod.core.scenerendermodule.SceneRenderEngine;
+import gamelikegod.data.scenedatamodule.SceneManager;
 
 public abstract class Mob extends Entity {
 	public enum Direction {
@@ -41,7 +43,8 @@ public abstract class Mob extends Entity {
 			// (0,0) (1,0) (0,1) (1,1) respectively
 			int xt = ((x + xa) + c % 2 * 7 + 4) / sprite.SIZE;
 			int yt = ((y + ya) + c / 2 * 9 + 5) / sprite.SIZE;
-			if (level.getTile(xt, yt).solid()) colide = true;
+			// TODO: level should get from SceneDataModule
+			if (SceneManager.getInstance().getLevel().getTile(xt, yt).solid()) colide = true;
 		}
 		return colide;
 	}

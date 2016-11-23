@@ -8,12 +8,13 @@ import java.awt.image.DataBufferInt;
 
 import gamelikegod.core.entityrendermodule.EntityRenderEngine;
 import gamelikegod.core.graphics.Sprite;
+import gamelikegod.core.rain.Game;
 import gamelikegod.core.scenerendermodule.level.tile.Tile;
 
 public class RenderEngine {
 	private static RenderEngine renderEngine;
 
-	private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+	private BufferedImage image = new BufferedImage(Game.WIDTH, Game.HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 	
 	private EntityRenderEngine entityRE;
@@ -45,13 +46,10 @@ public class RenderEngine {
 		}
 		clear();
 
-		int xScroll = player.x - screen.getWidth() / 2;
-		int yScroll = player.y - screen.getHeight() / 2;
+		sceneRE.renderScene(pixels);
+		//entityRE.render(pixels);
 
-		sceneRE.render(pixels);
-		entityRE.render(pixels);
-
-		System.arraycopy(screen.pixels, 0, pixels, 0, pixels.length);
+		System.arraycopy(sceneRE.getPixels(), 0, pixels, 0, pixels.length);
 
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight(), null);

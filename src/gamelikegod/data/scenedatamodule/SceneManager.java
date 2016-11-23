@@ -9,12 +9,13 @@ public class SceneManager {
 	public static final int MAP_SIZE = 256 * 256;
 	public static final int MAP_SQUARE_SIDE = 256;
 
-	private Level level;
+	private Level level = new SpawnLevel("/levels/spawn.png");
 	public int[] tiles = new int[MAP_SIZE];
-	
+
 	private static SceneManager instance = null;
 
 	private SceneManager() {
+		System.out.println("SceneManager created");
 	}
 
 	public static SceneManager getInstance() {
@@ -22,12 +23,6 @@ public class SceneManager {
 			instance = new SceneManager();
 		}
 		return instance;
-	}
-
-	public void clear() {
-		for (int i = 0; i < pixels.length; i++) {
-			pixels[i] = 0;
-		}
 	}
 
 	public int[] getPixels() {
@@ -39,6 +34,7 @@ public class SceneManager {
 	}
 
 	public Level getLevel() {
+		assert (level != null);
 		return level;
 	}
 

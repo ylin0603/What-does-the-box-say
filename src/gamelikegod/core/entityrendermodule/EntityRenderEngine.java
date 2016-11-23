@@ -3,7 +3,7 @@ package gamelikegod.core.entityrendermodule;
 import gamelikegod.core.graphics.Sprite;
 
 public class EntityRenderEngine {
-	public void renderPlayer(int xp, int yp, Sprite sprite) {
+	/*public void renderPlayer(int xp, int yp, Sprite sprite) {
 		xp -= xOffset; //TODO: offsets should get from DOM
 		yp -= yOffset;
 		for (int y = 0; y < sprite.SIZE; y++) {
@@ -18,5 +18,5 @@ public class EntityRenderEngine {
 			}
 		}
 
-	}
+	}*/
 }
