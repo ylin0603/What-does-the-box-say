@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Vector;
 import com.google.gson.Gson;
 
 public class UDP_Client {
@@ -16,16 +16,16 @@ public class UDP_Client {
 	}
 
 	//TEST///////////////////////////////////
-	public Vector<String> getClientIPTables() {
-		Vector<String> IPTables = new Vector<String>();
-		IPTables.addElement("127.0.0.1");
+	public ArrayList<String> getClientIPTables() {
+		ArrayList<String> IPTables = new ArrayList<String>();
+		IPTables.add("127.0.0.1");
 		
 		return IPTables;
 	}
-	public Vector<String> getUpdateInfo() {	
-		Vector<String> updateInfo = new Vector<String>();
-		updateInfo.addElement("A/EAST");
-		updateInfo.addElement("B/WEST");
+	public ArrayList<String> getUpdateInfo() {	
+		ArrayList<String> updateInfo = new ArrayList<String>();
+		updateInfo.add("A/EAST");
+		updateInfo.add("B/WEST");
 		
 		return updateInfo;
 	}
@@ -33,12 +33,12 @@ public class UDP_Client {
 	
 	// The method starts the UDP Broadcast thread.
 	public void startUDPBroadCast() {
-		Vector<String> allIPAddress = getClientIPTables();
-		Vector<String> updateInfo = getUpdateInfo();
+		ArrayList<String> allIPAddress = getClientIPTables();
+		ArrayList<String> updateInfo = getUpdateInfo();
 		
-		Vector<EncodedData> encodedData = new Vector<EncodedData>();
+		ArrayList<EncodedData> encodedData = new ArrayList<EncodedData>();
 		for(String eachInfo : updateInfo)
-			encodedData.addElement(new EncodedData("ADD", eachInfo)); //after toString()
+			encodedData.add(new EncodedData("ADD", eachInfo)); //after toString()
 			
 		broadcast(allIPAddress, encodedData); //First Time.
 		
@@ -47,11 +47,11 @@ public class UDP_Client {
 		TimerTask startBroadcast = new TimerTask() {
 			@Override
 			public void run() {
-				Vector<String> updateInfo = getUpdateInfo();
+				ArrayList<String> updateInfo = getUpdateInfo();
 				encodedData.clear();
 	
 				for(String eachInfo : updateInfo)
-					encodedData.addElement(new EncodedData("UPDATE", eachInfo));
+					encodedData.add(new EncodedData("UPDATE", eachInfo));
 				
 				broadcast(allIPAddress, encodedData);
 			}
@@ -59,7 +59,7 @@ public class UDP_Client {
 		timerBroadcast.schedule(startBroadcast, 0, 200); // 5 times/per second
 	}
 	
-	public void broadcast(Vector<String> allIPAddress, Vector<EncodedData> encodedData) {		
+	public void broadcast(ArrayList<String> allIPAddress, ArrayList<EncodedData> encodedData) {		
 		Gson gson = new Gson();
 		String jsonEncodedData = gson.toJson(encodedData);
 

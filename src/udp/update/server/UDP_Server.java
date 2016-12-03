@@ -3,7 +3,7 @@ package udp.update.server;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.util.Vector;
+import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -31,7 +31,7 @@ public class UDP_Server implements Runnable {
 	  
 	    		// parsing and getting EncodedData in Vector
 	    		String receiveString = new String(receivePacket.getData()).trim();
-	    		Vector<EncodedData> encodedData = gson.fromJson(receiveString, new TypeToken<Vector<EncodedData>>(){}.getType()); 		
+	    		ArrayList<EncodedData> encodedData = gson.fromJson(receiveString, new TypeToken<ArrayList<EncodedData>>(){}.getType()); 		
 	    		
     			for(EncodedData eachEnData : encodedData){
     				switch(eachEnData.getType()){
