@@ -5,13 +5,17 @@ public class Sprite {
 	private int sheetX, sheetY;
 	public int[] pixels;
 	private SpriteSheet sheet;
-	
+
 
 	public static Sprite GRASS = new Sprite(16, 0, 1, SpriteSheet.tiles);
 	public static Sprite STONE = new Sprite(16, 0, 2, SpriteSheet.tiles);
 	public static Sprite TREE = new Sprite(16, 0, 3, SpriteSheet.tiles);
 	public static Sprite VOID_SPRITE = new Sprite(16, 0x1B87E0);
-	
+
+	//for demo
+	public static Sprite ITEM = new Sprite(16,3,4,SpriteSheet.character);
+	public static Sprite PLAYER = new Sprite (16,1,0,SpriteSheet.character);
+
 	//Spawn Level Sprites here:
 	public static Sprite SPWAN_GRASS = new Sprite(16,0,0, SpriteSheet.SPWAN_LEVEL);
 	public static Sprite SPWAN_GRASS_2 = new Sprite(16,1,0, SpriteSheet.SPWAN_LEVEL);
@@ -22,25 +26,25 @@ public class Sprite {
 	
 	// below is for animation, dear StanleyLin.
 	/*public static Sprite[] PLAYER_FORWARD = {
-			new Sprite(16, 1, 3, SpriteSheet.character),
-			new Sprite(16, 0, 3, SpriteSheet.character),
-			new Sprite(16, 2, 3, SpriteSheet.character),
+			new Sprite(16, 1, 3, SpriteSheet.characterList),
+			new Sprite(16, 0, 3, SpriteSheet.characterList),
+			new Sprite(16, 2, 3, SpriteSheet.characterList),
 	};
 	
 	public static Sprite PLAYER_BACKWARD[] = {
-			new Sprite(16, 1, 0, SpriteSheet.character),
-			new Sprite(16, 0, 0, SpriteSheet.character),
-			new Sprite(16, 2, 0, SpriteSheet.character),
+			new Sprite(16, 1, 0, SpriteSheet.characterList),
+			new Sprite(16, 0, 0, SpriteSheet.characterList),
+			new Sprite(16, 2, 0, SpriteSheet.characterList),
 	};
 	public static Sprite PLAYER_LEFT[] = {
-			new Sprite(16, 1, 1, SpriteSheet.character),
-			new Sprite(16, 0, 1, SpriteSheet.character),
-			new Sprite(16, 2, 1, SpriteSheet.character),
+			new Sprite(16, 1, 1, SpriteSheet.characterList),
+			new Sprite(16, 0, 1, SpriteSheet.characterList),
+			new Sprite(16, 2, 1, SpriteSheet.characterList),
 	};
 	public static Sprite PLAYER_RIGHT[] = {
-			new Sprite(16, 1, 2, SpriteSheet.character),
-			new Sprite(16, 0, 2, SpriteSheet.character),
-			new Sprite(16, 2, 2, SpriteSheet.character),
+			new Sprite(16, 1, 2, SpriteSheet.characterList),
+			new Sprite(16, 0, 2, SpriteSheet.characterList),
+			new Sprite(16, 2, 2, SpriteSheet.characterList),
 			
 	};*/
 

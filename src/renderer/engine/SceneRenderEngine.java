@@ -1,6 +1,7 @@
 package renderer.engine;
 
 import pseudomain.Game;
+import renderer.data.DynamicObjectManager;
 import renderer.data.SceneManager;
 import renderer.level.Level;
 import renderer.level.tile.Tile;
@@ -15,15 +16,15 @@ public class SceneRenderEngine {
 
 	public void renderScene(int[] pixels) {
 		this.pixels = pixels;
-		// real x,y position need to get from DOM
-		int xScroll = 0;
-		int yScroll = 0;
+		// real x,y position need to get from renderer.data.DynamicObjectManager
+		int xScroll = DynamicObjectManager.getInstance().getVirtualCharacterXY().x - Game.WIDTH / 2;
+		int yScroll = DynamicObjectManager.getInstance().getVirtualCharacterXY().y - Game.HEIGHT / 2;
 
 		renderLevel(xScroll, yScroll);
 	}
 
 	public void renderTile(int xp, int yp, int xOffset, int yOffset, Tile tile) {
-		xp -= xOffset; // TODO: offsets should get from DOM
+		xp -= xOffset; // TODO: offsets should get from renderer.data.DynamicObjectManager
 		yp -= yOffset;
 		for (int y = 0; y < tile.sprite.SIZE; y++) {
 			int ya = y + yp;

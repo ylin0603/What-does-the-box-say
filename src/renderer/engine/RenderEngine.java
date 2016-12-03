@@ -14,11 +14,11 @@ public class RenderEngine {
 	private BufferedImage image = new BufferedImage(Game.WIDTH, Game.HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 	
-	//private EntityRenderEngine entityRE;
+	private EntityRenderEngine entityRE;
 	private SceneRenderEngine sceneRE;
 	
 	private RenderEngine() {
-	//	entityRE = new EntityRenderEngine();
+		entityRE = new EntityRenderEngine();
 		sceneRE = new SceneRenderEngine();
 	}
 
@@ -44,7 +44,7 @@ public class RenderEngine {
 		clear();
 
 		sceneRE.renderScene(pixels);
-		//entityRE.render(pixels);
+		entityRE.render(pixels);
 
 		System.arraycopy(sceneRE.getPixels(), 0, pixels, 0, pixels.length);
 
