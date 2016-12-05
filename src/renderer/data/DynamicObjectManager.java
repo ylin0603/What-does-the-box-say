@@ -7,7 +7,6 @@ import renderer.data.entity.Item;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,12 +16,12 @@ public class DynamicObjectManager {
 
     private static DynamicObjectManager instance = null;
 
-    private DynamicObjectManager(){
+    private DynamicObjectManager() {
         addVirtualCharacter(0);
         addVirtualCharacter(1);
-        addItem("YO",0,false);
-        updateVirtualCharacter(0,1,2,200,300);
-        updateVirtualCharacter(1,1,2,150,300);
+        addItem("YO", 0, false, 50, 100);
+        updateVirtualCharacter(0, 1, 2, 200, 300);
+        updateVirtualCharacter(1, 1, 2, 150, 300);
     }
 
     public static DynamicObjectManager getInstance() {
@@ -37,15 +36,15 @@ public class DynamicObjectManager {
         this.characterList.add(new Character(clientno));
     }
 
-    public void addItem(String name, int index, Boolean shared) {
+    public void addItem(String name, int index, Boolean shared, int x, int y) {
         //TODO: no position of the Item? How suppose is this drawn?
-        this.itemList.add(new Item(name, index, shared));
+        this.itemList.add(new Item(name, index, shared, x, y));
     }
 
     public void updateVirtualCharacter(int clientno, int dir, int speed, int x, int y) {
 
         Character character = this.characterList.get(clientno);
-        character.update(dir,speed,x,y);
+        character.update(dir, speed, x, y);
     }
 
     public void updateItem(int index, Boolean shared, int owner) {
@@ -68,6 +67,19 @@ public class DynamicObjectManager {
 
     public void keyGETPressed() {
         //TODO: WHY THE FUCK THIS IS BLANK?
+        int localClientNo = 0;
+        Character character = this.characterList.get(localClientNo);
+
+        for (Item item : this.itemList) {
+            if (character.x == item.x && character.y == item.y) {
+                if (item.getShared()) {
+                    item.update(false, localClientNo);
+                    //TCPClientModule.inputMoves("GET");
+                    break;
+                }
+            }
+        }
+
     }
 
 }
