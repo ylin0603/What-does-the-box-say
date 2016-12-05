@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Random;
 
 public class TcpServerThread implements Runnable {
     private int ClientID = 0;
@@ -13,15 +14,8 @@ public class TcpServerThread implements Runnable {
     BufferedReader input;
     private static TcpServerThread tcpServerThread;
 
-    private TcpServerThread() {
+    TcpServerThread() {
 
-    }
-
-    public static TcpServerThread getInstance() {
-        if (tcpServerThread == null) {
-            tcpServerThread = new TcpServerThread();
-        }
-        return tcpServerThread;
     }
 
     public TcpServerThread(Socket sc, int ClientID) {
@@ -32,12 +26,24 @@ public class TcpServerThread implements Runnable {
             output = new PrintWriter(sc.getOutputStream(), true);
             input = new BufferedReader(
                     new InputStreamReader(sc.getInputStream()));
+            // CDC.addVirtualCharacter(ClientID);
             assert input.ready();
             assert !input.ready() : "no";
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    private void initGame() {
+        Random random = new Random();
+        /*String[] bagType = {"補包", "子彈"};
+        for (int i = 0; i < bagType.length; i++) {
+            int x = random.nextInt(CDC.mapX);
+            int y = random.nextInt(CDC.mapY);
+            CDC.addItem(bagType[i], i, true, x, y);
+        }
+        CDC.startUpdatingThread();*/
     }
 
     @Override
@@ -62,11 +68,11 @@ public class TcpServerThread implements Runnable {
                     case 2:
                     case 3:
                         System.out.println("move" + moveChar[moveCode]);
-                        // updateDirection(moveCode);
+                        // updateDirection(this.ClientID,moveCode);
                         break;
                     case 4:
                         System.out.println("get");
-                        // getItem();
+                        // getItem(this.ClientID);
                         break;
                     default:
                         assert false : moveCode + "非定義的行為";
