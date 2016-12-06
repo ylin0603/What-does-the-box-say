@@ -7,10 +7,11 @@ public class Cdc implements Runnable {
 	
 	public ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
 	public ArrayList<ClientItemFeature> allItems = new ArrayList<>();
-	int West = 1;
-	int East = 2;
-	int South = 3;
-	int North = 4;
+	
+	private final static int East = 0;
+	private final static int South = 1;
+	private final static int North = 2;
+	private final static int West = 3;
 	Thread game = new Thread(this);
 	public void Cdc(){
 		
