@@ -1,76 +1,74 @@
 package CDC;
 
+import udp.broadcast.client.UDP_Client;
+
 import java.util.ArrayList;
 
-
 public class Cdc implements Runnable {
-	
-	public ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
-	public ArrayList<ClientItemFeature> allItems = new ArrayList<>();
+	private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
+	private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
 	
 	private final static int East = 0;
 	private final static int South = 1;
 	private final static int North = 2;
 	private final static int West = 3;
-	Thread game = new Thread(this);
-	public void Cdc(){
-		
+
+	private static Cdc instance = null;
+
+	public static void main(String[] args) {
+		//test and temp
+		getInstance().startUpdatingThread();
+		getInstance().addVirtualCharacter(0);
+		getInstance().addVirtualCharacter(1);
+		new UDP_Client().startUDPBroadCast();
 	}
 
-	public void addVirtualCharacter(int clientno){
-			assert clientno > 0;
-			allPlayers.add(new ClientPlayerFeature(clientno));
+	public void Cdc(){}
+
+	public static Cdc getInstance() {
+		if (instance == null) instance = new Cdc();
+		return instance;
+	}
+
+	public void addVirtualCharacter(int clientNo){
+        assert clientNo > -1;
+
+		allPlayers.add(new ClientPlayerFeature(clientNo));
 	}
 	
 	public void addItem(String name, int index, Boolean shared, int x, int y){
 		assert name != null;
-		assert index>0;
-		assert x>0 && y>0;
-		allItems.add(new ClientItemFeature(name,index,shared,x,y));
+		assert index > -1;
+		assert x > 0 && y > 0;
+
+		allItems.add(new ClientItemFeature(name, index, shared, x, y));
+	}
+
+	public void updateDirection(int clientNo, int moveCode){
+		assert clientNo > -1;
+		assert moveCode > -1 && moveCode < 4;
+
+		allPlayers.get(clientNo).setDirection(moveCode);
 	}
 	
-	// called by TCPSM 
-	// when TCPSM receives a MoveCode which is “TURN” from TCPCM, 
-	// it call this function to change the moving direction of virtual character of clientno
-	public void updateDirection(int clientno, int MoveCode){
-		assert clientno > 0;
-		assert MoveCode > 0;
-		assert MoveCode < 5;
-		allPlayers.get(clientno).direction = MoveCode;
-	}
-	
-	// called by TCPSM
-	// when TCPSM receives a MoveCode which is a “GET”, TCPSM calls this method.
-	// This method should check if there is an item ahead of the virtual character 
-	// clientno’s direction and if the item is within reaching range = 0. 
-	// If the item is within reaching range, check if the item is a shared object.
-	// If it is a shared object, check if it is already owned by any virtual character.
-	// Finally, change the states of the item accordingly.
-	public void getItem(int clientno){
-		assert clientno>0;
-		int playerLocationX = allPlayers.get(clientno).locationX;
-		int playerLocationY = allPlayers.get(clientno).locationY;
-		int itemsNum = allItems.size();
-		for(int currentItems = 0; currentItems < itemsNum; currentItems++){ 
-			//check direction and range (0?)
-			int currentItemLocationX = allItems.get(currentItems).locationX;
-			int currentItemLocationY = allItems.get(currentItems).locationY;
-			boolean currentItemIsShared = allItems.get(currentItems).isShared;
-			boolean currentItemIsNotOwned = !allItems.get(currentItems).isOwned;
-			if(Math.abs(playerLocationX - currentItemLocationX) <= 1 && 
-					Math.abs(playerLocationY - currentItemLocationY) <= 1)
-			{	//check item is shered or not
-				if(currentItemIsShared && currentItemIsNotOwned){
-					allItems.get(currentItems).isOwned = true;
+	public void getItem(int clientNo){
+		assert clientNo > -1;
+		ClientPlayerFeature player = allPlayers.get(clientNo);
+		int playerX = player.getLocationX();
+		int playerY = player.getLocationY();
+		int itemsSize = allItems.size();
+		for(int i = 0; i < itemsSize; i++){
+            ClientItemFeature item = allItems.get(i);
+			if(Math.abs(playerX - item.getLocationX()) <= 1
+                    && Math.abs(playerY - item.getLocationY()) <= 1){
+                if(item.isShared() && !item.isOwned()) {
+					item.setOwned(true);
+					item.setItemOwner(clientNo);
 				}
-			}
-			
+            }
 		}
 	}
 	
-	// called by UDPBC 
-	// The method will return a vector, which contains all the references
-	// to the dynamic objects (virtual character and item) which has just been updated recently
 	public ArrayList<ClientPlayerFeature> getPlayersUpdateInfo(){
 		return allPlayers;
 	}
@@ -78,11 +76,9 @@ public class Cdc implements Runnable {
 		return allItems;
 	}
 	
-	// called by TCPSM, after all the connections are established and the game is started
-	// this method start the following thread to update each virtual character’s x,y
-	// every 0.5 second
 	public void startUpdatingThread(){
-		game.run();
+	    Thread game = new Thread(instance);
+		game.start();
 	}
 
 	@Override
@@ -93,33 +89,32 @@ public class Cdc implements Runnable {
 				Thread.sleep(500);
 			} catch (InterruptedException e){
 				e.printStackTrace();
-				}
-				
-			for(int currentUpdate = 0; currentUpdate < allPlayers.size(); currentUpdate ++){
-				int currentPlayerDir = allPlayers.get(currentUpdate).direction;
-				int currentPlayerLocationX = allPlayers.get(currentUpdate).locationX;
-				int currentPlayerLocationY = allPlayers.get(currentUpdate).locationY;
-				int currentPlayerVel = allPlayers.get(currentUpdate).velocity;
-				if (currentPlayerDir == West){ 
-					allPlayers.get(currentUpdate).locationX = 
-							currentPlayerLocationX - currentPlayerVel/2;
-				}
-				else if (currentPlayerDir == East){ 
-					allPlayers.get(currentUpdate).locationX = 
-							currentPlayerLocationX + currentPlayerVel/2;
-				}
-				else if (currentPlayerDir == South){ 
-					allPlayers.get(currentUpdate).locationY = 
-							currentPlayerLocationY + currentPlayerVel/2;
-				}
-				else if (currentPlayerDir == North){ 
-					allPlayers.get(currentUpdate).locationY = 
-							currentPlayerLocationY - currentPlayerVel/2;
-				}
-			}
-				
+            }
+
+            int playerSize = allPlayers.size();
+            for(int i = 0; i < playerSize; i++) {
+                ClientPlayerFeature player = allPlayers.get(i);
+                int currPlayerX = player.getLocationX();
+                int currPlayerY = player.getLocationY();
+                int currPlayerVel = player.getVelocity();
+
+                switch(player.getDirection()) {
+                    case West:
+                        player.setLocationX(currPlayerX - currPlayerVel/2);
+                        break;
+                    case East:
+                        player.setLocationX(currPlayerX + currPlayerVel/2);
+                        break;
+                    case South:
+                        player.setLocationY(currPlayerY + currPlayerVel/2);
+                        break;
+                    case North:
+                        player.setLocationY(currPlayerY - currPlayerVel/2);
+                        break;
+                    default:
+                        throw new Error("Out of direction!");
+                }
+            }
 		}
 	}
-	
-	
 }

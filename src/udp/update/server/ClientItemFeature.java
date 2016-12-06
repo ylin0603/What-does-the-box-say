@@ -1,4 +1,4 @@
-package CDC;
+package udp.update.server;
 
 public class ClientItemFeature {
 
@@ -21,51 +21,27 @@ public class ClientItemFeature {
 		return itemIndex;
 	}
 
-	public int getLocationX() {
-		return locationX;
+	public int getItemOwner() {
+		return itemOwner;
 	}
 
-	public void setLocationX(int locationX) {
-		this.locationX = locationX;
+	public int getLocationX() {
+		return locationX;
 	}
 
 	public int getLocationY() {
 		return locationY;
 	}
 
-	public void setLocationY(int locationY) {
-		this.locationY = locationY;
-	}
-
 	public boolean isShared() {
 		return isShared;
-	}
-
-	public void setShared(boolean shared) {
-		isShared = shared;
 	}
 
 	public boolean isOwned() {
 		return isOwned;
 	}
 
-	public void setOwned(boolean owned) {
-		isOwned = owned;
-	}
-
 	public String getType() {
 		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public int getItemOwner() {
-		return itemOwner;
-	}
-
-	public void setItemOwner(int itemOwner) {
-		this.itemOwner = itemOwner;
 	}
 }
