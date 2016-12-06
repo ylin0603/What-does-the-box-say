@@ -11,12 +11,13 @@ public class ClientPlayerFeature {
 		playerId=clientno;
 	}
 	
-	public String toString(){
-		//turn features to string
+	/*public String toString(){
+		//turn features to str
+		//change protocol
 		String passString;
 		passString = "id:" + playerId + "direction:" + direction + "velocity" + velocity + "x:" + locationX + "y:" + locationY;
 		return passString;
-	}
+	}*/
 	
 
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ClientItemFeature {
 	
-	String kind = "";
+	String type = "";
 	int itemIndex;
 	int locationX;
 	int locationY;
@@ -13,17 +13,17 @@ public class ClientItemFeature {
 	
 	public ClientItemFeature(String name, int index, boolean shared, int x, int y)
 	{
-		kind = name;
+		type = name;
 		itemIndex = index;
 		locationX = x;
 		locationY = y;
 		isShared = shared;
 	}
 	
-	public String toString(){
+	/*public String toString(){
 		String passString;
-		passString = "kind" + kind + "index" + itemIndex + "x:" + locationX + "y:" + locationY + "shared:" + isShared;
+		passString = "kind" + type + "index" + itemIndex + "x:" + locationX + "y:" + locationY + "shared:" + isShared;
 		return passString;
-	}
+	}*/
 	
 }
