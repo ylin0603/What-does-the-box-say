@@ -12,12 +12,12 @@ import renderer.data.DynamicObjectManager;
 
 public class UDP_Server implements Runnable {
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 	    //當室長按下「遊戲開始」後，initial UDP_server
 		new UDP_Server().initUDPServer();
-	}
+	}*/
 
-    public void initUDPServer() {
+    public static void initUDPServer() {
         Thread serverThread = new Thread(new UDP_Server()); // 產生Thread物件
         serverThread.start();
     }
@@ -56,8 +56,6 @@ public class UDP_Server implements Runnable {
                     player = gson.fromJson(eachEnData.getData(), ClientPlayerFeature.class);
                     instance.updateVirtualCharacter(player.getPlayerId(), player.getDirection(),
                                     player.getVelocity(), player.getLocationX(), player.getLocationY());
-
-                    System.out.println("Update Player");
                     break;
                 case "AddP":
                     player = gson.fromJson(eachEnData.getData(), ClientPlayerFeature.class);

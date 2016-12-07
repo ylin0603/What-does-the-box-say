@@ -5,7 +5,7 @@ public class ClientPlayerFeature {
 	private int playerId;
 	private int locationX, locationY;
 	private int direction = 0;
-	private int velocity = 0;
+	private int velocity = 2;
 
 	public ClientPlayerFeature(int clientNo){
 		this.playerId = clientNo;

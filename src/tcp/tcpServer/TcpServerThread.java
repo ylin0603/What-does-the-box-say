@@ -1,5 +1,7 @@
 package tcp.tcpServer;
 
+import CDC.Cdc;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -68,7 +70,7 @@ public class TcpServerThread implements Runnable {
                     case 2:
                     case 3:
                         System.out.println("move" + moveChar[moveCode]);
-                        // updateDirection(this.ClientID,moveCode);
+                        Cdc.getInstance().updateDirection(this.ClientID,moveCode);
                         break;
                     case 4:
                         System.out.println("get");
