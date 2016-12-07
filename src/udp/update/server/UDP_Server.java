@@ -13,6 +13,7 @@ import renderer.data.DynamicObjectManager;
 public class UDP_Server implements Runnable {
 
 	public static void main(String[] args) {
+	    //當室長按下「遊戲開始」後，initial UDP_server
 		new UDP_Server().initUDPServer();
 	}
 
@@ -46,34 +47,33 @@ public class UDP_Server implements Runnable {
         ArrayList<EncodedData> encodedData
                 = gson.fromJson(receiveString, new TypeToken<ArrayList<EncodedData>>(){}.getType());
 
+        ClientPlayerFeature player = null;
+        ClientItemFeature item = null;
+        DynamicObjectManager instance = DynamicObjectManager.getInstance();
         for (EncodedData eachEnData : encodedData) {
-            ClientPlayerFeature player = null;
-            ClientItemFeature item = null;
             switch (eachEnData.getType()) {
                 case "UpdateP":
                     player = gson.fromJson(eachEnData.getData(), ClientPlayerFeature.class);
-                    DynamicObjectManager.getInstance()
-                            .updateVirtualCharacter(player.getPlayerId(), player.getDirection(),
+                    instance.updateVirtualCharacter(player.getPlayerId(), player.getDirection(),
                                     player.getVelocity(), player.getLocationX(), player.getLocationY());
 
                     System.out.println("Update Player");
                     break;
                 case "AddP":
                     player = gson.fromJson(eachEnData.getData(), ClientPlayerFeature.class);
-                    DynamicObjectManager.getInstance().addVirtualCharacter(player.getPlayerId());
+                    instance.addVirtualCharacter(player.getPlayerId());
 
                     System.out.println("Add Player");
                     break;
                 case "UpdateI":
                     item = gson.fromJson(eachEnData.getData(), ClientItemFeature.class);
-                    DynamicObjectManager.getInstance()
-                            .updateItem(item.getItemIndex(), item.isShared(), item.getItemOwner());
+                    instance.updateItem(item.getItemIndex(), item.isShared(), item.getItemOwner());
 
                     System.out.println("Update Item");
                     break;
                 case "AddI":
                     item = gson.fromJson(eachEnData.getData(), ClientItemFeature.class);
-                    DynamicObjectManager.getInstance().addItem(item.getType(), item.getItemIndex(),
+                    instance.addItem(item.getType(), item.getItemIndex(),
                             item.isShared(), item.getLocationX(), item.getLocationY());
 
                     System.out.println("Add Item");
