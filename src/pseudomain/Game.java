@@ -109,6 +109,8 @@ public class Game extends Canvas implements Runnable {
         boolean isConnect =
                 realTcpClient.connectServer("127.0.0.1");
         UDP_Server.initUDPServer();
+        realTcpClient.joinRoom("ASD");
+        realTcpClient.loadGame();
         Game game = new Game();
         game.frame.setResizable(false);
         game.frame.setTitle("Rain");
