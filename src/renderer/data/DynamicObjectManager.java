@@ -6,22 +6,18 @@ import renderer.data.entity.Item;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DynamicObjectManager {
-    public List<Character> characterList = new ArrayList<>();
-    public List<Item> itemList = new ArrayList<>();
+    public List<Character> characterList = Collections.synchronizedList(new ArrayList<Character>());
+    public List<Item> itemList = Collections.synchronizedList(new ArrayList<Item>());
 
     private static DynamicObjectManager instance = null;
 
     private DynamicObjectManager() {
-        addVirtualCharacter(0);
-        addVirtualCharacter(1);
-        addItem("YO", 0, false, 50, 100);
-        updateVirtualCharacter(0, 1, 2, 200, 300);
-        updateVirtualCharacter(1, 1, 2, 150, 300);
     }
 
     public static DynamicObjectManager getInstance() {
@@ -37,12 +33,10 @@ public class DynamicObjectManager {
     }
 
     public void addItem(String name, int index, Boolean shared, int x, int y) {
-        //TODO: no position of the Item? How suppose is this drawn?
         this.itemList.add(new Item(name, index, shared, x, y));
     }
 
     public void updateVirtualCharacter(int clientno, int dir, int speed, int x, int y) {
-
         Character character = this.characterList.get(clientno);
         character.update(dir, speed, x, y);
     }
@@ -60,13 +54,13 @@ public class DynamicObjectManager {
     }
 
     public Point getVirtualCharacterXY() {
+        if(characterList.size() == 0) return new Point(0,0);
         int localClientNo = 0; //TODO: localClientNo should get from TCP?
         Character character = this.characterList.get(localClientNo);
         return new Point(character.x, character.y);
     }
 
     public void keyGETPressed() {
-        //TODO: WHY THE FUCK THIS IS BLANK?
         int localClientNo = 0;
         Character character = this.characterList.get(localClientNo);
 

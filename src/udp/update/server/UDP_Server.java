@@ -13,10 +13,11 @@ import renderer.data.DynamicObjectManager;
 public class UDP_Server implements Runnable {
 
 	/*public static void main(String[] args) {
+	    //當室長按下「遊戲開始」後，initial UDP_server
 		new UDP_Server().initUDPServer();
 	}*/
 
-    public void initUDPServer() {
+    public static void initUDPServer() {
         Thread serverThread = new Thread(new UDP_Server()); // 產生Thread物件
         serverThread.start();
     }
@@ -25,48 +26,60 @@ public class UDP_Server implements Runnable {
         DatagramSocket serverSocket = null;
         try {
             byte[] receiveData = new byte[1024];
-            serverSocket = new DatagramSocket(3334);
+            serverSocket = new DatagramSocket(3335);
 
             while (true) {
-                Gson gson = new Gson();
                 DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                 serverSocket.receive(receivePacket);
 
-                // parsing and getting EncodedData in Vector
+                // get EncodedData in ArrayList and parse.
                 String receiveString = new String(receivePacket.getData()).trim();
-                ArrayList<EncodedData> encodedData = gson.fromJson(receiveString, new TypeToken<ArrayList<EncodedData>>() {
-                }.getType());
-
-                for (EncodedData eachEnData : encodedData) {
-                    switch (eachEnData.getType()) {
-                        case "ADD":
-                            System.out.println("ADD");
-                            System.in.read();
-                            DynamicObjectManager.getInstance().addVirtualCharacter(0);
-                            break;
-                        case "ADDI":
-                            String name = null;
-                            int index = 0;
-                            Boolean shared = true;
-                            int x = 10, y = 10;
-                            DynamicObjectManager.getInstance().addItem(name, index, shared, x, y);
-                        case "UPDATE":
-                            System.out.println("UPDATE");
-                            System.in.read();
-                            //DynamicObjectManager.getInstance().updateVirtualCharacter();
-                            break;
-                        case "UPDATEI":
-                            //DynamicObjectManager.getInstance().updateItem();
-                        default:
-                            System.in.read();
-                            System.out.println("ERROR");
-                    }
-                }
+                parseData(receiveString);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             serverSocket.close();
+        }
+    }
+    private Gson gson = new Gson();
+    public void parseData(String receiveString) {
+        ArrayList<EncodedData> encodedData
+                = gson.fromJson(receiveString, new TypeToken<ArrayList<EncodedData>>(){}.getType());
+
+        ClientPlayerFeature player = null;
+        ClientItemFeature item = null;
+        DynamicObjectManager instance = DynamicObjectManager.getInstance();
+        for (EncodedData eachEnData : encodedData) {
+            switch (eachEnData.getType()) {
+                case "UpdateP":
+                    player = gson.fromJson(eachEnData.getData(), ClientPlayerFeature.class);
+                    instance.updateVirtualCharacter(player.getPlayerId(), player.getDirection(),
+                                    player.getVelocity(), player.getLocationX(), player.getLocationY());
+                    break;
+                case "AddP":
+                    player = gson.fromJson(eachEnData.getData(), ClientPlayerFeature.class);
+                    instance.addVirtualCharacter(player.getPlayerId());
+
+                    System.out.println("Add Player");
+                    break;
+                case "UpdateI":
+                    item = gson.fromJson(eachEnData.getData(), ClientItemFeature.class);
+                    instance.updateItem(item.getItemIndex(), item.isShared(), item.getItemOwner());
+
+                    System.out.println("Update Item");
+                    break;
+                case "AddI":
+                    item = gson.fromJson(eachEnData.getData(), ClientItemFeature.class);
+                    instance.addItem(item.getType(), item.getItemIndex(),
+                            item.isShared(), item.getLocationX(), item.getLocationY());
+
+                    System.out.println("Add Item");
+                    break;
+                default:
+                    System.out.println("ERROR");
+                    throw new Error("ERROR");
+            }
         }
     }
 }
