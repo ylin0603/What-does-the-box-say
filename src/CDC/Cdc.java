@@ -18,7 +18,7 @@ public class Cdc implements Runnable {
 
     private static Cdc instance = null;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // tcp
         RealTcpServer realTcpServer = RealTcpServer.getInstance();
         realTcpServer.initTCPServer();
@@ -27,7 +27,7 @@ public class Cdc implements Runnable {
         getInstance().startUpdatingThread();
         getInstance().addVirtualCharacter(0);
         getInstance().addVirtualCharacter(1);
-
+        Thread.sleep(5000);
         new UDP_Client().startUDPBroadCast();
     }
 

@@ -103,13 +103,12 @@ public class Game extends Canvas implements Runnable {
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // before game initial
         RealTcpClient realTcpClient = RealTcpClient.getInstance();
         boolean isConnect =
                 realTcpClient.connectServer("127.0.0.1");
         UDP_Server.initUDPServer();
-
         Game game = new Game();
         game.frame.setResizable(false);
         game.frame.setTitle("Rain");

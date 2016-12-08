@@ -20,6 +20,7 @@ public class Character extends Entity {
         this.y = 0;
         this.dir = 0;
         this.speed = 0;
+        sprite = Sprite.PLAYER;
     }
 
     public void update(int dir, int speed, int x, int y) {
@@ -27,7 +28,6 @@ public class Character extends Entity {
         this.speed = speed;
         this.x = x;
         this.y = y;
-        sprite = Sprite.PLAYER;
     }
 
 
