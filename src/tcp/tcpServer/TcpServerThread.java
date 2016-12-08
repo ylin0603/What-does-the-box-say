@@ -1,76 +1,63 @@
 package tcp.tcpServer;
 
-import CDC.Cdc;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Random;
+
+import CDC.Cdc;
+import udp.broadcast.client.UDP_Client;
 
 public class TcpServerThread implements Runnable {
     private int ClientID = 0;
     static int totalClient;
-    PrintWriter output;
-    BufferedReader input;
-    private static TcpServerThread tcpServerThread;
+    private PrintWriter output;
+    private BufferedReader input;
+    volatile static public boolean load = false;
+    volatile static private int loadNum = 0;
+    static String[] moveChar =
+            {"TURNEAST", "TURNSOUTH", "TURNNORTH", "TURNWEST", "GET"};
 
     TcpServerThread() {
 
     }
 
     public TcpServerThread(Socket sc, int ClientID) {
-
         this.ClientID = ClientID + 1;
         TcpServerThread.totalClient = ClientID + 1;
         try {
             output = new PrintWriter(sc.getOutputStream(), true);
             input = new BufferedReader(
                     new InputStreamReader(sc.getInputStream()));
-            assert input.ready();
-            assert !input.ready() : "no";
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
-    public void initGame() {
-        Random random = new Random();
-        /*
-         * String[] bagType = {"補包", "子彈"}; for (int i = 0; i < bagType.length; i++) { int x =
-         * random.nextInt(CDC.mapX); int y = random.nextInt(CDC.mapY); CDC.addItem(bagType[i], i,
-         * true, x, y); } CDC.startUpdatingThread();
-         */
-    }
-
     @Override
     public void run() {
-        // CDC.addVirtualCharacter(ClientID);
+        String nickName = initGame(input);
+        loadGame(output, nickName);
+        // game state
         while (true) {
             try {
-                if (ClientID == 0)
-                    tcpServerThread.initGame();
-                String[] moveChar = {"TURNEAST", "TURNSOUTH", "TURNNORTH",
-                        "TURNWEST", "GET"};
                 String buf = recv(input);
-                System.out.println(buf);
                 int moveCode = -1;
                 for (int i = 0; i < moveChar.length; i++) {
                     if (buf.equals(moveChar[i])) {
                         moveCode = i;
                         break;
                     }
-                    assert i == moveChar.length - 1 : buf;
                 }
                 switch (moveCode) {
                     case 0:
                     case 1:
                     case 2:
                     case 3:
-                        System.out.println("move" + moveChar[moveCode]);
-                        Cdc.getInstance().updateDirection(this.ClientID,moveCode);
+                        Cdc.getInstance().updateDirection(this.ClientID,
+                                moveCode);
                         break;
                     case 4:
                         System.out.println("get");
@@ -83,13 +70,46 @@ public class TcpServerThread implements Runnable {
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("sc close");
-                TcpServerThread.totalClient--;
                 break;
             }
         }
     }
 
+    String initGame(BufferedReader input) {
+        // room wait
+        String nickName = null;
+        try {
+            nickName = recv(input);
+            send(output, String.valueOf(ClientID));
+            if (ClientID == 0) {
+                while (!recv(input).equals("Start"));
+            }
 
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return nickName;
+    }
+
+    void loadGame(PrintWriter output, String nickName) {
+        // loading state
+        while (load) {
+            Cdc.getInstance().addVirtualCharacter(ClientID, nickName);
+            loadNum++;
+        }
+        while (loadNum == totalClient) {
+        }
+        if (ClientID == 0) {
+            send(output, "Game load");
+            new UDP_Client().startUDPBroadCast();
+            Cdc.getInstance().startUpdatingThread();
+        }
+    }
+
+    void send(PrintWriter output, String outputString) {
+        output.println(outputString);
+    }
 
     private static String recv(BufferedReader input) throws IOException {
         String inputLine;

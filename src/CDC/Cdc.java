@@ -1,15 +1,13 @@
 package CDC;
 
-import udp.broadcast.client.UDP_Client;
-
 import java.util.ArrayList;
 
-import tcp.tcpClient.RealTcpClient;
 import tcp.tcpServer.RealTcpServer;
 
 public class Cdc implements Runnable {
     private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
     private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
+
 
     private final static int East = 0;
     private final static int South = 1;
@@ -22,13 +20,6 @@ public class Cdc implements Runnable {
         // tcp
         RealTcpServer realTcpServer = RealTcpServer.getInstance();
         realTcpServer.initTCPServer();
-
-        // test and temp
-        getInstance().startUpdatingThread();
-        getInstance().addVirtualCharacter(0);
-        getInstance().addVirtualCharacter(1);
-        Thread.sleep(5000);
-        new UDP_Client().startUDPBroadCast();
     }
 
     public void Cdc() {}
@@ -39,10 +30,10 @@ public class Cdc implements Runnable {
         return instance;
     }
 
-    public void addVirtualCharacter(int clientNo) {
+    public void addVirtualCharacter(int clientNo, String nickName) {
         assert clientNo > -1;
 
-        allPlayers.add(new ClientPlayerFeature(clientNo));
+        allPlayers.add(new ClientPlayerFeature(clientNo, nickName));
     }
 
     public void addItem(String name, int index, Boolean shared, int x, int y) {

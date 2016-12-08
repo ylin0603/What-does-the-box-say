@@ -2,14 +2,16 @@ package CDC;
 
 public class ClientPlayerFeature {
 
-	private int playerId;
-	private int locationX, locationY;
-	private int direction = 0;
-	private int velocity = 2;
+    private int playerId;
+    private int locationX, locationY;
+    private int direction = 0;
+    private int velocity = 2;
+    private String nickName = null;
 
-	public ClientPlayerFeature(int clientNo){
-		this.playerId = clientNo;
-	}
+    public ClientPlayerFeature(int clientNo, String nickName) {
+        this.playerId = clientNo;
+        this.nickName = nickName;
+    }
 
     public void setLocationX(int locationX) {
         this.locationX = locationX;
@@ -30,17 +32,21 @@ public class ClientPlayerFeature {
     public int getPlayerId() {
         return playerId;
     }
-    public int getLocationX() {
-		return locationX;
 
-	}
-	public int getLocationY() {
-		return locationY;
-	}
-	public int getDirection() {
-		return direction;
-	}
-	public int getVelocity() {
-		return velocity;
-	}
+    public int getLocationX() {
+        return locationX;
+
+    }
+
+    public int getLocationY() {
+        return locationY;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
+
+    public int getVelocity() {
+        return velocity;
+    }
 }

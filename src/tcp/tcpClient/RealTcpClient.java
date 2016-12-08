@@ -8,9 +8,9 @@ import java.net.Socket;
 
 public class RealTcpClient {
     final int port = 8888;
-    Socket sc;
-    BufferedReader input;
-    PrintWriter output;
+    private Socket sc;
+    private BufferedReader input;
+    private PrintWriter output;
 
     private static RealTcpClient realTcpClient;
 
@@ -40,12 +40,20 @@ public class RealTcpClient {
         return true;
     }
 
+    // all client join game
     public int joinRoom(String nickName) {
         int ClientNO;
         output.println(nickName);
         String ClientNOS = recv(input);
         ClientNO = Integer.valueOf(ClientNOS);
         return ClientNO;
+    }
+
+    // only room leader loadGame
+    public boolean loadGame() {
+        output.println("load");
+        while (!recv(input).equals("Game load"));
+        return true;
     }
 
     public void inputMoves(int moveCode) throws Exception {

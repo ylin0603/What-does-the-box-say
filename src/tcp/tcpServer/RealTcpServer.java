@@ -1,11 +1,9 @@
 package tcp.tcpServer;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class RealTcpServer implements Runnable {
     final int port = 8888;
@@ -51,9 +49,7 @@ public class RealTcpServer implements Runnable {
             try {
                 so = ss.accept();
                 String s1 = so.getInetAddress().toString().replace("/", "");
-                System.out.println(s1);
                 IPtable.add(s1);
-                System.out.println(s1);
                 TcpServerThread tcpServerThread =
                         new TcpServerThread(so, totalClient);
                 if (totalClient == 0) {
