@@ -35,7 +35,7 @@ public class Game extends Canvas implements Runnable {
         Dimension size = new Dimension(WIDTH * scale, HEIGHT * scale);
         setPreferredSize(size);
         frame = new JFrame();
-        initialKeyBinding();//
+        initialKeyBinding();
     }
 
     private void initialKeyBinding() {
