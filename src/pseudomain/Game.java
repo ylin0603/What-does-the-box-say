@@ -7,6 +7,7 @@ import javax.swing.*;
 
 import Input.FetchAction;
 import Input.MoveAction;
+import Input.RotateAction;
 import renderer.engine.RenderEngine;
 import tcp.tcpClient.RealTcpClient;
 import udp.update.server.UDP_Server;
@@ -28,6 +29,8 @@ public class Game extends Canvas implements Runnable {
     private final static int TURNSOUTH = 1;
     private final static int TURNNORTH = 2;
     private final static int TURNWEST = 3;
+    private final static int ROTATE_CLOCKWISE = 0;
+    private final static int ROTATE_COUNTER_CLOCKWISE = 1;
     private final static String GET = "get";
 
 
@@ -45,11 +48,17 @@ public class Game extends Canvas implements Runnable {
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("RIGHT"), TURNEAST);
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("GET"), GET);
 
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("A"),ROTATE_CLOCKWISE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("D"),ROTATE_COUNTER_CLOCKWISE);
+
         frame.getRootPane().getActionMap().put(TURNNORTH, new MoveAction(TURNNORTH));
         frame.getRootPane().getActionMap().put(TURNSOUTH, new MoveAction(TURNSOUTH));
         frame.getRootPane().getActionMap().put(TURNWEST, new MoveAction(TURNWEST));
         frame.getRootPane().getActionMap().put(TURNEAST, new MoveAction(TURNEAST));
         frame.getRootPane().getActionMap().put(GET, new FetchAction());
+
+        frame.getRootPane().getActionMap().put(ROTATE_CLOCKWISE,new RotateAction(ROTATE_CLOCKWISE));
+        frame.getRootPane().getActionMap().put(ROTATE_COUNTER_CLOCKWISE, new RotateAction(ROTATE_COUNTER_CLOCKWISE));
     }
 
     public synchronized void start() {
@@ -105,12 +114,12 @@ public class Game extends Canvas implements Runnable {
 
     public static void main(String[] args) throws InterruptedException {
         // before game initial
-        RealTcpClient realTcpClient = RealTcpClient.getInstance();
+       /* RealTcpClient realTcpClient = RealTcpClient.getInstance();
         boolean isConnect =
                 realTcpClient.connectServer("127.0.0.1");
         UDP_Server.initUDPServer();
         realTcpClient.joinRoom("ASD");
-        realTcpClient.loadGame();
+        realTcpClient.loadGame();*/
         Game game = new Game();
         game.frame.setResizable(false);
         game.frame.setTitle("Rain");
