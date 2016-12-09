@@ -48,7 +48,6 @@ local.properties
 
 # Package Files #
 *.jar
-
 #lib
 !lib/*.jar
 
