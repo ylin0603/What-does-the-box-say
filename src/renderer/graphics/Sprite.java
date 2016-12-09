@@ -75,7 +75,7 @@ public class Sprite {
     public static Sprite rotate(Sprite sprite, double angle) {
         return new Sprite(rotate(sprite.pixels, angle, sprite.SIZE, sprite.SIZE), sprite.SIZE);
     }
-
+    // below are ratation class
     private static int[] rotate(int[] opixels, double angle, int width, int height) {
         int[] result = new int[width * height];
         double nx_x = rotateX(-angle, 1.0, 0.0);
@@ -121,7 +121,7 @@ public class Sprite {
 
         return x * sin + y * cos;
     }
-
+    // --------------------------------
     private void setColour(int colour) {
         for (int i = 0; i < SIZE * SIZE; i++) {
             pixels[i] = colour;

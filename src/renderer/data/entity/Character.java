@@ -28,12 +28,13 @@ public class Character extends Entity {
         this.speed = speed;
         this.x = x;
         this.y = y;
-        this.sprite = Sprite.rotate(sprite,Math.toRadians(dir));
+        this.sprite = Sprite.rotate(Sprite.PLAYER,Math.toRadians(dir));
     }
 
     public void render(int[] pixels){
+        //TODO: If attack flag == true, draw addition animation
+        //TODO: bullet should have additional class and draw additionally.
         super.render(pixels);
-        //EntityRenderEngine.renderCharacter(this, pixels);
     }
 
 

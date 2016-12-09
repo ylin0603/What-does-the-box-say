@@ -18,8 +18,6 @@ public class DynamicObjectManager {
     private static DynamicObjectManager instance = null;
 
     private DynamicObjectManager() {
-        addVirtualCharacter(0);
-        updateVirtualCharacter(0,0,2,100,100);
     }
 
     public static DynamicObjectManager getInstance() {
@@ -56,7 +54,6 @@ public class DynamicObjectManager {
     }
 
     public Point getVirtualCharacterXY() {
-        if(characterList.size() == 0) return new Point(0,0);
         int localClientNo = 0; //TODO: localClientNo should get from TCP?
         Character character = this.characterList.get(localClientNo);
         return new Point(character.x, character.y);

@@ -2,6 +2,7 @@ package renderer.data.entity;
 
 import pseudomain.Game;
 import renderer.data.DynamicObjectManager;
+import renderer.engine.EntityRenderEngine;
 import renderer.graphics.Sprite;
 
 import java.util.Map;
@@ -21,22 +22,7 @@ public abstract class Entity {
     }
 
     public void render(int pixels[]) {
-        int offsetX = DynamicObjectManager.getInstance().getVirtualCharacterXY().x - Game.WIDTH / 2;
-        int offsetY = DynamicObjectManager.getInstance().getVirtualCharacterXY().y - Game.HEIGHT / 2;
-        int xp = this.x;
-        int yp = this.y;
-        xp -= offsetX;
-        yp -= offsetY;
-        for (int y = 0; y < sprite.SIZE; y++) {
-            int ya = y + yp;
-            for (int x = 0; x < sprite.SIZE; x++) {
-                int xa = x + xp;
-                if (xa < -sprite.SIZE || xa >= Game.WIDTH || ya < 0 || ya >= Game.HEIGHT) break;
-                if (xa < 0) xa = 0;
-                int color = sprite.pixels[x + y * sprite.SIZE];
-                if (color != 0xffffffff) pixels[xa + ya * Game.WIDTH] = color;
-            }
-        }
+        EntityRenderEngine.renderEntity(this,pixels);
     }
 
 

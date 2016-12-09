@@ -27,7 +27,7 @@ public class Item extends Entity {
     }
 
     public void render(int[] pixels){
-       // EntityRenderEngine.renderitem(this,pixels);
+        super.render(pixels);
     }
 
     public String getName() {
