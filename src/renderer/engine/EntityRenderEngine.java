@@ -22,7 +22,7 @@ public class EntityRenderEngine {
         this.pixels = pixels;
         List<Entity> allCharacter = dom.getAllDynamicObjects();
         for (Entity e : allCharacter) {
-            e.render(pixels);
+            e.render(pixels,Math.toRadians(90.0));
         }
     }
 
