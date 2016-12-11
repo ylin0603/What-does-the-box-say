@@ -27,10 +27,11 @@ public class UDP_Server implements Runnable {
 	public void run() {
 		DatagramSocket serverSocket = null;
 		try {
-			byte[] receiveData = new byte[1024];
+			byte[] receiveData;
 			serverSocket = new DatagramSocket(3335);
 
 			while (true) {
+				receiveData = new byte[1024];
 				DatagramPacket receivePacket =
 						new DatagramPacket(receiveData, receiveData.length);
 				serverSocket.receive(receivePacket);
@@ -50,8 +51,6 @@ public class UDP_Server implements Runnable {
 	private Gson gson = new Gson();
 
 	public void parseData(String receiveString) {
-		JsonReader reader = new JsonReader(new StringReader(receiveString));
-		reader.setLenient(true);
 		ArrayList<EncodedData> encodedData = null;
 		try {
 			encodedData = gson.fromJson(receiveString,
