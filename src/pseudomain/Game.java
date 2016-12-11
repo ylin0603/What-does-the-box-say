@@ -48,7 +48,6 @@ public class Game extends Canvas implements Runnable {
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("LEFT"), TURNWEST);
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("RIGHT"), TURNEAST);
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("GET"), GET);
-
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("A"),ROTATE_CLOCKWISE);
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("D"),ROTATE_COUNTER_CLOCKWISE);
 
