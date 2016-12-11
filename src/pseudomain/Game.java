@@ -30,8 +30,8 @@ public class Game extends Canvas implements Runnable {
     private final static int TURNSOUTH = 1;
     private final static int TURNNORTH = 2;
     private final static int TURNWEST = 3;
-    private final static int ROTATE_CLOCKWISE = 0;
-    private final static int ROTATE_COUNTER_CLOCKWISE = 1;
+    private final static int ROTATE_CLOCKWISE = 4;
+    private final static int ROTATE_COUNTER_CLOCKWISE = 5;
     private final static String GET = "get";
 
 
