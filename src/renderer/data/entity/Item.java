@@ -2,6 +2,7 @@ package renderer.data.entity;
 
 import pseudomain.Game;
 import renderer.data.DynamicObjectManager;
+import renderer.engine.EntityRenderEngine;
 import renderer.graphics.Sprite;
 
 public class Item extends Entity {
@@ -23,6 +24,10 @@ public class Item extends Entity {
     public void update(boolean shared, int owner){
         this.shared = shared;
         this.owner = owner;
+    }
+
+    public void render(int[] pixels){
+        super.render(pixels);
     }
 
     public String getName() {
