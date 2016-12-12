@@ -9,7 +9,6 @@ import java.net.Socket;
 import com.google.gson.Gson;
 
 import CDC.Cdc;
-import transfer.TransferModify;
 import udp.broadcast.client.UDP_Client;
 
 public class TcpServerThread implements Runnable {
@@ -20,7 +19,7 @@ public class TcpServerThread implements Runnable {
     volatile static public boolean load = false;
     volatile static private int loadNum = 0;
     Gson gson;
-    TransferModify transferModify;
+
 
     TcpServerThread() {
         gson = new Gson();
@@ -47,16 +46,23 @@ public class TcpServerThread implements Runnable {
         while (true) {
             try {
                 String buf = recv(input);
-                transferModify = gson.fromJson(buf, TransferModify.class);
-                switch (transferModify.getEventType()) {
+                int eventType = Integer.valueOf(buf);
+                // move forward | backward
+                // spin right | left
+                // attack closeRange | longRange
+                switch (eventType) {
                     case 0:
+                    case 1:
                         // Cdc.getInstance().updateWalk(this.ClientID,transferModify.isTypeDetail());
                         break;
-                    case 1:
+                    case 2:
+                    case 3:
                         // Cdc.getInstance().updateDirection(this.ClientID,transferModify.isTypeDetail());
                         break;
-                    case 2:
+                    case 4:
+                    case 5:
                         // Cdc.getInstance().updateAttack(this.ClientID,transferModify.isTypeDetail());
+                        break;
                 }
             } catch (Exception e) {
                 e.printStackTrace();

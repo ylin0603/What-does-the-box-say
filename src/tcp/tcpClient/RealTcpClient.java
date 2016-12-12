@@ -6,23 +6,16 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import com.google.gson.Gson;
-
-import transfer.TransferModify;
-import transfer.TransferPlayer;
-
 public class RealTcpClient {
     final int port = 8888;
     private Socket sc;
     private BufferedReader input;
     private PrintWriter output;
-    TransferModify transferModify;
+
 
     private static RealTcpClient realTcpClient;
 
-    private RealTcpClient() {
-        transferModify = new TransferModify();
-    }
+    private RealTcpClient() {}
 
     public static RealTcpClient getInstance() {
         if (realTcpClient == null) {
@@ -62,15 +55,14 @@ public class RealTcpClient {
         return true;
     }
 
-    public void inputMoves(int eventType, boolean typeDetail) throws Exception {
-        transferModify.setEventType(eventType);
-        transferModify.setTypeDetail(typeDetail);
-
-        Gson gson = new Gson();
-        String sendMsg = gson.toJson(transferModify);
-        realTcpClient.output.println(sendMsg);
+    public void inputMoves(int eventType) throws Exception {
+        // move forward | backward
+        // spin right | left
+        // attack closeRange | longRange
+        String SedMsg = String.valueOf(eventType);
+        realTcpClient.output.println(SedMsg);
         realTcpClient.output.flush();
-        System.out.println(sendMsg);
+        System.out.println(SedMsg);
         if (sc.isClosed())
             throw new Exception();
     }
