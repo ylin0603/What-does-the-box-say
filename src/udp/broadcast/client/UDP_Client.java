@@ -46,9 +46,9 @@ public class UDP_Client {
 
 		String type;
 		for (ClientPlayerFeature player : updatePlayers) {
-			if (clientNo < player.getPlayerId()) {
+			if (clientNo < player.getTransferPlayer().getPlayerId()) {
 				type = "AddP";
-				clientNo = player.getPlayerId();
+				clientNo = player.getTransferPlayer().getPlayerId();
 			} else {
 				type = "UpdateP";
 			}

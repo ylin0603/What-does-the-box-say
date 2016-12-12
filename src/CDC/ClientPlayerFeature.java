@@ -1,52 +1,50 @@
 package CDC;
 
+import transfer.TransferPlayer;
+
 public class ClientPlayerFeature {
 
-	private int playerId;
-	private int locationX, locationY;
-	private int direction = 0;
+	private TransferPlayer transferPlayer;
 	private int velocity = 2;
-	private String nickName = null;
+	private int lastShootTime;
+	private int lastMoveTime;
 
 	public ClientPlayerFeature(int clientNo, String nickName) {
-		this.playerId = clientNo;
-		this.nickName = nickName;
+		transferPlayer = new TransferPlayer(clientNo, nickName);
+
 	}
 
-	public void setLocationX(int locationX) {
-		this.locationX = locationX;
+	public TransferPlayer getTransferPlayer() {
+		return transferPlayer;
 	}
 
-	public void setLocationY(int locationY) {
-		this.locationY = locationY;
+	public void setTransferPlayer(TransferPlayer transferPlayer) {
+		this.transferPlayer = transferPlayer;
 	}
 
-	public void setDirection(int direction) {
-		this.direction = direction;
+	public int getVelocity() {
+		return velocity;
 	}
 
 	public void setVelocity(int velocity) {
 		this.velocity = velocity;
 	}
 
-	public int getPlayerId() {
-		return playerId;
+	public int getLastShootTime() {
+		return lastShootTime;
 	}
 
-	public int getLocationX() {
-		return locationX;
-
+	public void setLastShootTime(int lastShootTime) {
+		this.lastShootTime = lastShootTime;
 	}
 
-	public int getLocationY() {
-		return locationY;
+	public int getLastMoveTime() {
+		return lastMoveTime;
 	}
 
-	public int getDirection() {
-		return direction;
+	public void setLastMoveTime(int lastMoveTime) {
+		this.lastMoveTime = lastMoveTime;
 	}
 
-	public int getVelocity() {
-		return velocity;
-	}
+
 }

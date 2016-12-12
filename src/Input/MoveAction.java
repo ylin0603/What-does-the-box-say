@@ -15,13 +15,14 @@ public class MoveAction extends AbstractAction {
         direction = dir;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        try {
-            RealTcpClient.getInstance().inputMoves(direction);
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		try {
+			// TODO follow API
+			RealTcpClient.getInstance().inputMoves(0);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 
     }
 }

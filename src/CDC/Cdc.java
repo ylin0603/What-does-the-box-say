@@ -48,14 +48,14 @@ public class Cdc implements Runnable {
 		assert clientNo > -1;
 		assert moveCode > -1 && moveCode < 4;
 
-		allPlayers.get(clientNo).setDirection(moveCode);
+		allPlayers.get(clientNo).getTransferPlayer().setFaceAngle(moveCode);
 	}
 
 	public void getItem(int clientNo) {
 		assert clientNo > -1;
 		ClientPlayerFeature player = allPlayers.get(clientNo);
-		int playerX = player.getLocationX();
-		int playerY = player.getLocationY();
+		int playerX = player.getTransferPlayer().getLocX();
+		int playerY = player.getTransferPlayer().getLocY();
 		int itemsSize = allItems.size();
 		for (int i = 0; i < itemsSize; i++) {
 			ClientItemFeature item = allItems.get(i);
@@ -95,22 +95,26 @@ public class Cdc implements Runnable {
 			int playerSize = allPlayers.size();
 			for (int i = 0; i < playerSize; i++) {
 				ClientPlayerFeature player = allPlayers.get(i);
-				int currPlayerX = player.getLocationX();
-				int currPlayerY = player.getLocationY();
+				int currPlayerX = player.getTransferPlayer().getLocX();
+				int currPlayerY = player.getTransferPlayer().getLocY();
 				int currPlayerVel = player.getVelocity();
-
-				switch (player.getDirection()) {
+				// TODO direction follow SPEC
+				switch ((int) player.getTransferPlayer().getFaceAngle()) {
 					case West:
-						player.setLocationX(currPlayerX - currPlayerVel / 2);
+						player.getTransferPlayer()
+								.setLocX(currPlayerX - currPlayerVel / 2);
 						break;
 					case East:
-						player.setLocationX(currPlayerX + currPlayerVel / 2);
+						player.getTransferPlayer()
+								.setLocX(currPlayerX + currPlayerVel / 2);
 						break;
 					case South:
-						player.setLocationY(currPlayerY + currPlayerVel / 2);
+						player.getTransferPlayer()
+								.setLocY(currPlayerY + currPlayerVel / 2);
 						break;
 					case North:
-						player.setLocationY(currPlayerY - currPlayerVel / 2);
+						player.getTransferPlayer()
+								.setLocY(currPlayerY - currPlayerVel / 2);
 						break;
 					default:
 						throw new Error("Out of direction!");
