@@ -1,33 +1,163 @@
 package udp.update.server;
 
 public class ClientPlayerFeature {
+	private int clientNo;
+	private int weaponType = 0; // 0 for knife, 1 for gun
+	private String nickname;
+	private int locX, locY;
+	private int vel = 2; // Need to decide a number, 不用傳給Client
+	private int direction;
+	private double faceAngle = 0; // (radium) => use Math.toRadium();
+	private double angleVel = 2; // Need to decide a number, 不用傳給Client
+	private int HP = 100;
+	private int killCount = 0, deadCount = 0;
+	private int bulletCount = 2;
+	private boolean attackFlag = false; // TCP設成true，傳送一次後設回false
+	private boolean attackedFlag = false; // CDC設成true，UDP傳回一次後再設回false
+	private boolean collisionFlag = false; // 同上
+	private boolean isDead = false; // Bear will do it.
 
-	private int playerId;
-	private int locationX, locationY;
-	private int direction = 0;
-	private int velocity = 0;
-
-	public ClientPlayerFeature(int clientNo){
-		this.playerId = clientNo;
+	public ClientPlayerFeature(int clientNo, String nickName,
+                               int locX, int locY) {
+		this.clientNo = clientNo;
+		this.nickname = nickName;
+		this.locX = locX;
+		this.locY = locY;
 	}
 
-	public int getPlayerId() {
-		return playerId;
+	public int getClientNo() {
+		return clientNo;
 	}
 
-	public int getLocationX() {
-		return locationX;
+	public void setClientNo(int clientNo) {
+		this.clientNo = clientNo;
 	}
 
-	public int getLocationY() {
-		return locationY;
+	public int getWeaponType() {
+		return weaponType;
+	}
+
+	public void setWeaponType(int weaponType) {
+		this.weaponType = weaponType;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public int getDirection() {
 		return direction;
 	}
 
-	public int getVelocity() {
-		return velocity;
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
+
+	public int getLocX() {
+		return locX;
+	}
+
+	public void setLocX(int locX) {
+		this.locX = locX;
+	}
+
+	public int getLocY() {
+		return locY;
+	}
+
+	public void setLocY(int locY) {
+		this.locY = locY;
+	}
+
+	public int getVel() {
+		return vel;
+	}
+
+	public void setVel(int vel) {
+		this.vel = vel;
+	}
+
+	public double getFaceAngle() {
+		return faceAngle;
+	}
+
+	public void setFaceAngle(double faceAngle) {
+		this.faceAngle = faceAngle;
+	}
+
+	public double getAngleVel() {
+		return angleVel;
+	}
+
+	public void setAngleVel(double angleVel) {
+		this.angleVel = angleVel;
+	}
+
+	public int getHP() {
+		return HP;
+	}
+
+	public void setHP(int HP) {
+		this.HP = HP;
+	}
+
+	public int getKillCount() {
+		return killCount;
+	}
+
+	public void setKillCount(int killCount) {
+		this.killCount = killCount;
+	}
+
+	public int getDeadCount() {
+		return deadCount;
+	}
+
+	public void setDeadCount(int deadCount) {
+		this.deadCount = deadCount;
+	}
+
+	public int getBulletCount() {
+		return bulletCount;
+	}
+
+	public void setBulletCount(int bulletCount) {
+		this.bulletCount = bulletCount;
+	}
+
+	public boolean isAttackFlag() {
+		return attackFlag;
+	}
+
+	public void setAttackFlag(boolean attackFlag) {
+		this.attackFlag = attackFlag;
+	}
+
+	public boolean isAttackedFlag() {
+		return attackedFlag;
+	}
+
+	public void setAttackedFlag(boolean attackedFlag) {
+		this.attackedFlag = attackedFlag;
+	}
+
+	public boolean isCollisionFlag() {
+		return collisionFlag;
+	}
+
+	public void setCollisionFlag(boolean collisionFlag) {
+		this.collisionFlag = collisionFlag;
+	}
+
+	public boolean isDead() {
+		return isDead;
+	}
+
+	public void setDead(boolean dead) {
+		isDead = dead;
 	}
 }

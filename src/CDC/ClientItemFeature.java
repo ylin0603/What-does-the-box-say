@@ -1,64 +1,57 @@
 package CDC;
 
 public class ClientItemFeature {
-
-	private int itemIndex;
+	private int itemID; // unique ID
+	private int itemType; // 0: Fake Box, 1: Add HP, 2: Add Bullet, 3: Moving Bullet
+	private int locX, locY;
+	private boolean isDead = false;
 	private int itemOwner;
-	private int locationX, locationY;
-	private boolean isShared, isOwned;
-	private String type = "";
 
-	public ClientItemFeature(String name, int index, boolean shared, int x, int y)
-	{
-		this.type = name;
-		this.itemIndex = index;
-		this.locationX = x;
-		this.locationY = y;
-		this.isShared = shared;
+	public ClientItemFeature(int itemID, int itemType, int x, int y) {
+		this.itemID = itemID;
+		this.itemType = itemType;
+		this.locX = x;
+		this.locY = y;
 	}
 
-	public int getItemIndex() {
-		return itemIndex;
+	public int getItemID() {
+		return itemID;
 	}
 
-	public int getLocationX() {
-		return locationX;
+	public void setItemID(int itemID) {
+		this.itemID = itemID;
 	}
 
-	public void setLocationX(int locationX) {
-		this.locationX = locationX;
+	public int getItemType() {
+		return itemType;
 	}
 
-	public int getLocationY() {
-		return locationY;
+	public void setItemType(int itemType) {
+		this.itemType = itemType;
 	}
 
-	public void setLocationY(int locationY) {
-		this.locationY = locationY;
+	public int getLocX() {
+		return locX;
 	}
 
-	public boolean isShared() {
-		return isShared;
+	public void setLocX(int locX) {
+		this.locX = locX;
 	}
 
-	public void setShared(boolean shared) {
-		isShared = shared;
+	public int getLocY() {
+		return locY;
 	}
 
-	public boolean isOwned() {
-		return isOwned;
+	public void setLocY(int locY) {
+		this.locY = locY;
 	}
 
-	public void setOwned(boolean owned) {
-		isOwned = owned;
+	public boolean isDead() {
+		return isDead;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
+	public void setDead(boolean dead) {
+		isDead = dead;
 	}
 
 	public int getItemOwner() {
