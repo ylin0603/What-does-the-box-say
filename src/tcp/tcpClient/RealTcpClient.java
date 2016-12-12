@@ -63,8 +63,8 @@ public class RealTcpClient {
 	}
 
 	public void inputMoves(int eventType, boolean typeDetail) throws Exception {
-		transferModify.setEventType(0);
-		transferModify.setTypeDetail(true);
+		transferModify.setEventType(eventType);
+		transferModify.setTypeDetail(typeDetail);
 
 		Gson gson = new Gson();
 		String sendMsg = gson.toJson(transferModify);

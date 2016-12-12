@@ -6,7 +6,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import com.google.gson.Gson;
+
 import CDC.Cdc;
+import transfer.TransferModify;
 import udp.broadcast.client.UDP_Client;
 
 public class TcpServerThread implements Runnable {
@@ -16,11 +19,11 @@ public class TcpServerThread implements Runnable {
 	private BufferedReader input;
 	volatile static public boolean load = false;
 	volatile static private int loadNum = 0;
-	static String[] moveChar =
-			{"TURNEAST", "TURNSOUTH", "TURNNORTH", "TURNWEST", "GET"};
+	Gson gson;
+	TransferModify transferModify;
 
 	TcpServerThread() {
-
+		gson = new Gson();
 	}
 
 	public TcpServerThread(Socket sc, int ClientID) {
@@ -44,28 +47,16 @@ public class TcpServerThread implements Runnable {
 		while (true) {
 			try {
 				String buf = recv(input);
-				int moveCode = -1;
-				for (int i = 0; i < moveChar.length; i++) {
-					if (buf.equals(moveChar[i])) {
-						moveCode = i;
-						break;
-					}
-				}
-				switch (moveCode) {
+				transferModify = gson.fromJson(buf, TransferModify.class);
+				switch (transferModify.getEventType()) {
 					case 0:
+						// Cdc.getInstance().updateWalk(this.ClientID,transferModify.isTypeDetail());
+						break;
 					case 1:
+						// Cdc.getInstance().updateDirection(this.ClientID,transferModify.isTypeDetail());
+						break;
 					case 2:
-					case 3:
-						Cdc.getInstance().updateDirection(this.ClientID,
-								moveCode);
-						break;
-					case 4:
-						System.out.println("get");
-						// getItem(this.ClientID);
-						break;
-					default:
-						assert false : moveCode + "非定義的行為";
-						break;
+						// Cdc.getInstance().updateAttack(this.ClientID,transferModify.isTypeDetail());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
