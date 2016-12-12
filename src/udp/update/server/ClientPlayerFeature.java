@@ -5,10 +5,8 @@ public class ClientPlayerFeature {
 	private int weaponType = 0; // 0 for knife, 1 for gun
 	private String nickname;
 	private int locX, locY;
-	private int vel = 2; // Need to decide a number, 不用傳給Client
 	private int direction;
 	private double faceAngle = 0; // (radium) => use Math.toRadium();
-	private double angleVel = 2; // Need to decide a number, 不用傳給Client
 	private int HP = 100;
 	private int killCount = 0, deadCount = 0;
 	private int bulletCount = 2;
@@ -73,28 +71,12 @@ public class ClientPlayerFeature {
 		this.locY = locY;
 	}
 
-	public int getVel() {
-		return vel;
-	}
-
-	public void setVel(int vel) {
-		this.vel = vel;
-	}
-
 	public double getFaceAngle() {
 		return faceAngle;
 	}
 
 	public void setFaceAngle(double faceAngle) {
 		this.faceAngle = faceAngle;
-	}
-
-	public double getAngleVel() {
-		return angleVel;
-	}
-
-	public void setAngleVel(double angleVel) {
-		this.angleVel = angleVel;
 	}
 
 	public int getHP() {

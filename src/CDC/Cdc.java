@@ -16,6 +16,9 @@ public class Cdc implements Runnable {
 	private final static int TURNRIGHT = 2;
 	private final static int TURNLEFT = 3;
 
+	private final static int vel = 2;
+	private final static double angleVel = 2;
+
 	private static Cdc instance = null;
 
 	public static void main(String[] args) throws InterruptedException {
@@ -103,9 +106,7 @@ public class Cdc implements Runnable {
 			for (int i = 0; i < playerSize; i++) {
 				ClientPlayerFeature player = allPlayers.get(i);
 
-				int vel = player.getVel();
 				double faceAngle = player.getFaceAngle();
-				double angleVel = player.getAngleVel();
 
 				switch (player.getDirection()) {
 					//TODO: 用三角函數算前進向量，角度每次角速度
