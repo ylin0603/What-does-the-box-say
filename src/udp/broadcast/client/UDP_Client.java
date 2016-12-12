@@ -32,7 +32,7 @@ public class UDP_Client {
 				broadcast(allIPAddress, encodedData);
 			}
 		};
-		timerBroadcast.schedule(startBroadcast, 0, 200); // 5 times/per second
+		timerBroadcast.schedule(startBroadcast, 0, 50); // 20 times/per second
 	}
 
 	private int clientNo = -1, itemId = -1;

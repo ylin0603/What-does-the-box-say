@@ -87,7 +87,7 @@ public class Cdc implements Runnable {
 		// TODO Auto-generated method stub
 		while (true) {
 			try {
-				Thread.sleep(500);
+				Thread.sleep(50);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

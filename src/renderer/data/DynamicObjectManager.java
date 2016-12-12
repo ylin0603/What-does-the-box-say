@@ -36,7 +36,7 @@ public class DynamicObjectManager {
         this.itemList.add(new Item(name, index, shared, x, y));
     }
 
-    public void updateVirtualCharacter(int clientno, int dir, int speed, int x, int y) {
+    public void updateVirtualCharacter(int clientno, double dir, int speed, int x, int y) {
         Character character = this.characterList.get(clientno);
         character.update(dir, speed, x, y);
     }
