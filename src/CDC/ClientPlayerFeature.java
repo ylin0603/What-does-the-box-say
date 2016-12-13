@@ -3,10 +3,11 @@ package CDC;
 public class ClientPlayerFeature {
 
 	private int playerId;
-	private int locationX, locationY;
+	private int locationX, locationY ,lastLocationX , lastLocationY;
 	private int direction = 0;
 	private int velocity = 2;
 	private String nickName = null;
+	private long stopTime;
 
 	public ClientPlayerFeature(int clientNo, String nickName) {
 		this.playerId = clientNo;
@@ -15,10 +16,22 @@ public class ClientPlayerFeature {
 
 	public void setLocationX(int locationX) {
 		this.locationX = locationX;
+		if(!checkStayStill()){
+			checkRecover();
+		}else{
+			stopTime = System.currentTimeMillis();
+			lastLocationX = locationX;
+		}
 	}
-
+	
 	public void setLocationY(int locationY) {
 		this.locationY = locationY;
+		if(!checkStayStill()){
+			
+		}else{
+			stopTime = System.currentTimeMillis();
+			lastLocationX = locationX;
+		}
 	}
 
 	public void setDirection(int direction) {
@@ -35,7 +48,6 @@ public class ClientPlayerFeature {
 
 	public int getLocationX() {
 		return locationX;
-
 	}
 
 	public int getLocationY() {
@@ -48,5 +60,20 @@ public class ClientPlayerFeature {
 
 	public int getVelocity() {
 		return velocity;
+	}
+	
+	private boolean checkStayStill(){
+		if(locationX == lastLocationX && locationY == lastLocationY){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	private void checkRecover() {
+		long stopSecond = System.currentTimeMillis()- stopTime;
+		if(stopSecond > 5000){
+			//Recoverd
+		}
 	}
 }
