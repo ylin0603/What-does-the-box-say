@@ -16,7 +16,7 @@ public class ClientPlayerFeature {
 
 	public void setLocationX(int locationX) {
 		this.locationX = locationX;
-		if(checkStayStill()){
+		if(!checkStayStill()){
 			lastLocationX = locationX;
 		}
 	}
