@@ -4,6 +4,7 @@ public class ClientItemFeature {
 	private int itemID; // unique ID
 	private int itemType; // 0: Fake Box, 1: Add HP, 2: Add Bullet, 3: Moving Bullet
 	private int locX, locY;
+	private boolean isCollision = false;
 	private boolean isDead = false;
 	private int itemOwner;
 
@@ -44,6 +45,14 @@ public class ClientItemFeature {
 
 	public void setLocY(int locY) {
 		this.locY = locY;
+	}
+
+	public boolean isCollision() {
+		return isCollision;
+	}
+
+	public void setCollision(boolean collision) {
+		isCollision = collision;
 	}
 
 	public boolean isDead() {
