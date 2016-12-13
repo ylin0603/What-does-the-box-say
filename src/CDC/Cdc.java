@@ -7,7 +7,6 @@ import tcp.tcpServer.RealTcpServer;
 public class Cdc implements Runnable {
 	private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
 	private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
-	private long startTime;
 
 
 	private final static int East = 0;
@@ -70,14 +69,6 @@ public class Cdc implements Runnable {
 		}
 	}
 
-  private boolean finishGame (int gameTime){
-		long now = System.currentTimeMillis();
-		if(now-startTime < gameTime*1000) 
-			return false;
-		else
-			return true;
-	}
-
 	public ArrayList<ClientPlayerFeature> getPlayersUpdateInfo() {
 		return allPlayers;
 	}
@@ -94,16 +85,13 @@ public class Cdc implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		startTime = System.currentTimeMillis(); //Set startTime
 		while (true) {
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			if(finishGame(300)){// 5分鐘就是300秒
-				//do something
-			}
+
 			int playerSize = allPlayers.size();
 			for (int i = 0; i < playerSize; i++) {
 				ClientPlayerFeature player = allPlayers.get(i);
