@@ -7,7 +7,7 @@ import java.util.List;
 
 import gui.component.GuiBloodBar;
 import gui.component.GuiComponent;
-import gui.component.GuiLabel;
+import gui.component.GuiRoomInfo;
 
 public class GameManager {
 
@@ -16,10 +16,12 @@ public class GameManager {
 		= Collections.synchronizedList(new ArrayList<GuiComponent>());
 	
 	private GuiBloodBar bloodBar;
+	private GuiRoomInfo roomInfo;
 	
 	private GameManager() {
 		init();
 		componentList.add(bloodBar);
+		componentList.add(roomInfo);
 	}
 	
 	public static GameManager getInsatance() {
@@ -31,6 +33,7 @@ public class GameManager {
 	
 	private void init() {
 		bloodBar = new GuiBloodBar();
+		roomInfo = new GuiRoomInfo();
 	}
 	
 	public void render(Graphics g) {
