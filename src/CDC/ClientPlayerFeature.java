@@ -17,20 +17,14 @@ public class ClientPlayerFeature {
 	public void setLocationX(int locationX) {
 		this.locationX = locationX;
 		if(checkStayStill()){
-			checkRecover();
-		}else{
-			lastMoveTime = System.currentTimeMillis();
 			lastLocationX = locationX;
 		}
 	}
 	
 	public void setLocationY(int locationY) {
 		this.locationY = locationY;
-		if(checkStayStill()){
-			checkRecover();
-		}else{
-			lastMoveTime = System.currentTimeMillis();
-			lastLocationX = locationX;
+		if(!checkStayStill()){
+			lastLocationY = locationY;
 		}
 	}
 
@@ -64,8 +58,10 @@ public class ClientPlayerFeature {
 	
 	private boolean checkStayStill(){ //檢查是否停在原地
 		if(locationX == lastLocationX && locationY == lastLocationY){
+			checkRecover();
 			return true;
 		}else{
+			lastMoveTime = System.currentTimeMillis();
 			return false;
 		}
 	}
