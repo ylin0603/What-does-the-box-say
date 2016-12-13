@@ -7,7 +7,7 @@ public class ClientPlayerFeature {
 	private int direction = 0;
 	private int velocity = 2;
 	private String nickName = null;
-	private long stopTime;
+	private long lastMoveTime;
 
 	public ClientPlayerFeature(int clientNo, String nickName) {
 		this.playerId = clientNo;
@@ -16,20 +16,20 @@ public class ClientPlayerFeature {
 
 	public void setLocationX(int locationX) {
 		this.locationX = locationX;
-		if(!checkStayStill()){
+		if(checkStayStill()){
 			checkRecover();
 		}else{
-			stopTime = System.currentTimeMillis();
+			lastMoveTime = System.currentTimeMillis();
 			lastLocationX = locationX;
 		}
 	}
 	
 	public void setLocationY(int locationY) {
 		this.locationY = locationY;
-		if(!checkStayStill()){
+		if(checkStayStill()){
 			checkRecover();
 		}else{
-			stopTime = System.currentTimeMillis();
+			lastMoveTime = System.currentTimeMillis();
 			lastLocationX = locationX;
 		}
 	}
@@ -62,7 +62,7 @@ public class ClientPlayerFeature {
 		return velocity;
 	}
 	
-	private boolean checkStayStill(){
+	private boolean checkStayStill(){ //檢查是否停在原地
 		if(locationX == lastLocationX && locationY == lastLocationY){
 			return true;
 		}else{
@@ -71,7 +71,7 @@ public class ClientPlayerFeature {
 	}
 	
 	private void checkRecover() {
-		long stopSecond = System.currentTimeMillis()- stopTime;
+		long stopSecond = System.currentTimeMillis()- lastMoveTime;
 		if(stopSecond > 5000){
 			//Recoverd
 		}
