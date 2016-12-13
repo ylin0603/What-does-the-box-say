@@ -69,8 +69,8 @@ public class Cdc implements Runnable {
 			}
 		}
 	}
-	
-	private boolean finishGame (int gameTime){
+
+  private boolean finishGame (int gameTime){
 		long now = System.currentTimeMillis();
 		if(now-startTime < gameTime*1000) 
 			return false;
