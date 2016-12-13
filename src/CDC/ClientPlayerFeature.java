@@ -27,7 +27,7 @@ public class ClientPlayerFeature {
 	public void setLocationY(int locationY) {
 		this.locationY = locationY;
 		if(!checkStayStill()){
-			
+			checkRecover();
 		}else{
 			stopTime = System.currentTimeMillis();
 			lastLocationX = locationX;
