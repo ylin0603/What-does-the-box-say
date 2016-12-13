@@ -47,9 +47,10 @@ public class TcpServerThread implements Runnable {
             try {
                 String buf = recv(input);
                 int eventType = Integer.valueOf(buf);
-                // move forward | backward
-                // spin right | left
-                // attack closeRange | longRange
+                // key release -1
+                // move forward | backward 0 1
+                // spin right | left 2 3
+                // attack closeRange | longRange 4 5
                 switch (eventType) {
                     case 0:
                     case 1:
