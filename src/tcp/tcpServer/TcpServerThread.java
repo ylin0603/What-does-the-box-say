@@ -52,13 +52,12 @@ public class TcpServerThread implements Runnable {
                 // spin right | left 2 3
                 // attack closeRange | longRange 4 5
                 switch (eventType) {
+                    case -1:
                     case 0:
                     case 1:
-                        // Cdc.getInstance().updateWalk(this.ClientID,transferModify.isTypeDetail());
-                        break;
                     case 2:
                     case 3:
-                        // Cdc.getInstance().updateDirection(this.ClientID,transferModify.isTypeDetail());
+                        Cdc.getInstance().updateDirection(ClientID, eventType);
                         break;
                     case 4:
                     case 5:
