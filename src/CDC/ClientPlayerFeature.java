@@ -6,7 +6,7 @@ public class ClientPlayerFeature {
 	private String nickname;
 	private int locX, locY;
 	private int direction;
-	private double faceAngle = 0; // (radium) => use Math.toRadium();
+	private double faceAngle = 0; // (degree) => use Math.toRadium();
 	private int HP = 100;
 	private int killCount = 0, deadCount = 0;
 	private int bulletCount = 2;
@@ -60,6 +60,8 @@ public class ClientPlayerFeature {
 	}
 
 	public void setLocX(int locX) {
+		if(locX > 1985) locX = 1984;
+		else if(locX < 0) locX = 0;
 		this.locX = locX;
 	}
 
@@ -68,6 +70,8 @@ public class ClientPlayerFeature {
 	}
 
 	public void setLocY(int locY) {
+		if(locY > 1985) locY = 1985;
+		else if(locY < 0) locY = 0;
 		this.locY = locY;
 	}
 
@@ -76,6 +80,10 @@ public class ClientPlayerFeature {
 	}
 
 	public void setFaceAngle(double faceAngle) {
+		if (faceAngle < 0)
+			faceAngle += 360;
+		else if (faceAngle > 360)
+			faceAngle -= 360;
 		this.faceAngle = faceAngle;
 	}
 

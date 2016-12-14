@@ -17,7 +17,7 @@ public class Cdc implements Runnable {
 	private final static int TURNLEFT = 3;
 
 	private final static int vel = 2;
-	private final static double angleVel = 2;
+	private final static double angleVel = 2;//degree
 
 	private static Cdc instance = null;
 
@@ -75,6 +75,7 @@ public class Cdc implements Runnable {
 		//TODO: 確認TCP傳進來的moveCode狀態，0: 前進、1: 後退、2: 右轉、3: 左轉，我覺得-1可以當停止。
 		//TODO: 如果是同時按前進跟旋轉呢？
 
+		System.out.println(moveCode);
 		allPlayers.get(clientNo).setDirection(moveCode);
 	}
 
@@ -106,25 +107,35 @@ public class Cdc implements Runnable {
 			for (int i = 0; i < playerSize; i++) {
 				ClientPlayerFeature player = allPlayers.get(i);
 
+				double diff;
 				double faceAngle = player.getFaceAngle();
+				double radianAngle = Math.toRadians(faceAngle);
 
 				switch (player.getDirection()) {
 					//TODO: 用三角函數算前進向量，角度每次角速度
 					case FORWARD:
-					case BACKWARD:
-						double diff = player.getLocX() + Math.sin(faceAngle);
-						player.setLocX((int)Math.round(diff) * vel);
+						diff = player.getLocX() + Math.sin(radianAngle) * vel;
+						player.setLocX((int)Math.round(diff));
 
-						diff = player.getLocY() + Math.cos(faceAngle);
-						player.setLocY((int)Math.round(diff) * vel);
+						diff = player.getLocY() - Math.cos(radianAngle) * vel;
+						player.setLocY((int)Math.round(diff));
+
+						checkGetItem(player);//只考慮前進後退才會吃到，旋轉不會碰到補給
+						break;
+					case BACKWARD:
+						diff = player.getLocX() - Math.sin(radianAngle) * vel;
+						player.setLocX((int)Math.round(diff));
+
+						diff = player.getLocY() + Math.cos(radianAngle) * vel;
+						player.setLocY((int)Math.round(diff));
 
 						checkGetItem(player);//只考慮前進後退才會吃到，旋轉不會碰到補給
 						break;
 					case TURNRIGHT:
-						player.setFaceAngle(faceAngle + Math.toRadians(angleVel));
+						player.setFaceAngle(faceAngle + angleVel);
 						break;
 					case TURNLEFT:
-						player.setFaceAngle(faceAngle - Math.toRadians(angleVel));
+						player.setFaceAngle(faceAngle - angleVel);
 						break;
 					case STOP:
 						//Don't Move

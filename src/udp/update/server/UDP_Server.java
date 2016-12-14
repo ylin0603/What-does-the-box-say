@@ -49,7 +49,7 @@ public class UDP_Server implements Runnable {
 		ArrayList<EncodedData> encodedData = gson.fromJson(receiveString,
 				new TypeToken<ArrayList<EncodedData>>() {}.getType());
 
-		System.out.println(receiveString);
+		//System.out.println(receiveString);
 
 		ClientPlayerFeature player = null;
 		ClientItemFeature item = null;
