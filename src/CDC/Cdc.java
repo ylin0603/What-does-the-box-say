@@ -1,6 +1,7 @@
 package CDC;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import tcp.tcpServer.RealTcpServer;
 
@@ -8,11 +9,15 @@ public class Cdc implements Runnable {
 	private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
 	private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
 
+	//TODO: reset these
+	private final static int STOP = -1;
+	private final static int FORWARD = 0;
+	private final static int BACKWARD = 1;
+	private final static int TURNRIGHT = 2;
+	private final static int TURNLEFT = 3;
 
-	private final static int East = 0;
-	private final static int South = 1;
-	private final static int North = 2;
-	private final static int West = 3;
+	private final static int vel = 2;
+	private final static double angleVel = 2;//degree
 
 	private static Cdc instance = null;
 
@@ -20,6 +25,11 @@ public class Cdc implements Runnable {
 		// tcp
 		RealTcpServer realTcpServer = RealTcpServer.getInstance();
 		realTcpServer.initTCPServer();
+	}
+
+	public void startUpdatingThread() {
+		Thread game = new Thread(instance);
+		game.start();
 	}
 
 	public void Cdc() {}
@@ -30,64 +40,66 @@ public class Cdc implements Runnable {
 		return instance;
 	}
 
-	public void addVirtualCharacter(int clientNo, String nickName) {
-		assert clientNo > -1;
-
-		allPlayers.add(new ClientPlayerFeature(clientNo, nickName));
+	public ArrayList<ClientPlayerFeature> getPlayersUpdateInfo() {
+		return allPlayers;
+	}
+	public ArrayList<ClientItemFeature> getItemsUpdateInfo() {
+		return allItems;
 	}
 
-	public void addItem(String name, int index, Boolean shared, int x, int y) {
-		assert name != null;
-		assert index > -1;
+	public void addVirtualCharacter(int clientNo, String nickName) {
+		assert clientNo > -1;
+		assert !nickName.isEmpty();
+
+		// initial location, but TODO:要解決位置重疊的情況
+		Random random = new Random();
+		//int x = random.nextInt(1984) + 1;
+		//int y = random.nextInt(1984) + 1;
+		int x = 0, y = 0;
+
+		allPlayers.add(new ClientPlayerFeature(clientNo, nickName, x, y));
+	}
+
+	public void addItem(int itemID, int itemType, int x, int y) {
+		assert itemID > -1 && itemType > -1;
 		assert x > 0 && y > 0;
 
-		allItems.add(new ClientItemFeature(name, index, shared, x, y));
+		//TODO: 物品的初始位置？
+
+		allItems.add(new ClientItemFeature(itemID, itemType, x, y));
 	}
 
 	public void updateDirection(int clientNo, int moveCode) {
 		assert clientNo > -1;
 		assert moveCode > -1 && moveCode < 4;
 
+		//TODO: 確認TCP傳進來的moveCode狀態，0: 前進、1: 後退、2: 右轉、3: 左轉，我覺得-1可以當停止。
+		//TODO: 如果是同時按前進跟旋轉呢？
+
+		System.out.println(moveCode);
 		allPlayers.get(clientNo).setDirection(moveCode);
 	}
 
-	public void getItem(int clientNo) {
-		assert clientNo > -1;
-		ClientPlayerFeature player = allPlayers.get(clientNo);
-		int playerX = player.getLocationX();
-		int playerY = player.getLocationY();
-		int itemsSize = allItems.size();
-		for (int i = 0; i < itemsSize; i++) {
-			ClientItemFeature item = allItems.get(i);
-			if (Math.abs(playerX - item.getLocationX()) <= 1
-					&& Math.abs(playerY - item.getLocationY()) <= 1) {
-				if (item.isShared() && !item.isOwned()) {
-					item.setOwned(true);
-					item.setItemOwner(clientNo);
-				}
-			}
+	//TODO: 碰到物體則等於吃到，感覺要每秒去確認，但感覺會很慢？
+	private void checkGetItem(ClientPlayerFeature player) {
+		int itemSize = allItems.size();
+
+		for (int j = 0; j < itemSize; j++) {
+			ClientItemFeature item = allItems.get(j);
+
+			if (item.getItemType() > 0 && item.getItemType() < 3) continue; //只考慮補給品
+
+			if (Math.abs(item.getLocX() - player.getLocX()) < 16 &&
+					Math.abs(item.getLocY() - player.getLocY()) < 16)
+				item.setItemOwner(player.getClientNo());
 		}
-	}
-
-	public ArrayList<ClientPlayerFeature> getPlayersUpdateInfo() {
-		return allPlayers;
-	}
-
-	public ArrayList<ClientItemFeature> getItemsUpdateInfo() {
-		return allItems;
-	}
-
-	public void startUpdatingThread() {
-		Thread game = new Thread(instance);
-		game.start();
 	}
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		while (true) {
 			try {
-				Thread.sleep(50);
+				Thread.sleep(50); // while(true) + sleep = timer嗎?
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -95,23 +107,39 @@ public class Cdc implements Runnable {
 			int playerSize = allPlayers.size();
 			for (int i = 0; i < playerSize; i++) {
 				ClientPlayerFeature player = allPlayers.get(i);
-				int currPlayerX = player.getLocationX();
-				int currPlayerY = player.getLocationY();
-				int currPlayerVel = player.getVelocity();
+
+				double diff;
+				double faceAngle = player.getFaceAngle();
+				double radianAngle = Math.toRadians(faceAngle);
 
 				switch (player.getDirection()) {
-					case West:
-						player.setLocationX(currPlayerX - currPlayerVel / 2);
+					//TODO: 用三角函數算前進向量，角度每次角速度
+					case FORWARD:
+						diff = player.getLocX() + Math.sin(radianAngle) * vel;
+						player.setLocX((int)Math.round(diff));
+
+						diff = player.getLocY() - Math.cos(radianAngle) * vel;
+						player.setLocY((int)Math.round(diff));
+
+						checkGetItem(player);//只考慮前進後退才會吃到，旋轉不會碰到補給
 						break;
-					case East:
-						player.setLocationX(currPlayerX + currPlayerVel / 2);
+					case BACKWARD:
+						diff = player.getLocX() - Math.sin(radianAngle) * vel;
+						player.setLocX((int)Math.round(diff));
+
+						diff = player.getLocY() + Math.cos(radianAngle) * vel;
+						player.setLocY((int)Math.round(diff));
+
+						checkGetItem(player);//只考慮前進後退才會吃到，旋轉不會碰到補給
 						break;
-					case South:
-						player.setLocationY(currPlayerY + currPlayerVel / 2);
+					case TURNRIGHT:
+						player.setFaceAngle(faceAngle + angleVel);
 						break;
-					case North:
-						player.setLocationY(currPlayerY - currPlayerVel / 2);
+					case TURNLEFT:
+						player.setFaceAngle(faceAngle - angleVel);
 						break;
+					case STOP:
+						//Don't Move
 					default:
 						throw new Error("Out of direction!");
 				}

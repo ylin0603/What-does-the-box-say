@@ -54,15 +54,17 @@ public class TcpServerThread implements Runnable {
                 switch (eventType) {
                     case 0:
                     case 1:
-                        // Cdc.getInstance().updateWalk(this.ClientID,transferModify.isTypeDetail());
+                        //Cdc.getInstance().updateWalk(this.ClientID,transferModify.isTypeDetail());
+                        Cdc.getInstance().updateDirection(this.ClientID, eventType);
                         break;
                     case 2:
                     case 3:
-                        // Cdc.getInstance().updateDirection(this.ClientID,transferModify.isTypeDetail());
+                        //Cdc.getInstance().updateDirection(this.ClientID,transferModify.isTypeDetail());
+                        Cdc.getInstance().updateDirection(this.ClientID, eventType);
                         break;
                     case 4:
                     case 5:
-                        // Cdc.getInstance().updateAttack(this.ClientID,transferModify.isTypeDetail());
+                         //Cdc.getInstance().updateAttack(this.ClientID,transferModify.isTypeDetail());
                         break;
                 }
             } catch (Exception e) {
