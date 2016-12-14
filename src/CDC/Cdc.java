@@ -9,6 +9,9 @@ public class Cdc implements Runnable {
 	private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
 	private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
 
+	private final static int BOX_SIZE = 16;
+	private final static int MAP_SIZE = 2000;
+
 	//TODO: reset these
 	private final static int STOP = -1;
 	private final static int FORWARD = 0;
@@ -16,8 +19,8 @@ public class Cdc implements Runnable {
 	private final static int TURNRIGHT = 2;
 	private final static int TURNLEFT = 3;
 
-	private final static int vel = 2;
-	private final static double angleVel = 2;//degree
+	private final static int VEL = 2;
+	private final static double ANGLEVEL = 2;//degree
 
 	private static Cdc instance = null;
 
@@ -53,8 +56,8 @@ public class Cdc implements Runnable {
 
 		// initial location, but TODO:要解決位置重疊的情況
 		Random random = new Random();
-		//int x = random.nextInt(1984) + 1;
-		//int y = random.nextInt(1984) + 1;
+		//int x = random.nextInt(MAP_SIZE - BOX_SIZE) + 1;
+		//int y = random.nextInt(MAP_SIZE - BOX_SIZE) + 1;
 		int x = 0, y = 0;
 
 		allPlayers.add(new ClientPlayerFeature(clientNo, nickName, x, y));
@@ -71,12 +74,11 @@ public class Cdc implements Runnable {
 
 	public void updateDirection(int clientNo, int moveCode) {
 		assert clientNo > -1;
-		assert moveCode > -1 && moveCode < 4;
+		assert moveCode > -2 && moveCode < 4;
 
 		//TODO: 確認TCP傳進來的moveCode狀態，0: 前進、1: 後退、2: 右轉、3: 左轉，我覺得-1可以當停止。
 		//TODO: 如果是同時按前進跟旋轉呢？
 
-		System.out.println(moveCode);
 		allPlayers.get(clientNo).setDirection(moveCode);
 	}
 
@@ -95,54 +97,56 @@ public class Cdc implements Runnable {
 		}
 	}
 
+	public void movingPlayer() {
+		int playerSize = allPlayers.size();
+		for (int i = 0; i < playerSize; i++) {
+			ClientPlayerFeature player = allPlayers.get(i);
+
+			double diff;
+			double faceAngle = player.getFaceAngle();
+			double radianAngle = Math.toRadians(faceAngle);
+
+			switch (player.getDirection()) {
+				case FORWARD:
+					diff = player.getLocX() + Math.sin(radianAngle) * VEL;
+					player.setLocX((int)Math.round(diff));
+
+					diff = player.getLocY() - Math.cos(radianAngle) * VEL;
+					player.setLocY((int)Math.round(diff));
+
+					checkGetItem(player);//只考慮前進後退才會吃到，旋轉不會碰到補給
+					break;
+				case BACKWARD:
+					diff = player.getLocX() - Math.sin(radianAngle) * VEL;
+					player.setLocX((int)Math.round(diff));
+
+					diff = player.getLocY() + Math.cos(radianAngle) * VEL;
+					player.setLocY((int)Math.round(diff));
+
+					checkGetItem(player);//只考慮前進後退才會吃到，旋轉不會碰到補給
+					break;
+				case TURNRIGHT:
+					player.setFaceAngle(faceAngle + ANGLEVEL);
+					break;
+				case TURNLEFT:
+					player.setFaceAngle(faceAngle - ANGLEVEL);
+					break;
+				case STOP:
+					//Don't Move
+				default:
+					throw new Error("Out of direction!");
+			}
+		}
+	}
+
 	@Override
 	public void run() {
 		while (true) {
+			movingPlayer();
 			try {
 				Thread.sleep(50); // while(true) + sleep = timer嗎?
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
-
-			int playerSize = allPlayers.size();
-			for (int i = 0; i < playerSize; i++) {
-				ClientPlayerFeature player = allPlayers.get(i);
-
-				double diff;
-				double faceAngle = player.getFaceAngle();
-				double radianAngle = Math.toRadians(faceAngle);
-
-				switch (player.getDirection()) {
-					//TODO: 用三角函數算前進向量，角度每次角速度
-					case FORWARD:
-						diff = player.getLocX() + Math.sin(radianAngle) * vel;
-						player.setLocX((int)Math.round(diff));
-
-						diff = player.getLocY() - Math.cos(radianAngle) * vel;
-						player.setLocY((int)Math.round(diff));
-
-						checkGetItem(player);//只考慮前進後退才會吃到，旋轉不會碰到補給
-						break;
-					case BACKWARD:
-						diff = player.getLocX() - Math.sin(radianAngle) * vel;
-						player.setLocX((int)Math.round(diff));
-
-						diff = player.getLocY() + Math.cos(radianAngle) * vel;
-						player.setLocY((int)Math.round(diff));
-
-						checkGetItem(player);//只考慮前進後退才會吃到，旋轉不會碰到補給
-						break;
-					case TURNRIGHT:
-						player.setFaceAngle(faceAngle + angleVel);
-						break;
-					case TURNLEFT:
-						player.setFaceAngle(faceAngle - angleVel);
-						break;
-					case STOP:
-						//Don't Move
-					default:
-						throw new Error("Out of direction!");
-				}
 			}
 		}
 	}
