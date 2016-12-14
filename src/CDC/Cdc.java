@@ -9,8 +9,8 @@ public class Cdc implements Runnable {
 	private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
 	private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
 
-	private final static int BOX_SIZE = 16;
-	private final static int MAP_SIZE = 2000;
+    final static int BOX_SIZE = 16;// this is two are read for all server
+    final static int MAP_SIZE = 2000;
 
 	//TODO: reset these
 	private final static int STOP = -1;
@@ -108,6 +108,7 @@ public class Cdc implements Runnable {
 
 			switch (player.getDirection()) {
 				case FORWARD:
+                    // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
 					diff = player.getLocX() + Math.sin(radianAngle) * VEL;
 					player.setLocX((int)Math.round(diff));
 
