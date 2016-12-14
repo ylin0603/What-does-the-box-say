@@ -1,9 +1,8 @@
 package Input;
 
-import renderer.data.DynamicObjectManager;
 import tcp.tcpClient.RealTcpClient;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
 
 /**
