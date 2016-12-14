@@ -2,15 +2,12 @@ package udp.update.server;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
+import renderer.data.DynamicObjectManager;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
-
-import renderer.data.DynamicObjectManager;
 
 public class UDP_Server implements Runnable {
 
@@ -49,7 +46,6 @@ public class UDP_Server implements Runnable {
 		ArrayList<EncodedData> encodedData = gson.fromJson(receiveString,
 				new TypeToken<ArrayList<EncodedData>>() {}.getType());
 
-		System.out.println(receiveString);
 
 		ClientPlayerFeature player = null;
 		ClientItemFeature item = null;

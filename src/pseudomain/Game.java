@@ -1,13 +1,11 @@
 package pseudomain;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 
-import Input.AttackAction;
-import Input.RotateAction;
-import Input.MoveAction;
-import Input.StopAction;
+import Input.*;
 
 import renderer.engine.RenderEngine;
 import tcp.tcpClient.RealTcpClient;
@@ -33,22 +31,26 @@ public class Game extends Canvas implements Runnable {
     private final static int ATTACK = 4;
     private final static int RELEASE = -1;
 
+    private KeyboardInput keyInput;
     public Game() {
         Dimension size = new Dimension(WIDTH * scale, HEIGHT * scale);
+        keyInput = new KeyboardInput();
+        this.addKeyListener(keyInput);
         setPreferredSize(size);
         frame = new JFrame();
-        initialKeyBinding();
+        //initialKeyBinding();
     }
 
     private void initialKeyBinding() {
+
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('w'), FORWARD);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('w',true), RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("released W"), RELEASE);
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('s'), BACKWARD);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('s',true), RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("released S"), RELEASE);
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('a'),ROTATE_COUNTER_CLOCKWISE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('a',true),RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("released A"),RELEASE);
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('d'),ROTATE_CLOCKWISE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('d',true),RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("released D"),RELEASE);
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke(' '),ATTACK);
 
 
