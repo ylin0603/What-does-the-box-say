@@ -56,9 +56,10 @@ public class RealTcpClient {
     }
 
     public void inputMoves(int eventType) throws Exception {
-        // move forward | backward
-        // spin right | left
-        // attack closeRange | longRange
+        // key release -1
+        // move forward | backward 0 1
+        // spin right | left 2 3
+        // attack closeRange | longRange 4 5
         String SedMsg = String.valueOf(eventType);
         realTcpClient.output.println(SedMsg);
         realTcpClient.output.flush();
