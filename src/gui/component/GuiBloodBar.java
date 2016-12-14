@@ -7,10 +7,10 @@ import pseudomain.Game;
 
 public class GuiBloodBar extends GuiComponent {
 
-	private final static int BLOODBAR_X = 30;
-	private final static int BLOODBAR_Y = 440;
 	private final static int BLOODBAR_WIDTH = 300;
 	private final static int BLOODBAR_HEIGHT = 20;
+	private final static int BLOODBAR_X = 20;
+	private final static int BLOODBAR_Y = 445;
 	
 	private static int bloodWidth = BLOODBAR_WIDTH;
 	
@@ -32,8 +32,8 @@ public class GuiBloodBar extends GuiComponent {
 		bloodLabel.render(g);
 	}
 	
-	public void update(int blood) {
-		bloodWidth = blood * Game.scale;
-		bloodLabel.setString(bloodWidth/Game.scale + bloodText);
+	public void update() {
+		bloodWidth = 100 * Game.scale; // 100 => DOM.get
+		bloodLabel.setText(bloodWidth/Game.scale + bloodText);
 	}
 }

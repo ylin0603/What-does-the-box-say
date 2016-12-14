@@ -22,7 +22,7 @@ public class GuiLabel extends GuiComponent {
 		g.drawString(text, x, y);
 	}
 	
-	public void setString(String text) {
+	public void setText(String text) {
 		this.text = text;
 	}
 }
