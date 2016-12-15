@@ -49,35 +49,39 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void initialKeyBinding() {
-<<<<<<< HEAD
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('w'), FORWARD);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("released w"), RELEASE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('s'), BACKWARD);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('s',true), RELEASE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('a'),ROTATE_COUNTER_CLOCKWISE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('a',true),RELEASE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('d'),ROTATE_CLOCKWISE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('d',true),RELEASE);
-=======
 
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('w'), FORWARD);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("released W"), RELEASE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('s'), BACKWARD);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("released S"), RELEASE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('a'),ROTATE_COUNTER_CLOCKWISE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("released A"),RELEASE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('d'),ROTATE_CLOCKWISE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("released D"),RELEASE);
->>>>>>> refs/remotes/origin/dev
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke(' '),ATTACK);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('w'),
+                FORWARD);
+        frame.getRootPane().getInputMap(IFW)
+                .put(KeyStroke.getKeyStroke("released W"), RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('s'),
+                BACKWARD);
+        frame.getRootPane().getInputMap(IFW)
+                .put(KeyStroke.getKeyStroke("released S"), RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('a'),
+                ROTATE_COUNTER_CLOCKWISE);
+        frame.getRootPane().getInputMap(IFW)
+                .put(KeyStroke.getKeyStroke("released A"), RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('d'),
+                ROTATE_CLOCKWISE);
+        frame.getRootPane().getInputMap(IFW)
+                .put(KeyStroke.getKeyStroke("released D"), RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke(' '),
+                ATTACK);
 
 
-        frame.getRootPane().getActionMap().put(FORWARD, new MoveAction(FORWARD));
-        frame.getRootPane().getActionMap().put(BACKWARD, new MoveAction(BACKWARD));
-        frame.getRootPane().getActionMap().put(ROTATE_CLOCKWISE, new RotateAction(ROTATE_CLOCKWISE));
-        frame.getRootPane().getActionMap().put(ROTATE_COUNTER_CLOCKWISE, new RotateAction(ROTATE_COUNTER_CLOCKWISE));
-        frame.getRootPane().getActionMap().put(ATTACK,new AttackAction(ATTACK));
-        frame.getRootPane().getActionMap().put(RELEASE, new StopAction(RELEASE));
+        frame.getRootPane().getActionMap().put(FORWARD,
+                new MoveAction(FORWARD));
+        frame.getRootPane().getActionMap().put(BACKWARD,
+                new MoveAction(BACKWARD));
+        frame.getRootPane().getActionMap().put(ROTATE_CLOCKWISE,
+                new RotateAction(ROTATE_CLOCKWISE));
+        frame.getRootPane().getActionMap().put(ROTATE_COUNTER_CLOCKWISE,
+                new RotateAction(ROTATE_COUNTER_CLOCKWISE));
+        frame.getRootPane().getActionMap().put(ATTACK,
+                new AttackAction(ATTACK));
+        frame.getRootPane().getActionMap().put(RELEASE,
+                new StopAction(RELEASE));
     }
 
     public synchronized void start() {

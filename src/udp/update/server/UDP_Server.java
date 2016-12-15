@@ -46,10 +46,6 @@ public class UDP_Server implements Runnable {
 		ArrayList<EncodedData> encodedData = gson.fromJson(receiveString,
 				new TypeToken<ArrayList<EncodedData>>() {}.getType());
 
-<<<<<<< HEAD
-		//System.out.println(receiveString);
-=======
->>>>>>> refs/remotes/origin/dev
 
 		ClientPlayerFeature player = null;
 		ClientItemFeature item = null;
