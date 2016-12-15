@@ -1,17 +1,17 @@
 package pseudomain;
 
-import java.awt.*;
+import java.awt.Canvas;
+import java.awt.Dimension;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 
-<<<<<<< HEAD
 import Input.AttackAction;
-import Input.RotateAction;
+import Input.KeyboardInput;
 import Input.MoveAction;
+import Input.RotateAction;
 import Input.StopAction;
-=======
-import Input.*;
->>>>>>> refs/remotes/origin/dev
 
 import renderer.engine.RenderEngine;
 import tcp.tcpClient.RealTcpClient;
@@ -38,6 +38,7 @@ public class Game extends Canvas implements Runnable {
     private final static int RELEASE = -1;
 
     private KeyboardInput keyInput;
+
     public Game() {
         Dimension size = new Dimension(WIDTH * scale, HEIGHT * scale);
         keyInput = new KeyboardInput();
@@ -128,6 +129,14 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void update() {
+        RealTcpClient realTcpClient = RealTcpClient.getInstance();
+
+        try {
+            realTcpClient.inputMoves(keyInput.getKeys());
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }
 

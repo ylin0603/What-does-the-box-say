@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import com.google.gson.Gson;
+
 public class RealTcpClient {
     final int port = 8888;
     private Socket sc;
@@ -55,12 +57,10 @@ public class RealTcpClient {
         return true;
     }
 
-    public void inputMoves(int eventType) throws Exception {
-        // key release -1
-        // move forward | backward 0 1
-        // spin right | left 2 3
-        // attack closeRange | longRange 4 5
-        String SedMsg = String.valueOf(eventType);
+    public void inputMoves(boolean[] keys) throws Exception {
+        // "wsad "
+        Gson gson = new Gson();
+        String SedMsg = gson.toJson(keys, boolean[].class);
         realTcpClient.output.println(SedMsg);
         realTcpClient.output.flush();
         System.out.println(SedMsg);
