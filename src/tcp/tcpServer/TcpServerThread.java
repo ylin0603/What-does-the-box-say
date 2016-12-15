@@ -46,25 +46,11 @@ public class TcpServerThread implements Runnable {
         while (true) {
             try {
                 String buf = recv(input);
-                int eventType = Integer.valueOf(buf);
-                // key release -1
-                // move forward | backward 0 1
-                // spin right | left 2 3
-                // attack closeRange | longRange 4 5
-                switch (eventType) {
-                    case 0:
-                    case 1:
-                        // Cdc.getInstance().updateWalk(this.ClientID,transferModify.isTypeDetail());
-                        break;
-                    case 2:
-                    case 3:
-                        // Cdc.getInstance().updateDirection(this.ClientID,transferModify.isTypeDetail());
-                        break;
-                    case 4:
-                    case 5:
-                        // Cdc.getInstance().updateAttack(this.ClientID,transferModify.isTypeDetail());
-                        break;
-                }
+                Gson gson = new Gson();
+                boolean[] keys = gson.fromJson(buf, boolean[].class);
+                // "wsad "
+                Cdc.getInstance().updateDirection(ClientID, keys);
+                
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("sc close");

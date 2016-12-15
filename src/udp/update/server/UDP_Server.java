@@ -2,22 +2,14 @@ package udp.update.server;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
+import renderer.data.DynamicObjectManager;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
 
-import renderer.data.DynamicObjectManager;
-
 public class UDP_Server implements Runnable {
-
-	/*
-	 * public static void main(String[] args) { //當室長按下「遊戲開始」後，initial UDP_server new
-	 * UDP_Server().initUDPServer(); }
-	 */
 
 	public static void initUDPServer() {
 		Thread serverThread = new Thread(new UDP_Server()); // 產生Thread物件
@@ -51,15 +43,9 @@ public class UDP_Server implements Runnable {
 	private Gson gson = new Gson();
 
 	public void parseData(String receiveString) {
-		ArrayList<EncodedData> encodedData = null;
-		try {
-			encodedData = gson.fromJson(receiveString,
-					new TypeToken<ArrayList<EncodedData>>() {}.getType());
+		ArrayList<EncodedData> encodedData = gson.fromJson(receiveString,
+				new TypeToken<ArrayList<EncodedData>>() {}.getType());
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println(receiveString);
 
 		ClientPlayerFeature player = null;
 		ClientItemFeature item = null;
@@ -69,31 +55,36 @@ public class UDP_Server implements Runnable {
 				case "UpdateP":
 					player = gson.fromJson(eachEnData.getData(),
 							ClientPlayerFeature.class);
-					instance.updateVirtualCharacter(player.getPlayerId(),
-							player.getDirection(), player.getVelocity(),
-							player.getLocationX(), player.getLocationY());
+					instance.updateVirtualCharacter(player.getClientNo(),
+							player.getWeaponType(), player.getNickname(),
+							player.getLocX(), player.getLocY(),
+							player.getFaceAngle(), player.getHP(),
+							player.getKillCount(), player.getDeadCount(),
+							player.getBulletCount(), player.isAttackFlag(),
+							player.isAttackedFlag(), player.isCollisionFlag(),
+							player.isDead());
 					break;
 				case "AddP":
 					player = gson.fromJson(eachEnData.getData(),
 							ClientPlayerFeature.class);
-					instance.addVirtualCharacter(player.getPlayerId());
+					instance.addVirtualCharacter(player.getClientNo(),
+							player.getNickname());
 
 					System.out.println("Add Player");
 					break;
 				case "UpdateI":
 					item = gson.fromJson(eachEnData.getData(),
 							ClientItemFeature.class);
-					instance.updateItem(item.getItemIndex(), item.isShared(),
-							item.getItemOwner());
+					instance.updateItem(item.getItemID(), item.isDead(),
+										item.getItemOwner());
 
 					System.out.println("Update Item");
 					break;
 				case "AddI":
 					item = gson.fromJson(eachEnData.getData(),
 							ClientItemFeature.class);
-					instance.addItem(item.getType(), item.getItemIndex(),
-							item.isShared(), item.getLocationX(),
-							item.getLocationY());
+					instance.addItem(item.getItemType(), item.getItemID(),
+							item.isDead(), item.getLocX(), item.getLocY());
 
 					System.out.println("Add Item");
 					break;

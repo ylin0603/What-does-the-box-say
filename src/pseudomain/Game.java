@@ -1,32 +1,13 @@
 package pseudomain;
 
-import java.awt.*;
-<<<<<<< HEAD
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.util.HashSet;
-import java.util.Set;
+import java.awt.Canvas;
+import java.awt.Dimension;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
 
-import Input.FetchAction;
-import Input.InfoAction;
-=======
+import Input.KeyboardInput;
 
-import javax.swing.*;
-
-import Input.AttackAction;
-import Input.RotateAction;
->>>>>>> origin/renderer
-import Input.MoveAction;
-import Input.StopAction;
-
-<<<<<<< HEAD
-import Input.RotateAction;
-import Input.WeaponAction;
-import gui.game.GameManager;
-=======
->>>>>>> origin/renderer
 import renderer.engine.RenderEngine;
 import tcp.tcpClient.RealTcpClient;
 import udp.update.server.UDP_Server;
@@ -44,25 +25,23 @@ public class Game extends Canvas implements Runnable {
 
     private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 
-    private final static int FORWARD = 0;
-    private final static int BACKWARD = 1;
-    private final static int ROTATE_CLOCKWISE = 2;
-    private final static int ROTATE_COUNTER_CLOCKWISE = 3;
-    private final static int ATTACK = 4;
-    private final static int RELEASE = -1;
-    private final static String GET = "get";
+    /////////////////////
     private final static String HELP = "help";
     private final static String TAB = "tab";
     private final static String WEAPON = "weapon";
+	///////////////////
+
+    private KeyboardInput keyInput;
 
     public Game() {
         Dimension size = new Dimension(WIDTH * scale, HEIGHT * scale);
+        keyInput = new KeyboardInput();
+        this.addKeyListener(keyInput);
         setPreferredSize(size);
         frame = new JFrame();
-        initialKeyBinding();
     }
 
-    private void initialKeyBinding() {
+    /*private void initialKeyBinding() {
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('w'), FORWARD);
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('w',true), RELEASE);
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('s'), BACKWARD);
@@ -92,7 +71,7 @@ public class Game extends Canvas implements Runnable {
         frame.getRootPane().getActionMap().put(HELP, new InfoAction(HELP));
         frame.getRootPane().getActionMap().put(TAB, new InfoAction(TAB));
         frame.getRootPane().getActionMap().put(WEAPON, new WeaponAction());
-    }
+    }*/
 
     public synchronized void start() {
         running = true;
@@ -143,7 +122,18 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void update() {
-    	GameManager.getInsatance().update();
+
+    	//GameManager.getInsatance().update();
+
+        RealTcpClient realTcpClient = RealTcpClient.getInstance();
+
+        try {
+            realTcpClient.inputMoves(keyInput.getKeys());
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
     }
 
     public static void main(String[] args) throws InterruptedException {
