@@ -75,7 +75,7 @@ public class Cdc implements Runnable {
 
     public void updateDirection(int clientNo, boolean[] moveCode) {
 		assert clientNo > -1;
-        assert moveCode.length == 4;
+        assert moveCode.length == 5;
         // 目前是將所有按住的按鍵記下來
 
 		allPlayers.get(clientNo).setDirection(moveCode);
@@ -117,6 +117,9 @@ public class Cdc implements Runnable {
             if (keys[3]) {
                 spin++;
             }
+            if(keys[4]) {
+				//attack;
+			}
             switch (move) {
                 case 1:
                     forward(player, radianAngle);
