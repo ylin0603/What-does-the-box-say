@@ -35,7 +35,7 @@ public class Cdc implements Runnable {
 		game.start();
 	}
 
-	public void Cdc() {}
+    private void Cdc() {}
 
 	public static Cdc getInstance() {
 		if (instance == null)
@@ -46,6 +46,7 @@ public class Cdc implements Runnable {
 	public ArrayList<ClientPlayerFeature> getPlayersUpdateInfo() {
 		return allPlayers;
 	}
+
 	public ArrayList<ClientItemFeature> getItemsUpdateInfo() {
 		return allItems;
 	}
@@ -72,12 +73,10 @@ public class Cdc implements Runnable {
 		allItems.add(new ClientItemFeature(itemID, itemType, x, y));
 	}
 
-	public void updateDirection(int clientNo, int moveCode) {
+    public void updateDirection(int clientNo, boolean[] moveCode) {
 		assert clientNo > -1;
-		assert moveCode > -2 && moveCode < 4;
-
-		//TODO: 確認TCP傳進來的moveCode狀態，0: 前進、1: 後退、2: 右轉、3: 左轉，我覺得-1可以當停止。
-		//TODO: 如果是同時按前進跟旋轉呢？
+        assert moveCode.length == 4;
+        // 目前是將所有按住的按鍵記下來
 
 		allPlayers.get(clientNo).setDirection(moveCode);
 	}
@@ -101,14 +100,57 @@ public class Cdc implements Runnable {
 		int playerSize = allPlayers.size();
 		for (int i = 0; i < playerSize; i++) {
 			ClientPlayerFeature player = allPlayers.get(i);
-
-			double diff;
 			double faceAngle = player.getFaceAngle();
 			double radianAngle = Math.toRadians(faceAngle);
+            boolean[] keys = player.getDirection();
+            // keys "wsad "
+            int move = 0, spin = 0;
+            if (keys[0]) {
+                move++;
+            }
+            if (keys[1]) {
+                move--;
+            }
+            if (keys[2]) {
+                spin--;
+            }
+            if (keys[3]) {
+                spin++;
+            }
+            switch (move) {
+                case 1:
+                    forward(player, radianAngle);
+                    break;
+                case -1:
+                    backward(player, radianAngle);
+                    break;
+                case 0:
+                    // Don't Move
+                    break;
+                default:
+                    throw new Error("Out of Move direction!");
+            }
+            switch (spin) {
+                case 1:
+                    turnRight(player, faceAngle);
+                    break;
+                case -1:
+                    turnLeft(player, faceAngle);
+                    break;
+                case 0:
+                    // Don't Spin
+                    break;
+                default:
+                    throw new Error("Out of Spin direction!");
+            }
+        }
+    }
 
-			switch (player.getDirection()) {
-				case FORWARD:
+
+
+    private void forward(ClientPlayerFeature player, double radianAngle) {
                     // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
+        double diff;
 					diff = player.getLocX() + Math.sin(radianAngle) * VEL;
 					player.setLocX((int)Math.round(diff));
 
@@ -116,8 +158,11 @@ public class Cdc implements Runnable {
 					player.setLocY((int)Math.round(diff));
 
 					checkGetItem(player);//只考慮前進後退才會吃到，旋轉不會碰到補給
-					break;
-				case BACKWARD:
+    }
+
+    private void backward(ClientPlayerFeature player, double radianAngle) {
+        // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
+        double diff;
 					diff = player.getLocX() - Math.sin(radianAngle) * VEL;
 					player.setLocX((int)Math.round(diff));
 
@@ -125,19 +170,16 @@ public class Cdc implements Runnable {
 					player.setLocY((int)Math.round(diff));
 
 					checkGetItem(player);//只考慮前進後退才會吃到，旋轉不會碰到補給
-					break;
-				case TURNRIGHT:
+    }
+
+    private void turnRight(ClientPlayerFeature player, double faceAngle) {
+        // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
 					player.setFaceAngle(faceAngle + ANGLEVEL);
-					break;
-				case TURNLEFT:
-					player.setFaceAngle(faceAngle - ANGLEVEL);
-					break;
-				case STOP:
-					//Don't Move
-				default:
-					throw new Error("Out of direction!");
 			}
-		}
+
+    private void turnLeft(ClientPlayerFeature player, double faceAngle) {
+        // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
+        player.setFaceAngle(faceAngle - ANGLEVEL);
 	}
 
 	@Override

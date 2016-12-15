@@ -7,7 +7,7 @@ public class ClientPlayerFeature {
 	private String nickname;
 	private int locX, locY;
 
-	private int direction;
+    private boolean[] direction = new boolean[5];// "wsad "
 	private double faceAngle = 0; // (degree) => use Math.toRadium();
 	private int HP = 100;
 	private int killCount = 0, deadCount = 0;
@@ -49,11 +49,11 @@ public class ClientPlayerFeature {
 		this.nickname = nickname;
 	}
 
-	public int getDirection() {
+    public boolean[] getDirection() {
 		return direction;
 	}
 
-	public void setDirection(int direction) {
+    public void setDirection(boolean[] direction) {
 		this.direction = direction;
 	}
 

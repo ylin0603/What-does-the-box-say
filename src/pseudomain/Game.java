@@ -1,11 +1,17 @@
 package pseudomain;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
+import java.awt.Canvas;
+import java.awt.Dimension;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 
-import Input.*;
+import Input.AttackAction;
+import Input.KeyboardInput;
+import Input.MoveAction;
+import Input.RotateAction;
+import Input.StopAction;
 
 import renderer.engine.RenderEngine;
 import tcp.tcpClient.RealTcpClient;
@@ -32,6 +38,7 @@ public class Game extends Canvas implements Runnable {
     private final static int RELEASE = -1;
 
     private KeyboardInput keyInput;
+
     public Game() {
         Dimension size = new Dimension(WIDTH * scale, HEIGHT * scale);
         keyInput = new KeyboardInput();
@@ -43,23 +50,38 @@ public class Game extends Canvas implements Runnable {
 
     private void initialKeyBinding() {
 
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('w'), FORWARD);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("released W"), RELEASE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('s'), BACKWARD);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("released S"), RELEASE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('a'),ROTATE_COUNTER_CLOCKWISE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("released A"),RELEASE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('d'),ROTATE_CLOCKWISE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("released D"),RELEASE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke(' '),ATTACK);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('w'),
+                FORWARD);
+        frame.getRootPane().getInputMap(IFW)
+                .put(KeyStroke.getKeyStroke("released W"), RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('s'),
+                BACKWARD);
+        frame.getRootPane().getInputMap(IFW)
+                .put(KeyStroke.getKeyStroke("released S"), RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('a'),
+                ROTATE_COUNTER_CLOCKWISE);
+        frame.getRootPane().getInputMap(IFW)
+                .put(KeyStroke.getKeyStroke("released A"), RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('d'),
+                ROTATE_CLOCKWISE);
+        frame.getRootPane().getInputMap(IFW)
+                .put(KeyStroke.getKeyStroke("released D"), RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke(' '),
+                ATTACK);
 
 
-        frame.getRootPane().getActionMap().put(FORWARD, new MoveAction(FORWARD));
-        frame.getRootPane().getActionMap().put(BACKWARD, new MoveAction(BACKWARD));
-        frame.getRootPane().getActionMap().put(ROTATE_CLOCKWISE, new RotateAction(ROTATE_CLOCKWISE));
-        frame.getRootPane().getActionMap().put(ROTATE_COUNTER_CLOCKWISE, new RotateAction(ROTATE_COUNTER_CLOCKWISE));
-        frame.getRootPane().getActionMap().put(ATTACK,new AttackAction(ATTACK));
-        frame.getRootPane().getActionMap().put(RELEASE, new StopAction(RELEASE));
+        frame.getRootPane().getActionMap().put(FORWARD,
+                new MoveAction(FORWARD));
+        frame.getRootPane().getActionMap().put(BACKWARD,
+                new MoveAction(BACKWARD));
+        frame.getRootPane().getActionMap().put(ROTATE_CLOCKWISE,
+                new RotateAction(ROTATE_CLOCKWISE));
+        frame.getRootPane().getActionMap().put(ROTATE_COUNTER_CLOCKWISE,
+                new RotateAction(ROTATE_COUNTER_CLOCKWISE));
+        frame.getRootPane().getActionMap().put(ATTACK,
+                new AttackAction(ATTACK));
+        frame.getRootPane().getActionMap().put(RELEASE,
+                new StopAction(RELEASE));
     }
 
     public synchronized void start() {
@@ -111,6 +133,14 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void update() {
+        RealTcpClient realTcpClient = RealTcpClient.getInstance();
+
+        try {
+            realTcpClient.inputMoves(keyInput.getKeys());
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }
 
