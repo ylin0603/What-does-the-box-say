@@ -1,6 +1,7 @@
 package pseudomain;
 
 import java.awt.*;
+<<<<<<< HEAD
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
@@ -10,11 +11,22 @@ import javax.swing.*;
 
 import Input.FetchAction;
 import Input.InfoAction;
-import Input.MoveAction;
+=======
 
+import javax.swing.*;
+
+import Input.AttackAction;
+import Input.RotateAction;
+>>>>>>> origin/renderer
+import Input.MoveAction;
+import Input.StopAction;
+
+<<<<<<< HEAD
 import Input.RotateAction;
 import Input.WeaponAction;
 import gui.game.GameManager;
+=======
+>>>>>>> origin/renderer
 import renderer.engine.RenderEngine;
 import tcp.tcpClient.RealTcpClient;
 import udp.update.server.UDP_Server;
@@ -32,12 +44,12 @@ public class Game extends Canvas implements Runnable {
 
     private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 
-    private final static int TURNEAST = 0;
-    private final static int TURNSOUTH = 1;
-    private final static int TURNNORTH = 2;
-    private final static int TURNWEST = 3;
-    private final static int ROTATE_CLOCKWISE = 4;
-    private final static int ROTATE_COUNTER_CLOCKWISE = 5;
+    private final static int FORWARD = 0;
+    private final static int BACKWARD = 1;
+    private final static int ROTATE_CLOCKWISE = 2;
+    private final static int ROTATE_COUNTER_CLOCKWISE = 3;
+    private final static int ATTACK = 4;
+    private final static int RELEASE = -1;
     private final static String GET = "get";
     private final static String HELP = "help";
     private final static String TAB = "tab";
@@ -51,25 +63,26 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void initialKeyBinding() {
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("UP"), TURNNORTH);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("DOWN"), TURNSOUTH);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("LEFT"), TURNWEST);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("RIGHT"), TURNEAST);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("GET"), GET);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("A"),ROTATE_CLOCKWISE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("D"),ROTATE_COUNTER_CLOCKWISE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('w'), FORWARD);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('w',true), RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('s'), BACKWARD);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('s',true), RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('a'),ROTATE_CLOCKWISE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('a',true),RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('d'),ROTATE_COUNTER_CLOCKWISE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke('d',true),RELEASE);
+        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke(' '),ATTACK);
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("H"), HELP);
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("TAB"), TAB);
         frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("J"), WEAPON);
 
-        frame.getRootPane().getActionMap().put(TURNNORTH, new MoveAction(TURNNORTH));
-        frame.getRootPane().getActionMap().put(TURNSOUTH, new MoveAction(TURNSOUTH));
-        frame.getRootPane().getActionMap().put(TURNWEST, new MoveAction(TURNWEST));
-        frame.getRootPane().getActionMap().put(TURNEAST, new MoveAction(TURNEAST));
-        frame.getRootPane().getActionMap().put(GET, new FetchAction());
 
-        frame.getRootPane().getActionMap().put(ROTATE_CLOCKWISE,new RotateAction(ROTATE_CLOCKWISE));
+        frame.getRootPane().getActionMap().put(FORWARD, new MoveAction(FORWARD));
+        frame.getRootPane().getActionMap().put(BACKWARD, new MoveAction(BACKWARD));
+        frame.getRootPane().getActionMap().put(ROTATE_CLOCKWISE, new RotateAction(ROTATE_CLOCKWISE));
         frame.getRootPane().getActionMap().put(ROTATE_COUNTER_CLOCKWISE, new RotateAction(ROTATE_COUNTER_CLOCKWISE));
+        frame.getRootPane().getActionMap().put(ATTACK,new AttackAction(ATTACK));
+        frame.getRootPane().getActionMap().put(RELEASE, new StopAction(RELEASE));
         
         // Remove the original key event on TAB.
         Set<KeyStroke> forwardKeys = new HashSet<KeyStroke>(1);
@@ -126,6 +139,7 @@ public class Game extends Canvas implements Runnable {
                 updates = 0;
             }
         }
+        stop();
     }
 
     public void update() {

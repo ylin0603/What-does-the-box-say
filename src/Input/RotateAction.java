@@ -1,9 +1,8 @@
 package Input;
 
-import renderer.data.DynamicObjectManager;
 import tcp.tcpClient.RealTcpClient;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
 
 /**
@@ -11,7 +10,6 @@ import java.awt.event.ActionEvent;
  */
 public class RotateAction extends AbstractAction {
     private int direction;
-    static double degree = 0;
     public RotateAction(int dir) {
         this.direction = dir;
     }
@@ -19,7 +17,7 @@ public class RotateAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            //RealTcpClient.getInstance().inputMoves(angle);
+           RealTcpClient.getInstance().inputMoves(direction);
         } catch (Exception e1) {
             e1.printStackTrace();
         }
