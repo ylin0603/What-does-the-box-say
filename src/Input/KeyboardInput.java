@@ -2,17 +2,19 @@ package Input;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Arrays;
 
 /**
  * Created by Tsunglin on 2016/12/15.
  */
 public class KeyboardInput implements KeyListener{
 
-    private boolean[] keys = new boolean[4];
+    private boolean[] keys = new boolean[5];
     private static int W = 0;
     private static int S = 1;
     private static int A = 2;
     private static int D = 3;
+    private static int ATTACK = 4;
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -28,6 +30,8 @@ public class KeyboardInput implements KeyListener{
             keys[A] = true;
         if(e.getKeyChar() == 'd')
             keys[D] = true;
+        if(e.getKeyChar() == ' ')
+            keys[ATTACK] = true;
     }
 
     @Override
@@ -40,9 +44,14 @@ public class KeyboardInput implements KeyListener{
             keys[A] = false;
         if(e.getKeyChar() == 'd')
             keys[D] = false;
+        if(e.getKeyChar() == ' ')
+            keys[ATTACK] = false;
     }
 
-    public boolean[] getKeys(){
+    public boolean[] getKeys() {
         return keys;
+    }
+    public void reset(){
+        Arrays.fill(keys,false);
     }
 }
