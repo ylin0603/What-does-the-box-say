@@ -152,7 +152,7 @@ public class Cdc implements Runnable {
     }
 	
 	private void checkSupplement(){
-		if(System.currentTimeMillis() > tenSeconds){ //現在時間超過10秒
+		if(System.currentTimeMillis() >= tenSeconds){ //現在時間超過10秒
 			//補衝 補包 彈藥包
 			tenSeconds += 10*1000;
 		}
@@ -172,7 +172,7 @@ public class Cdc implements Runnable {
 
 	private boolean finishGame (int gameTime){
 		long now = System.currentTimeMillis();
-		if(now-startTime < gameTime*1000) 
+		if(now-startTime <= gameTime*1000) 
 			return false;
 		else
 			return true;

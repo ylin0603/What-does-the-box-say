@@ -115,8 +115,8 @@ public class ClientPlayerFeature {
 		return deadCount;
 	}
 	
-	public boolean isAttackCDCD(){
-		if(attackCD < System.currentTimeMillis())
+	public boolean isAttackCD(){
+		if(attackCD <= System.currentTimeMillis())
 			return true;
 		else
 			return false;		 
@@ -175,15 +175,14 @@ public class ClientPlayerFeature {
 
 	public void checkRecover(){ //檢查是否停在原地
 		long stopSecond = System.currentTimeMillis()- lastMoveTime;
-		if(stopSecond > 5000){
+		if(stopSecond >= 5000){
 			HP += 5;
 			lastMoveTime += 1000;
 		}
 	}
 	
 	public boolean checkResurrection(){ //檢查復活
-		long passTime = System.currentTimeMillis()- resurrectionTime;
-		if(passTime > resurrectionCD)
+		if(System.currentTimeMillis() >= resurrectionTime)
 			return true;
 		else
 			return false;
