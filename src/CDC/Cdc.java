@@ -198,6 +198,7 @@ public class Cdc implements Runnable {
 	public void run() {
 		while (true) {
 			movingPlayer();
+            movingBullet();
 			try {
 				Thread.sleep(50); // while(true) + sleep = timer嗎?
 			} catch (InterruptedException e) {
