@@ -65,7 +65,6 @@ public class RealTcpClient {
         String SedMsg = gson.toJson(keys, boolean[].class);
         realTcpClient.output.println(SedMsg);
         realTcpClient.output.flush();
-        System.out.println(SedMsg);
         if (sc.isClosed())
             throw new Exception();
     }
