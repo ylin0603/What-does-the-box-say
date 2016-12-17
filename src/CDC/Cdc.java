@@ -9,6 +9,7 @@ public class Cdc implements Runnable {
 	private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
 	private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
 	private long startTime;
+	private long tenSeconds;
 
     final static int BOX_SIZE = 16;// this is two are read for all server
     final static int MAP_SIZE = 2000;
@@ -150,6 +151,13 @@ public class Cdc implements Runnable {
         }
     }
 	
+	private void checkSupplement(){
+		if(System.currentTimeMillis() > tenSeconds){ //現在時間超過10秒
+			//補衝 補包 彈藥包
+			tenSeconds += 10000;
+		}
+	}
+	
 	private void checkResurrection(){//檢查復活
 		int playerSize = allPlayers.size();
 		for (int i = 0; i < playerSize; i++) {
@@ -207,12 +215,14 @@ public class Cdc implements Runnable {
 	@Override
 	public void run() {
 		startTime = System.currentTimeMillis();
+		tenSeconds = startTime + 10*1000;
 		while (true) {
 			if(finishGame(300)){// 5分鐘就是300秒
 				//do something
 			}
 			movingPlayer();
 			checkResurrection();//檢查復活
+			checkSupplement();//每十秒補充補包彈藥包
 			try {
 				Thread.sleep(50); // while(true) + sleep = timer嗎?
 			} catch (InterruptedException e) {
