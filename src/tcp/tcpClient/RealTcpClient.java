@@ -14,7 +14,7 @@ public class RealTcpClient {
     private Socket sc;
     private BufferedReader input;
     private PrintWriter output;
-
+    private int clientNo = -1;
 
     private static RealTcpClient realTcpClient;
 
@@ -44,11 +44,12 @@ public class RealTcpClient {
 
     // all client join game
     public int joinRoom(String nickName) {
-        int ClientNO;
+
         output.println(nickName);
-        String ClientNOS = recv(input);
-        ClientNO = Integer.valueOf(ClientNOS);
-        return ClientNO;
+        String clientNoS = recv(input);
+        clientNo = Integer.valueOf(clientNoS);
+
+        return clientNo;
     }
 
     // only room leader loadGame
@@ -67,6 +68,12 @@ public class RealTcpClient {
         System.out.println(SedMsg);
         if (sc.isClosed())
             throw new Exception();
+    }
+
+    public int getClientNo(){
+        assert clientNo != -1;
+
+        return clientNo;
     }
 
     private String recv(BufferedReader input) {

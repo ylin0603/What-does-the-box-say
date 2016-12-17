@@ -3,6 +3,7 @@ package renderer.data;
 import renderer.data.entity.Character;
 import renderer.data.entity.Entity;
 import renderer.data.entity.Item;
+import tcp.tcpClient.RealTcpClient;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class DynamicObjectManager {
 
     public Point getVirtualCharacterXY() {
         if (characterList.size() == 0) return new Point(0, 0);
-        int localClientNo = 0; //TODO: localClientNo should get from TCP?
+        int localClientNo = RealTcpClient.getInstance().getClientNo();
         Character character = this.characterList.get(localClientNo);
         return new Point(character.x, character.y);
     }
