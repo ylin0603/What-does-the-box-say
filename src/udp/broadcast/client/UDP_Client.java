@@ -46,18 +46,18 @@ public class UDP_Client {
 
 		String type;
 		for (ClientPlayerFeature player : updatePlayers) {
-			if (clientNo < player.getPlayerId()) {
+			if (clientNo < player.getClientNo()) {
 				type = "AddP";
-				clientNo = player.getPlayerId();
+				clientNo = player.getClientNo();
 			} else {
 				type = "UpdateP";
 			}
 			encodedData.add(new EncodedData(type, gson.toJson(player)));
 		}
 		for (ClientItemFeature item : updateItems) {
-			if (itemId < item.getItemIndex()) {
+			if (itemId < item.getItemID()) {
 				type = "AddI";
-				itemId = item.getItemIndex();
+				itemId = item.getItemID();
 			} else {
 				type = "UpdateI";
 			}
