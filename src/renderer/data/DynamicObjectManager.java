@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DynamicObjectManager {
-    public List<Character> characterList = Collections.synchronizedList(new ArrayList<Character>());
-    public List<Item> itemList = Collections.synchronizedList(new ArrayList<Item>());
+    private List<Character> characterList = Collections.synchronizedList(new ArrayList<Character>());
+    private List<Item> itemList = Collections.synchronizedList(new ArrayList<Item>());
 
     private static DynamicObjectManager instance = null;
 
@@ -58,12 +58,26 @@ public class DynamicObjectManager {
                 itemList.stream()).collect(Collectors.toList());
         return joinList;
     }
+    
+    public List<Character> getCharacterList() {
+        return characterList;
+    }
+    
+    public List<Item> getItemList() {
+        return itemList;
+    }
 
     public Point getVirtualCharacterXY() {
         if (characterList.size() == 0) return new Point(0, 0);
         int localClientNo = RealTcpClient.getInstance().getClientNo();
         Character character = this.characterList.get(localClientNo);
         return new Point(character.x, character.y);
+    }
+    
+    public Character getLocalCharacter() {
+    	if (characterList.size() == 0) return new Character(0, "");
+    	int localClientNo = RealTcpClient.getInstance().getClientNo();
+        return this.characterList.get(localClientNo);
     }
 
     public void keyGETPressed() {

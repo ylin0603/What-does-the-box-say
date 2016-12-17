@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import gui.component.GuiBloodBar;
 import gui.component.GuiComponent;
 import gui.component.GuiHelpPanel;
-import gui.component.GuiRoomInfo;
+import gui.component.GuiPlayerAngle;
+import gui.component.GuiStatusBar;
 import gui.component.GuiScoreBoard;
 import gui.component.GuiSmallMap;
 
@@ -15,18 +16,20 @@ public class GameManager {
 	private ArrayList<GuiComponent> componentList = new ArrayList<GuiComponent>();
 	
 	private GuiBloodBar bloodBar;
-	private GuiRoomInfo roomInfo;
+	private GuiStatusBar statusBar;
 	private GuiSmallMap smallMap;
 	private GuiHelpPanel helpPanel;
 	private GuiScoreBoard scoreBoard;
+	private GuiPlayerAngle playerAngle;
 	
 	private GameManager() {
 		init();
 		componentList.add(bloodBar);
-		componentList.add(roomInfo);
+		componentList.add(statusBar);
 		componentList.add(smallMap);
 		componentList.add(helpPanel);
 		componentList.add(scoreBoard);
+		componentList.add(playerAngle);
 	}
 	
 	public static GameManager getInsatance() {
@@ -38,10 +41,11 @@ public class GameManager {
 	
 	private void init() {
 		bloodBar = new GuiBloodBar();
-		roomInfo = new GuiRoomInfo();
+		statusBar = new GuiStatusBar();
 		smallMap = new GuiSmallMap();
 		helpPanel = new GuiHelpPanel();
 		scoreBoard = new GuiScoreBoard();
+		playerAngle = new GuiPlayerAngle();
 	}
 	
 	public void render(Graphics g) {
@@ -57,16 +61,20 @@ public class GameManager {
 	}
 	
 	public void setWeapon() {
-		roomInfo.setWeopon();
+		statusBar.setWeopon();
 	}
 	
 	public void openInfo(String type) {
-		if (type == "help") {
+		if (type == "help") 
 			helpPanel.setVisible();
-			scoreBoard.setInvisible();
-		} else if (type == "tab"){
-			helpPanel.setInvisible();
+		if (type == "tab") 
 			scoreBoard.setVisible();
-		}
+	}
+	
+	public void closeInfo(String type) {
+		if (type == "help")
+			helpPanel.setInvisible();
+		if (type == "tab")
+			scoreBoard.setInvisible();
 	}
 }

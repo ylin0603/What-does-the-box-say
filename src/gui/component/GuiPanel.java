@@ -16,8 +16,7 @@ public class GuiPanel extends GuiComponent {
 	}
 	
 	public void setVisible() {
-		if (!visible) visible = true;
-		else visible = false;
+		visible = true;
 	}
 	
 	public void setInvisible() {

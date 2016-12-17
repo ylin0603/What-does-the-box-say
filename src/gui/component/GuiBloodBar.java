@@ -33,7 +33,7 @@ public class GuiBloodBar extends GuiComponent {
 	}
 	
 	public void update() {
-		bloodWidth = 100 * Game.scale; // 100 => DOM.get
+		bloodWidth = dom.getLocalCharacter().getHP() * Game.scale;
 		bloodLabel.setText(bloodWidth/Game.scale + bloodText);
 	}
 }

@@ -56,6 +56,10 @@ public class KeyboardInput implements KeyListener{
             keys[D] = false;
         if(e.getKeyChar() == ' ')
             keys[ATTACK] = false;
+        if(e.getKeyChar() == 'h')
+        	GameManager.getInsatance().closeInfo(HELP);
+        if(e.getKeyCode() == KeyEvent.VK_TAB)
+        	GameManager.getInsatance().closeInfo(TAB);
     }
 
     public boolean[] getKeys() {

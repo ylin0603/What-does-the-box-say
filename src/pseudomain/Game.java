@@ -8,7 +8,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import Input.KeyboardInput;
-
+import gui.game.GameManager;
 import renderer.engine.RenderEngine;
 import tcp.tcpClient.RealTcpClient;
 import udp.update.server.UDP_Server;
@@ -87,7 +87,7 @@ public class Game extends Canvas implements Runnable {
 
     public void update() {
 
-    	//GameManager.getInsatance().update();
+    	GameManager.getInsatance().update();
 
         RealTcpClient realTcpClient = RealTcpClient.getInstance();
 
