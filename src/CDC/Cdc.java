@@ -194,6 +194,7 @@ public class Cdc implements Runnable {
 
 	@Override
 	public void run() {
+		startTime = System.currentTimeMillis();
 		while (true) {
 			movingPlayer();
 			try {
