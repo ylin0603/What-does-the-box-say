@@ -87,8 +87,6 @@ public class Game extends Canvas implements Runnable {
 
     public void update() {
 
-    	GameManager.getInsatance().update();
-
         RealTcpClient realTcpClient = RealTcpClient.getInstance();
 
         try {
@@ -97,6 +95,8 @@ public class Game extends Canvas implements Runnable {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        
+        GameManager.getInsatance().update();
         
     }
 
