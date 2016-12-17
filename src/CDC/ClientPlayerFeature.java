@@ -23,6 +23,7 @@ public class ClientPlayerFeature {
 		this.nickname = nickName;
 		this.locX = locX;
 		this.locY = locY;
+        this.HP = 100;
 	}
 
 	public int getClientNo() {
