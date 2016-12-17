@@ -8,6 +8,7 @@ import tcp.tcpServer.RealTcpServer;
 public class Cdc implements Runnable {
 	private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
 	private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
+	private long startTime;
 
     final static int BOX_SIZE = 16;// this is two are read for all server
     final static int MAP_SIZE = 2000;
@@ -149,7 +150,13 @@ public class Cdc implements Runnable {
         }
     }
 
-
+	private boolean finishGame (int gameTime){
+		long now = System.currentTimeMillis();
+		if(now-startTime < gameTime*1000) 
+			return false;
+		else
+			return true;
+	}
 
     private void forward(ClientPlayerFeature player, double radianAngle) {
                     // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
@@ -193,6 +200,9 @@ public class Cdc implements Runnable {
 				Thread.sleep(50); // while(true) + sleep = timer嗎?
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			}
+			if(finishGame(300)){// 5分鐘就是300秒
+				//do something
 			}
 		}
 	}
