@@ -154,7 +154,7 @@ public class Cdc implements Runnable {
 	private void checkSupplement(){
 		if(System.currentTimeMillis() > tenSeconds){ //現在時間超過10秒
 			//補衝 補包 彈藥包
-			tenSeconds += 10000;
+			tenSeconds += 10*1000;
 		}
 	}
 	

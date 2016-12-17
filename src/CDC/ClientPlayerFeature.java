@@ -5,10 +5,9 @@ public class ClientPlayerFeature {
 	private int clientNo;
 	private int weaponType = 0; // 0 for knife, 1 for gun
 	private String nickname;
-	private int locX, locY, lastLocX, lastLocY;
+	private int locX, locY;
 	private long lastMoveTime;
-	private long knifeCD = 0;
-	private long gunCD = 0;
+	private long attackCD = 0;
 	private long resurrectionTime = 0;
 	private final int resurrectionCD = 4000; 
 
@@ -70,7 +69,6 @@ public class ClientPlayerFeature {
 		if(locX > 1985) locX = 1984;
 		else if(locX < 0) locX = 0;
 		this.locX = locX;
-		lastLocX = locX;
 		lastMoveTime = System.currentTimeMillis();
 	}
 
@@ -82,7 +80,6 @@ public class ClientPlayerFeature {
 		if(locY > 1985) locY = 1985;
 		else if(locY < 0) locY = 0;
 		this.locY = locY;
-		lastLocY = locY;
 		lastMoveTime = System.currentTimeMillis();
 	}
 
@@ -118,18 +115,15 @@ public class ClientPlayerFeature {
 		return deadCount;
 	}
 	
-	public boolean getKnifeCD(){
-		if(knifeCD < System.currentTimeMillis())
+	public boolean isAttackCDCD(){
+		if(attackCD < System.currentTimeMillis())
 			return true;
 		else
 			return false;		 
 	}
 	
-	public boolean getGunCD(){
-		if(gunCD < System.currentTimeMillis())
-			return true;
-		else
-			return false;		 
+	public void setAttackCD(){
+		attackCD = System.currentTimeMillis() + 1000;
 	}
 
 	public void setDeadCount(int deadCount) {
@@ -180,12 +174,10 @@ public class ClientPlayerFeature {
 	}
 
 	public void checkRecover(){ //檢查是否停在原地
-		if(locX == lastLocX && locY == lastLocY){
-			long stopSecond = System.currentTimeMillis()- lastMoveTime;
-			if(stopSecond > 5000){
-				HP += 5;
-				lastMoveTime += 1000;
-			}
+		long stopSecond = System.currentTimeMillis()- lastMoveTime;
+		if(stopSecond > 5000){
+			HP += 5;
+			lastMoveTime += 1000;
 		}
 	}
 	
