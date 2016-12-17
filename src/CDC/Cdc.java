@@ -129,7 +129,7 @@ public class Cdc implements Runnable {
                     backward(player, radianAngle);
                     break;
                 case 0:
-                    // Don't Move
+                    player.checkRecover();
                     break;
                 default:
                     throw new Error("Out of Move direction!");
@@ -149,6 +149,18 @@ public class Cdc implements Runnable {
             }
         }
     }
+	
+	private void checkResurrection(){//檢查復活
+		int playerSize = allPlayers.size();
+		for (int i = 0; i < playerSize; i++) {
+			ClientPlayerFeature player = allPlayers.get(i);
+			if(player.isDead()){
+				if(player.checkResurrection()){
+					//復活function
+				}
+			}
+        }
+	}
 
 	private boolean finishGame (int gameTime){
 		long now = System.currentTimeMillis();
@@ -196,14 +208,15 @@ public class Cdc implements Runnable {
 	public void run() {
 		startTime = System.currentTimeMillis();
 		while (true) {
+			if(finishGame(300)){// 5分鐘就是300秒
+				//do something
+			}
 			movingPlayer();
+			checkResurrection();//檢查復活
 			try {
 				Thread.sleep(50); // while(true) + sleep = timer嗎?
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
-			if(finishGame(300)){// 5分鐘就是300秒
-				//do something
 			}
 		}
 	}

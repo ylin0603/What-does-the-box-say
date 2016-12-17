@@ -10,6 +10,7 @@ public class ClientPlayerFeature {
 	private long knifeCD = 0;
 	private long gunCD = 0;
 	private long resurrectionTime = 0;
+	private final int resurrectionCD = 4000; 
 
     private boolean[] direction = new boolean[5];// "wsad "
 	private double faceAngle = 0; // (degree) => use Math.toRadium();
@@ -69,9 +70,8 @@ public class ClientPlayerFeature {
 		if(locX > 1985) locX = 1984;
 		else if(locX < 0) locX = 0;
 		this.locX = locX;
-		if(!checkStayStill()){
-			lastLocX = locX;
-		}
+		lastLocX = locX;
+		lastMoveTime = System.currentTimeMillis();
 	}
 
 	public int getLocY() {
@@ -82,9 +82,8 @@ public class ClientPlayerFeature {
 		if(locY > 1985) locY = 1985;
 		else if(locY < 0) locY = 0;
 		this.locY = locY;
-		if(!checkStayStill()){
-			lastLocY = locY;
-		}
+		lastLocY = locY;
+		lastMoveTime = System.currentTimeMillis();
 	}
 
 	public double getFaceAngle() {
@@ -176,25 +175,25 @@ public class ClientPlayerFeature {
 	public void setDead(boolean dead) {
 		isDead = dead;
 		if(dead){
-			resurrectionTime = System.currentTimeMillis()+5000;
+			resurrectionTime = System.currentTimeMillis()+resurrectionCD;
 		}
 	}
 
-	
-	private boolean checkStayStill(){ //檢查是否停在原地
+	public void checkRecover(){ //檢查是否停在原地
 		if(locX == lastLocX && locY == lastLocY){
-			checkRecover();
-			return true;
-		}else{
-			lastMoveTime = System.currentTimeMillis();
-			return false;
+			long stopSecond = System.currentTimeMillis()- lastMoveTime;
+			if(stopSecond > 5000){
+				HP += 5;
+				lastMoveTime += 1000;
+			}
 		}
 	}
 	
-	private void checkRecover() {
-		long stopSecond = System.currentTimeMillis()- lastMoveTime;
-		if(stopSecond > 5000){
-			//Recoverd
-		}
+	public boolean checkResurrection(){ //檢查復活
+		long passTime = System.currentTimeMillis()- resurrectionTime;
+		if(passTime > resurrectionCD)
+			return true;
+		else
+			return false;
 	}
 }
