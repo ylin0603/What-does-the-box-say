@@ -75,6 +75,7 @@ public class DynamicObjectManager {
     }
     
     public Character getLocalCharacter() {
+    	assert characterList.size() > 0;
     	int localClientNo = RealTcpClient.getInstance().getClientNo();
         return this.characterList.get(localClientNo);
     }
