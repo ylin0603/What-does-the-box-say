@@ -7,7 +7,8 @@ public class ClientPlayerFeature {
 	private String nickname;
 	private int locX, locY, lastLocX, lastLocY;
 	private long lastMoveTime;
-	private long CD = 0;
+	private long knifeCD = 0;
+	private long gunCD = 0;
 	private long resurrectionTime = 0;
 
     private boolean[] direction = new boolean[5];// "wsad "
@@ -118,8 +119,15 @@ public class ClientPlayerFeature {
 		return deadCount;
 	}
 	
-	public boolean getCD(){
-		if(CD < System.currentTimeMillis())
+	public boolean getKnifeCD(){
+		if(knifeCD < System.currentTimeMillis())
+			return true;
+		else
+			return false;		 
+	}
+	
+	public boolean getGunCD(){
+		if(gunCD < System.currentTimeMillis())
 			return true;
 		else
 			return false;		 
