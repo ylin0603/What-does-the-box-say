@@ -2,12 +2,13 @@ package pseudomain;
 
 import java.awt.Canvas;
 import java.awt.Dimension;
+import java.awt.KeyboardFocusManager;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import Input.KeyboardInput;
-
+import gui.game.GameManager;
 import renderer.engine.RenderEngine;
 import tcp.tcpClient.RealTcpClient;
 import udp.update.server.UDP_Server;
@@ -25,7 +26,6 @@ public class Game extends Canvas implements Runnable {
 
     private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 
-
     private KeyboardInput keyInput;
 
     public Game() {
@@ -34,8 +34,8 @@ public class Game extends Canvas implements Runnable {
         this.addKeyListener(keyInput);
         setPreferredSize(size);
         frame = new JFrame();
+        this.setFocusTraversalKeysEnabled(false);
     }
-
 
     public synchronized void start() {
         running = true;
@@ -86,6 +86,7 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void update() {
+
         RealTcpClient realTcpClient = RealTcpClient.getInstance();
 
         try {
@@ -94,7 +95,9 @@ public class Game extends Canvas implements Runnable {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
+        
+        GameManager.getInsatance().update();
+        
     }
 
     public static void main(String[] args) throws InterruptedException {

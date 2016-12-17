@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Arrays;
 
+import gui.game.GameManager;
+
 /**
  * Created by Tsunglin on 2016/12/15.
  */
@@ -15,6 +17,8 @@ public class KeyboardInput implements KeyListener{
     private static int A = 2;
     private static int D = 3;
     private static int ATTACK = 4;
+    private static String HELP = "help";
+    private static String TAB = "tab";
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -32,6 +36,12 @@ public class KeyboardInput implements KeyListener{
             keys[D] = true;
         if(e.getKeyChar() == ' ')
             keys[ATTACK] = true;
+        if(e.getKeyChar() == 'j')
+        	GameManager.getInsatance().setWeapon();
+        if(e.getKeyChar() == 'h')
+        	GameManager.getInsatance().openInfo(HELP);
+        if(e.getKeyCode() == KeyEvent.VK_TAB)
+        	GameManager.getInsatance().openInfo(TAB);
     }
 
     @Override
@@ -46,6 +56,10 @@ public class KeyboardInput implements KeyListener{
             keys[D] = false;
         if(e.getKeyChar() == ' ')
             keys[ATTACK] = false;
+        if(e.getKeyChar() == 'h')
+        	GameManager.getInsatance().closeInfo(HELP);
+        if(e.getKeyCode() == KeyEvent.VK_TAB)
+        	GameManager.getInsatance().closeInfo(TAB);
     }
 
     public boolean[] getKeys() {

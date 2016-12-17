@@ -60,6 +60,32 @@ public class Character extends Entity {
         //TODO: bullet should have additional class and draw additionally.
         super.render(pixels);
     }
+    
+    public int getWeaponType() {
+    	return weaponType;
+    }
 
-
+    public String getNickName() {
+    	return nickName;
+    }
+    
+    public double getFaceAngle() {
+    	return faceAngle;
+    }
+    
+    public int getHP() {
+    	return HP;
+    }
+    
+    public int getKillCount() {
+    	return killCount;
+    }
+    
+    public int getDeadCount() {
+    	return deadCount;
+    }
+    
+    public int getBulletCount() {
+    	return bulletCount;
+    }
 }
