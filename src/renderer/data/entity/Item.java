@@ -3,13 +3,14 @@ package renderer.data.entity;
 import renderer.graphics.Sprite;
 
 public class Item extends Entity {
-    private String name;
+    
+    private int itemType;
     private int index;
     private boolean isDead;
     private int owner;
 
     public Item(int type, int index, boolean isDead, int x, int y) {
-        this.name = name;
+        this.itemType = type;
         this.index = index;
         this.isDead = isDead;
         this.x = x;
@@ -27,8 +28,8 @@ public class Item extends Entity {
         super.render(pixels);
     }
 
-    public String getName() {
-        return name;
+    public int getType() {
+        return itemType;
     }
 
     public int getIndex() {
