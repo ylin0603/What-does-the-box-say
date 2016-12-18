@@ -55,10 +55,10 @@ public class GuiSmallMap extends GuiComponent {
 		for(Item item: itemList) {
 			if(item.getType() == 1) // blood bag
 				functionBags.add(new GuiCircle(MAP_X + item.x/mapScale,
-						MAP_Y + item.y/mapScale, Color.GREEN, item.getIsDead()));
+						MAP_Y + item.y/mapScale, Color.GREEN, item.isDead()));
 			if(item.getType() == 2) // bullet bag
 				functionBags.add(new GuiCircle(MAP_X + item.x/mapScale,
-						MAP_Y + item.y/mapScale, Color.YELLOW, item.getIsDead()));
+						MAP_Y + item.y/mapScale, Color.YELLOW, item.isDead()));
 		}
 	}
 }
