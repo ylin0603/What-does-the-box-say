@@ -120,6 +120,8 @@ public class Cdc implements Runnable {
                 spin++;
             }
             if(keys[4]) {
+                keys[4] = false;
+                player.setDirection(keys);
 				//attack;
 			}
             switch (move) {
@@ -211,6 +213,13 @@ public class Cdc implements Runnable {
         // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
         player.setFaceAngle(faceAngle - ANGLEVEL);
 	}
+
+    private void movingBullet() {
+
+        for (int i = 0; i < allItems.size(); i++) {
+
+        }
+    }
 
 	@Override
 	public void run() {
