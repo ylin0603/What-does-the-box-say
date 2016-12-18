@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 
 import Input.KeyboardInput;
 import gui.game.GameManager;
+import renderer.data.DynamicObjectManager;
 import renderer.engine.RenderEngine;
 import tcp.tcpClient.RealTcpClient;
 import udp.update.server.UDP_Server;
@@ -108,6 +109,8 @@ public class Game extends Canvas implements Runnable {
         UDP_Server.initUDPServer();
         realTcpClient.joinRoom("aaa");
         realTcpClient.loadGame();
+        DynamicObjectManager dom = DynamicObjectManager.getInstance();
+        while(dom.getCharacterList().size()==0);
         Game game = new Game();
         game.frame.setResizable(false);
         game.frame.setTitle("Rain");
