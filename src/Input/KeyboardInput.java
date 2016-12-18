@@ -38,9 +38,10 @@ public class KeyboardInput implements KeyListener {
             keys[D] = true;
         if (e.getKeyChar() == ' ')
             keys[ATTACK] = true;
-        if (e.getKeyChar() == 'j')
+        if (e.getKeyChar() == 'j') {
             keys[J] = true;
-        // GameManager.getInsatance().setWeapon();
+            GameManager.getInsatance().setWeapon();
+        }
         if (e.getKeyChar() == 'h')
             GameManager.getInsatance().openInfo(HELP);
         if (e.getKeyCode() == KeyEvent.VK_TAB)

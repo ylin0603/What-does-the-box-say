@@ -56,7 +56,7 @@ public class TcpServerThread implements Runnable {
                 if (keys[4]) {
                     Cdc.getInstance().attack(ClientID);
                 }
-                if (false) {
+                if (keys[5]) {
                     Cdc.getInstance().changeWeapon(ClientID);
                 }
             }
@@ -69,7 +69,6 @@ public class TcpServerThread implements Runnable {
 
     String initGame(BufferedReader input) throws IOException {
         // room wait
-
         myName = recv(input);
         nameList.add(myName);
         send(output, String.valueOf(ClientID));
@@ -84,13 +83,18 @@ public class TcpServerThread implements Runnable {
 
     void loadGame(PrintWriter output, String nickName) throws IOException {
         // loading state
-        while (!load) {
+        boolean roundFinished = false;
+        while (!load || roundFinished) {
             String caseType = recv(input);
             switch (caseType) {
                 case "Start":
                     send(output, String.valueOf(load));
+                    roundFinished = true;
+                    break;
                 case "Get list":
                     send(output, new Gson().toJson(nameList));
+                    roundFinished = false;
+                    break;
             }
         }
         Cdc.getInstance().addVirtualCharacter(ClientID, nickName);
