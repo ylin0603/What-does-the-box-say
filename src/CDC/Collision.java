@@ -5,7 +5,7 @@ public class Collision {
 
     // for normal player collision
     // for normal attack
-    public static boolean isPlayersCollison(ClientPlayerFeature player1,
+    public static boolean isCollison(ClientPlayerFeature player1,
             ClientPlayerFeature player2) {
         double size = ((PlayerSize * 2) * 1.2);
         int p1LocX = player1.getLocX();
@@ -20,7 +20,7 @@ public class Collision {
         return false;
     }
 
-    public static boolean isItemPlayerCollison(ClientItemFeature item,
+    public static boolean isCollison(ClientItemFeature item,
             ClientPlayerFeature player2) {
         double size = ((PlayerSize * 2) * 1.2);
         int p1LocX = item.getLocX();
@@ -35,7 +35,7 @@ public class Collision {
         return false;
     }
 
-    public static boolean isItemItemCollison(ClientItemFeature item1,
+    public static boolean isCollison(ClientItemFeature item1,
             ClientItemFeature item2) {
         double size = ((PlayerSize * 2) * 1.2);
         int p1LocX = item1.getLocX();

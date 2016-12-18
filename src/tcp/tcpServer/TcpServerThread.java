@@ -19,7 +19,7 @@ public class TcpServerThread implements Runnable {
     private BufferedReader input;
     volatile static public boolean load = false;
     private String myName = null;
-    private static ArrayList<String> NameList = new ArrayList<String>();
+    private static ArrayList<String> nameList = new ArrayList<String>();
     volatile static private int loadNum = 0;
     Gson gson;
 
@@ -43,52 +43,64 @@ public class TcpServerThread implements Runnable {
 
     @Override
     public void run() {
-        String nickName = initGame(input);
-        loadGame(output, nickName);
-        // game state
-        while (true) {
-            try {
+        try {
+            String nickName = initGame(input);
+            loadGame(output, nickName);
+            // game state
+            while (true) {
                 String buf = recv(input);
                 Gson gson = new Gson();
                 boolean[] keys = gson.fromJson(buf, boolean[].class);
-                // "wsad "
+                // "wsad j"
                 Cdc.getInstance().updateDirection(ClientID, keys);
-                
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("sc close");
-                NameList.remove(myName);
-                break;
+                if (keys[4]) {
+                    Cdc.getInstance().attack(ClientID);
+                }
+                if (false) {
+                    Cdc.getInstance().changeWeapon(ClientID);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("sc close");
+            nameList.remove(myName);
         }
     }
 
-    String initGame(BufferedReader input) {
+    String initGame(BufferedReader input) throws IOException {
         // room wait
 
-        try {
-            myName = recv(input);
-            NameList.add(myName);
-            send(output, String.valueOf(ClientID));
-            if (ClientID == 0) {
-                while (!recv(input).equals("Start"));
-                load = true;
+        myName = recv(input);
+        nameList.add(myName);
+        send(output, String.valueOf(ClientID));
+        if (ClientID == 0) {
+            while (!recv(input).equals("Start")) {
+                send(output, new Gson().toJson(nameList));
             }
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            load = true;
         }
-        return nickName;
+        return myName;
     }
 
-    void loadGame(PrintWriter output, String nickName) {
+    void loadGame(PrintWriter output, String nickName) throws IOException {
         // loading state
-        while (!load);
+        while (!load) {
+            String caseType = recv(input);
+            switch (caseType) {
+                case "Start":
+                    send(output, String.valueOf(load));
+                case "Get list":
+                    send(output, new Gson().toJson(nameList));
+            }
+        }
         Cdc.getInstance().addVirtualCharacter(ClientID, nickName);
         loadNum++;
-
+        int oldLoadNum = loadNum;
         while (loadNum != totalClient) {
+            if (oldLoadNum != loadNum) {
+                oldLoadNum = loadNum;
+                send(output, new Gson().toJson(nameList));
+            }
         }
         if (ClientID == 0) {
             send(output, "Game load");
