@@ -23,9 +23,7 @@ public class EntityRenderEngine {
     public void render(int pixels[]) {
         this.pixels = pixels;
         List<Entity> allCharacter = dom.getAllDynamicObjects();
-        for (Entity e : allCharacter) {
-            e.render(pixels);
-        }
+        allCharacter.stream().filter(e -> !e.isDead()).forEach(e -> e.render(pixels));
     }
     public static void renderEntity(Entity character, int pixels[]){
         int offsetX = DynamicObjectManager.getInstance().getVirtualCharacterXY().x - Game.WIDTH / 2;

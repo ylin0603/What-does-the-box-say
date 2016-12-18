@@ -14,7 +14,7 @@ import java.util.Random;
 public abstract class Entity {
     public int x, y;
     protected double dir;
-    private boolean removed = false;
+    protected boolean isDead;
     protected Sprite sprite;
 
     public void update() {
@@ -27,15 +27,14 @@ public abstract class Entity {
 
 
     public void remove() {
-        //TODO:: remove from level
-        removed = true;
+        isDead = true;
     }
 
     public double getDirection() {
         return dir;
     }
     public Sprite getSprite() {return sprite;}
-    public boolean isRemoved() {
-        return removed;
+    public boolean isDead() {
+        return isDead;
     }
 }
