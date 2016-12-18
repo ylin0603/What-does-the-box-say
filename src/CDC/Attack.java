@@ -8,16 +8,16 @@ public class Attack {
     final static int WINDOWSIZEX = 150;
     final static int WINDOWSIZEY = 72;
 
-    public void attack(int ClientNO,
+    public Attack(int ClientNO,
             ArrayList<ClientPlayerFeature> clientPlayerFeature,
             ArrayList<ClientItemFeature> clientItemFeature) {
         ClientPlayerFeature player = clientPlayerFeature.get(ClientNO);
-        /*
-        if (player.getCD())
+
+        if (!player.isAttackCD())
             return;
         else
-            player.setCD();
-        */
+            player.setAttackCD();
+
         switch (player.getWeaponType()) {
             case 0:
                 attackShortRange(ClientNO, clientPlayerFeature,
@@ -54,7 +54,7 @@ public class Attack {
         ClientItemFeature attackArea1 = new ClientItemFeature(0, 4,
                 (int) Math.round(fakeX), (int) Math.round(fakeY));
         attackI2P(ClientNO, attackArea1, clientPlayerFeature);
-        attackI2B(attackArea1, clientItemFeature);
+        attackI2B(attackArea1, clientPlayerFeature, clientItemFeature);
 
         // 先往前走一步，轉另一方向的90度
         fakeX = player.getLocX() + sin * Cdc.BOX_SIZE
@@ -65,19 +65,18 @@ public class Attack {
         ClientItemFeature attackArea2 = new ClientItemFeature(0, 4,
                 (int) Math.round(fakeX), (int) Math.round(fakeY));
         attackI2P(ClientNO, attackArea2, clientPlayerFeature);
-        attackI2B(attackArea2, clientItemFeature);
+        attackI2B(attackArea2, clientPlayerFeature, clientItemFeature);
     }
 
     private boolean attackI2P(int ClientNO, ClientItemFeature item1,
             ArrayList<ClientPlayerFeature> clientPlayerFeature) {
         boolean isThisAttack = false;
         ClientPlayerFeature player1 = clientPlayerFeature.get(ClientNO);
-        Collision collision = new Collision();
         for (ClientPlayerFeature player2 : clientPlayerFeature) {
             if (player2.getClientNo() == ClientNO) {
                 continue;// for prevent synchronize problem
             } else {
-                if (collision.isItemPlayerCollison(item1, player2)) {
+                if (Collision.isCollison(item1, player2)) {
                     player1.setAttackFlag(true);
                     player2.setAttackedFlag(true);
                     isThisAttack = true;
@@ -104,18 +103,24 @@ public class Attack {
     }
 
     private boolean attackI2B(ClientItemFeature item1,
+            ArrayList<ClientPlayerFeature> clientPlayerFeature,
             ArrayList<ClientItemFeature> clientItemFeature) {
         boolean isAttack = false;
-        Collision collision = new Collision();
         for (ClientItemFeature item2 : clientItemFeature) {
             if (item2.getItemType() != 0)
                 continue;
-            if (collision.isItemItemCollison(item1, item2)) {
+            if (Collision.isCollison(item1, item2)) {
                 item2.setDead(true);
                 isAttack = true;
+                // boxRevenge(clientPlayerFeature);
             }
         }
         return isAttack;
+    }
+
+    private void boxRevenge(
+            ArrayList<ClientPlayerFeature> clientPlayerFeature) {
+
     }
 
     private void attackLongRange(int ClientNO,
@@ -165,7 +170,8 @@ public class Attack {
             bullet.setLocX(locX);
             bullet.setLocY(loxY);
             if (attackI2P(bullet.getItemOwner(), bullet, clientPlayerFeature)
-                    || attackI2B(bullet, clientItemFeature))
+                    || attackI2B(bullet, clientPlayerFeature,
+                            clientItemFeature))
                 clientItemFeature.remove(bullet);
         }
     }

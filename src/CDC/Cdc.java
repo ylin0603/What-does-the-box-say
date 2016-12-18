@@ -62,7 +62,7 @@ public class Cdc implements Runnable {
 		//int x = random.nextInt(MAP_SIZE - BOX_SIZE) + 1;
 		//int y = random.nextInt(MAP_SIZE - BOX_SIZE) + 1;
 		int x = 0, y = 0;
-
+        allItems.add(new ClientItemFeature(clientNo, 0, x, y));
 		allPlayers.add(new ClientPlayerFeature(clientNo, nickName, x, y));
 	}
 
@@ -118,19 +118,6 @@ public class Cdc implements Runnable {
             }
             if (keys[3]) {
                 spin++;
-            }
-            if(keys[4]) {
-                keys[4] = false;
-                player.setDirection(keys);
-                new Attack().attack(player.getClientNo(), allPlayers, allItems);
-				//attack;
-			}
-            if (keys[5]) {
-                keys[5] = false;
-                player.setDirection(keys);
-                player.setWeaponType(1 - player.getWeaponType());
-                // 1 to 0
-                // 0 to 1
             }
             switch (move) {
                 case 1:
@@ -221,6 +208,17 @@ public class Cdc implements Runnable {
         // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
         player.setFaceAngle(faceAngle - ANGLEVEL);
 	}
+
+    public void attack(int clientNo) {
+        new Attack(clientNo, allPlayers, allItems);
+    }
+
+    public void changeWeapon(int clientNo) {
+        allPlayers.get(clientNo)
+                .setWeaponType(1 - allPlayers.get(clientNo).getWeaponType());
+        // 1 to 0
+        // 0 to 1
+    }
 
     private void movingBullet() {
 
