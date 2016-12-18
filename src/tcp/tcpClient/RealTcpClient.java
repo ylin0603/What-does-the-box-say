@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import udp.update.server.EncodedData;
 
 public class RealTcpClient {
     final int port = 8888;
@@ -14,6 +18,7 @@ public class RealTcpClient {
     private BufferedReader input;
     private PrintWriter output;
     private int clientNo = -1;
+    private ArrayList<String> NameList = new ArrayList<String>();
 
     private static RealTcpClient realTcpClient;
 
@@ -51,24 +56,33 @@ public class RealTcpClient {
         return clientNo;
     }
 
-    // only room leader loadGame
+    // all room member call it periodically
+    public ArrayList<String> getNameList() {
+        output.println("Get list");
+        String nameString = recv(input);
+        NameList = new Gson().fromJson(nameString,
+                new TypeToken<ArrayList<String>>() {}.getType());
+        return NameList;
+    }
+
+    // all room member call it periodically
     public boolean loadGame() {
         output.println("Start");
-        while (!recv(input).equals("Game load"));
-        return true;
+        boolean gameLoaded = Boolean.parseBoolean(recv(input));
+        return gameLoaded;
     }
 
     public void inputMoves(boolean[] keys) throws Exception {
-        // "wsad "
+        // "wsad j"
         Gson gson = new Gson();
-        String SedMsg = gson.toJson(keys, boolean[].class);
+        String SedMsg = gson.toJson(keys);
         realTcpClient.output.println(SedMsg);
         realTcpClient.output.flush();
         if (sc.isClosed())
             throw new Exception();
     }
 
-    public int getClientNo(){
+    public int getClientNo() {
         assert clientNo != -1;
 
         return clientNo;
