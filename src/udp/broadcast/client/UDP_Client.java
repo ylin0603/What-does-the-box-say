@@ -17,14 +17,14 @@ import com.google.gson.Gson;
 
 public class UDP_Client {
 
+	private int clientNo = -1, itemId = -1;
 	private Gson gson = new Gson();
+	private Timer timerBroadcast = new Timer();
 
-	// The method starts the UDP Broadcast thread.
 	public void startUDPBroadCast() {
 		ArrayList<String> allIPAddress =
 				RealTcpServer.getInstance().getClientIPTable();
 
-		Timer timerBroadcast = new Timer();
 		TimerTask startBroadcast = new TimerTask() {
 			@Override
 			public void run() {
@@ -35,31 +35,39 @@ public class UDP_Client {
 		timerBroadcast.schedule(startBroadcast, 0, 50); // 20 times/per second
 	}
 
-	private int clientNo = -1, itemId = -1;
+	public void stopBroadCast() {
+		timerBroadcast.cancel();
+
+		ArrayList<String> allIPAddress =
+				RealTcpServer.getInstance().getClientIPTable();
+		ArrayList<EncodedData> stopFlag = new ArrayList<>();
+		stopFlag.add(new EncodedData("STOP", "stop client"));
+
+		broadcast(allIPAddress, stopFlag);
+	}
 
 	private ArrayList<EncodedData> encapsulateData() {
-		ArrayList<ClientPlayerFeature> updatePlayers =
-				Cdc.getInstance().getPlayersUpdateInfo();
-		ArrayList<ClientItemFeature> updateItems =
-				Cdc.getInstance().getItemsUpdateInfo();
-		ArrayList<EncodedData> encodedData = new ArrayList<EncodedData>();
-
 		String type;
+		Cdc instance = Cdc.getInstance();
+		ArrayList<ClientPlayerFeature> updatePlayers = instance.getPlayersUpdateInfo();
+		ArrayList<ClientItemFeature> updateItems = instance.getItemsUpdateInfo();
+		ArrayList<EncodedData> encodedData = new ArrayList<>();
+
 		for (ClientPlayerFeature player : updatePlayers) {
-			if (clientNo < player.getPlayerId()) {
-				type = "AddP";
-				clientNo = player.getPlayerId();
-			} else {
+			if (clientNo >= player.getClientNo()) {
 				type = "UpdateP";
+			} else {
+				type = "AddP";
+				clientNo = player.getClientNo();
 			}
 			encodedData.add(new EncodedData(type, gson.toJson(player)));
 		}
 		for (ClientItemFeature item : updateItems) {
-			if (itemId < item.getItemIndex()) {
-				type = "AddI";
-				itemId = item.getItemIndex();
-			} else {
+			if (itemId >= item.getItemID()) {
 				type = "UpdateI";
+			} else {
+				type = "AddI";
+				itemId = item.getItemID();
 			}
 			encodedData.add(new EncodedData(type, gson.toJson(item)));
 		}
