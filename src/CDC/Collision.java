@@ -12,10 +12,10 @@ public class Collision {
         int p1LocY = player1.getLocY();
         int p2LocX = player2.getLocX();
         int p2LocY = player2.getLocY();
-        if (distance1d(p1LocX, p2LocX) > size
-                || distance1d(p1LocY, p2LocY) > size)
+        if (Distance1d(p1LocX, p2LocX) > size
+                || Distance1d(p1LocY, p2LocY) > size)
             return false;
-        if (distance2d(p1LocX, p1LocY, p2LocX, p2LocY) < Math.pow(size, 2))
+        if (Distance2d(p1LocX, p1LocY, p2LocX, p2LocY) < Math.pow(size, 2))
             return true;
         return false;
     }
@@ -27,10 +27,10 @@ public class Collision {
         int p1LocY = item.getLocY();
         int p2LocX = player2.getLocX();
         int p2LocY = player2.getLocY();
-        if (distance1d(p1LocX, p2LocX) > size
-                || distance1d(p1LocY, p2LocY) > size)
+        if (Distance1d(p1LocX, p2LocX) > size
+                || Distance1d(p1LocY, p2LocY) > size)
             return false;
-        if (distance2d(p1LocX, p1LocY, p2LocX, p2LocY) < Math.pow(size, 2))
+        if (Distance2d(p1LocX, p1LocY, p2LocX, p2LocY) < Math.pow(size, 2))
             return true;
         return false;
     }
@@ -42,10 +42,10 @@ public class Collision {
         int p1LocY = item1.getLocY();
         int p2LocX = item2.getLocX();
         int p2LocY = item2.getLocY();
-        if (distance1d(p1LocX, p2LocX) > size
-                || distance1d(p1LocY, p2LocY) > size)
+        if (Distance1d(p1LocX, p2LocX) > size
+                || Distance1d(p1LocY, p2LocY) > size)
             return false;
-        if (distance2d(p1LocX, p1LocY, p2LocX, p2LocY) < Math.pow(size, 2))
+        if (Distance2d(p1LocX, p1LocY, p2LocX, p2LocY) < Math.pow(size, 2))
             return true;
         return false;
     }
@@ -60,19 +60,19 @@ public class Collision {
         // this may change to not either 內切圓 外切圓 should be 混和圓
         int p2LocX = player2.getLocX();
         int p2LocY = player2.getLocY();
-        if (distance1d(c1LocX, p2LocX) > size
-                || distance1d(c1LocY, p2LocY) > size)
+        if (Distance1d(c1LocX, p2LocX) > size
+                || Distance1d(c1LocY, p2LocY) > size)
             return false;
-        if (distance2d(c1LocX, c1LocY, p2LocX, p2LocY) < Math.pow(size, 2))
+        if (Distance2d(c1LocX, c1LocY, p2LocX, p2LocY) < Math.pow(size, 2))
             return true;
         return false;
     }
 
-    public int distance1d(int loc1, int loc2) {
+    int Distance1d(int loc1, int loc2) {
         return Math.abs(loc1 - loc2);
     }
 
-    public double distance2d(int loc1X, int loc1Y, int loc2X, int loc2Y) {
+    double Distance2d(int loc1X, int loc1Y, int loc2X, int loc2Y) {
         return (Math.pow((loc1X - loc2X), 2) + Math.pow((loc1Y - loc2Y), 2));
     }
 }
