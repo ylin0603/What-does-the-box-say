@@ -62,7 +62,7 @@ public class Cdc implements Runnable {
 		//int x = random.nextInt(MAP_SIZE - BOX_SIZE) + 1;
 		//int y = random.nextInt(MAP_SIZE - BOX_SIZE) + 1;
 		int x = 0, y = 0;
-
+        allItems.add(new ClientItemFeature(clientNo, 0, x, y));
 		allPlayers.add(new ClientPlayerFeature(clientNo, nickName, x, y));
 	}
 
