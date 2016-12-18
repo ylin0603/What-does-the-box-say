@@ -122,8 +122,16 @@ public class Cdc implements Runnable {
             if(keys[4]) {
                 keys[4] = false;
                 player.setDirection(keys);
+                new Attack().attack(player.getClientNo(), allPlayers, allItems);
 				//attack;
 			}
+            if (keys[5]) {
+                keys[5] = false;
+                player.setDirection(keys);
+                player.setWeaponType(1 - player.getWeaponType());
+                // 1 to 0
+                // 0 to 1
+            }
             switch (move) {
                 case 1:
                     forward(player, radianAngle);

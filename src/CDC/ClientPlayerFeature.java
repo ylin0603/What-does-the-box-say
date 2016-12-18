@@ -11,7 +11,7 @@ public class ClientPlayerFeature {
 	private long resurrectionTime = 0;
 	private final int resurrectionCD = 4000; 
 
-    private boolean[] direction = new boolean[5];// "wsad "
+    private boolean[] direction = new boolean[6];// "wsad j"
 	private double faceAngle = 0; // (degree) => use Math.toRadium();
 	private int HP = 100;
 	private int killCount = 0, deadCount = 0;
