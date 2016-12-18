@@ -230,12 +230,9 @@ public class Cdc implements Runnable {
 				//do something
 			}
 			movingPlayer();
-<<<<<<< HEAD
             movingBullet();
-=======
 			checkResurrection();//檢查復活
 			checkSupplement();//每十秒補充補包彈藥包
->>>>>>> refs/remotes/origin/tcp/merge
 			try {
 				Thread.sleep(50); // while(true) + sleep = timer嗎?
 			} catch (InterruptedException e) {
