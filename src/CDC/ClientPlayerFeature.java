@@ -6,8 +6,12 @@ public class ClientPlayerFeature {
 	private int weaponType = 0; // 0 for knife, 1 for gun
 	private String nickname;
 	private int locX, locY;
+	private long lastMoveTime;
+	private long attackCD = 0;
+	private long resurrectionTime = 0;
+	private final int resurrectionCD = 4000; 
 
-    private boolean[] direction = new boolean[5];// "wsad "
+    private boolean[] direction = new boolean[6];// "wsad j"
 	private double faceAngle = 0; // (degree) => use Math.toRadium();
 	private int HP = 100;
 	private int killCount = 0, deadCount = 0;
@@ -23,6 +27,7 @@ public class ClientPlayerFeature {
 		this.nickname = nickName;
 		this.locX = locX;
 		this.locY = locY;
+        this.HP = 100;
 	}
 
 	public int getClientNo() {
@@ -65,6 +70,7 @@ public class ClientPlayerFeature {
 		if(locX > 1985) locX = 1984;
 		else if(locX < 0) locX = 0;
 		this.locX = locX;
+		lastMoveTime = System.currentTimeMillis();
 	}
 
 	public int getLocY() {
@@ -75,6 +81,7 @@ public class ClientPlayerFeature {
 		if(locY > 1985) locY = 1985;
 		else if(locY < 0) locY = 0;
 		this.locY = locY;
+		lastMoveTime = System.currentTimeMillis();
 	}
 
 	public double getFaceAngle() {
@@ -107,6 +114,17 @@ public class ClientPlayerFeature {
 
 	public int getDeadCount() {
 		return deadCount;
+	}
+	
+	public boolean isAttackCD(){
+		if(attackCD <= System.currentTimeMillis())
+			return true;
+		else
+			return false;		 
+	}
+	
+	public void setAttackCD(){
+		attackCD = System.currentTimeMillis() + 1000;
 	}
 
 	public void setDeadCount(int deadCount) {
@@ -151,5 +169,23 @@ public class ClientPlayerFeature {
 
 	public void setDead(boolean dead) {
 		isDead = dead;
+		if(dead){
+			resurrectionTime = System.currentTimeMillis()+resurrectionCD;
+		}
+	}
+
+	public void checkRecover(){ //檢查是否停在原地
+		long stopSecond = System.currentTimeMillis()- lastMoveTime;
+		if(stopSecond >= 5000){
+			HP += 5;
+			lastMoveTime += 1000;
+		}
+	}
+	
+	public boolean checkResurrection(){ //檢查復活
+		if(System.currentTimeMillis() >= resurrectionTime)
+			return true;
+		else
+			return false;
 	}
 }

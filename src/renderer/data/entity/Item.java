@@ -6,7 +6,6 @@ public class Item extends Entity {
     
     private int itemType;
     private int index;
-    private boolean isDead;
     private int owner;
 
     public Item(int type, int index, boolean isDead, int x, int y) {
@@ -34,10 +33,6 @@ public class Item extends Entity {
 
     public int getIndex() {
         return index;
-    }
-
-    public Boolean getIsDead() {
-        return isDead;
     }
 
     public int getOwner() {
