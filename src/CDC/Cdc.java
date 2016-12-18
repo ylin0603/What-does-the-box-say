@@ -11,7 +11,7 @@ public class Cdc implements Runnable {
 	private long tenSeconds;
 	private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
 	private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
-	private Collision dealCollision;
+	private Collision dealCollision = new Collision();
 
 	//TODO: reset these
 	private final static int STOP = -1;
@@ -107,6 +107,7 @@ public class Cdc implements Runnable {
 		player.setAttackedFlag(false);
 		player.setCollisionFlag(false);
 		player.setDead(false);
+		player.setLastMoveTime();
 
 	}
 
@@ -125,13 +126,34 @@ public class Cdc implements Runnable {
 		fakeBox.setCollision(false);
 	}
 
-	public void addItem(int itemID, int itemType, int x, int y) {
+	public void initBloodPackge(){
+		giveRandomLocation();
+		allItems.add(new ClientItemFeature(31, 1, setX, setY));
+		giveRandomLocation();
+		allItems.add(new ClientItemFeature(32, 1, setX, setY));
+	}
+
+	public void initBulletPackge(){
+		giveRandomLocation();
+		allItems.add(new ClientItemFeature(33, 2, setX, setY));
+		giveRandomLocation();
+		allItems.add(new ClientItemFeature(34, 2, setX, setY));
+
+	}
+
+	public void gameItemsInital(){
+		initFakeBox();
+		initBloodPackge();
+		initBulletPackge();
+	}
+	//不知道還需不需要，一開始都initial好了
+	/*public void addItem(int itemID, int itemType, int x, int y) {
 		assert itemID > -1 && itemType > -1;
 		assert x > 0 && y > 0;
 
 		//itemID要從30開始
 		allItems.add(new ClientItemFeature(itemID, itemType, x, y));
-	}
+	}*/
 
     public void updateDirection(int clientNo, boolean[] moveCode) {
 		assert clientNo > -1;
@@ -259,14 +281,33 @@ public class Cdc implements Runnable {
 
     private void forward(ClientPlayerFeature player, double radianAngle) {
     	boolean isImpacted = false;
+    	boolean colliHappened = false;
+    	int playerSize = allPlayers.size();
+    	int itemSize = allItems.size();
 
     	// 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
         double diffX = player.getLocX() + Math.sin(radianAngle) * VEL;
         double diffY = player.getLocY() - Math.cos(radianAngle) * VEL;
 
-        isImpacted = dealCollision.isCollison((int)Math.round(diffX), (int)Math.round(diffY));
+        for(int i=0; i<playerSize;i++){
+        	isImpacted = dealCollision.isCollison((int)Math.round(diffX), (int)Math.round(diffY),
+        		allPlayers.get(i));
+        	if(isImpacted){
+        		colliHappened = true;
+        		break;
+        	}
+        }
 
-		if(!isImpacted){
+        for(int j=0; j<itemSize;j++){
+        	isImpacted = dealCollision.isCollison((int)Math.round(diffX), (int)Math.round(diffY),
+        		allPlayers.get(j));
+        	if(isImpacted){
+        		colliHappened = true;
+        		break;
+        	}
+        }
+
+		if(!colliHappened){
 			player.setLocX((int)Math.round(diffX));
 			player.setLocY((int)Math.round(diffY));
 		}
@@ -276,14 +317,33 @@ public class Cdc implements Runnable {
 
     private void backward(ClientPlayerFeature player, double radianAngle) {
     	boolean isImpacted = false;
+    	boolean colliHappened = false;
+    	int playerSize = allPlayers.size();
+    	int itemSize = allItems.size();
 
         // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
 		double diffX = player.getLocX() - Math.sin(radianAngle) * VEL;
 		double diffY = player.getLocY() + Math.cos(radianAngle) * VEL;
 
-		isImpacted = dealCollision.isCollison((int)Math.round(diffX), (int)Math.round(diffY));
+		for(int i=0; i<playerSize;i++){
+        	isImpacted = dealCollision.isCollison((int)Math.round(diffX), (int)Math.round(diffY),
+        		allPlayers.get(i));
+        	if(isImpacted){
+        		colliHappened = true;
+        		break;
+        	}
+        }
 
-		if(!isImpacted){
+        for(int j=0; j<itemSize;j++){
+        	isImpacted = dealCollision.isCollison((int)Math.round(diffX), (int)Math.round(diffY),
+        		allPlayers.get(j));
+        	if(isImpacted){
+        		colliHappened = true;
+        		break;
+        	}
+        }
+
+		if(!colliHappened){
 			player.setLocX((int)Math.round(diffX));
 			player.setLocY((int)Math.round(diffY));
 		}
