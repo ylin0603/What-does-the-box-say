@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import com.google.gson.Gson;
 
@@ -17,6 +18,8 @@ public class TcpServerThread implements Runnable {
     private PrintWriter output;
     private BufferedReader input;
     volatile static public boolean load = false;
+    private String myName = null;
+    private static ArrayList<String> NameList = new ArrayList<String>();
     volatile static private int loadNum = 0;
     Gson gson;
 
@@ -54,6 +57,7 @@ public class TcpServerThread implements Runnable {
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("sc close");
+                NameList.remove(myName);
                 break;
             }
         }
@@ -61,9 +65,10 @@ public class TcpServerThread implements Runnable {
 
     String initGame(BufferedReader input) {
         // room wait
-        String nickName = null;
+
         try {
-            nickName = recv(input);
+            myName = recv(input);
+            NameList.add(myName);
             send(output, String.valueOf(ClientID));
             if (ClientID == 0) {
                 while (!recv(input).equals("Start"));

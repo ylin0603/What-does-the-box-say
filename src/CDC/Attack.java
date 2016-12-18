@@ -12,12 +12,12 @@ public class Attack {
             ArrayList<ClientPlayerFeature> clientPlayerFeature,
             ArrayList<ClientItemFeature> clientItemFeature) {
         ClientPlayerFeature player = clientPlayerFeature.get(ClientNO);
-        /*
-        if (player.getCD())
+
+        if (!player.isAttackCD())
             return;
         else
-            player.setCD();
-        */
+            player.setAttackCD();
+
         switch (player.getWeaponType()) {
             case 0:
                 attackShortRange(ClientNO, clientPlayerFeature,
@@ -72,12 +72,11 @@ public class Attack {
             ArrayList<ClientPlayerFeature> clientPlayerFeature) {
         boolean isThisAttack = false;
         ClientPlayerFeature player1 = clientPlayerFeature.get(ClientNO);
-        Collision collision = new Collision();
         for (ClientPlayerFeature player2 : clientPlayerFeature) {
             if (player2.getClientNo() == ClientNO) {
                 continue;// for prevent synchronize problem
             } else {
-                if (collision.isItemPlayerCollison(item1, player2)) {
+                if (Collision.isItemPlayerCollison(item1, player2)) {
                     player1.setAttackFlag(true);
                     player2.setAttackedFlag(true);
                     isThisAttack = true;
@@ -106,11 +105,10 @@ public class Attack {
     private boolean attackI2B(ClientItemFeature item1,
             ArrayList<ClientItemFeature> clientItemFeature) {
         boolean isAttack = false;
-        Collision collision = new Collision();
         for (ClientItemFeature item2 : clientItemFeature) {
             if (item2.getItemType() != 0)
                 continue;
-            if (collision.isItemItemCollison(item1, item2)) {
+            if (Collision.isItemItemCollison(item1, item2)) {
                 item2.setDead(true);
                 isAttack = true;
             }
