@@ -10,7 +10,7 @@ public class ClientPlayerFeature {
     private long attackCD = 0;
     private long changeWeaponCD = 0;
     private long resurrectionTime = 0;
-    private final int resurrectionCD = 4000;
+    private final int resurrectionCD = 4000; 
 
     private boolean[] direction = new boolean[6];// "wsad j"
     private double faceAngle = 0; // (degree) => use Math.toRadium();
@@ -22,8 +22,8 @@ public class ClientPlayerFeature {
     private boolean collisionFlag = false; // 同上
     private boolean isDead = false; // Bear will do it.
 
-    public ClientPlayerFeature(int clientNo, String nickName, int locX,
-            int locY) {
+    public ClientPlayerFeature(int clientNo, String nickName,
+                               int locX, int locY) {
         this.clientNo = clientNo;
         this.nickname = nickName;
         this.locX = locX;
@@ -68,10 +68,8 @@ public class ClientPlayerFeature {
     }
 
     public void setLocX(int locX) {
-        if (locX > 1985)
-            locX = 1984;
-        else if (locX < 0)
-            locX = 0;
+        if(locX > 1985) locX = 1984;
+        else if(locX < 0) locX = 0;
         this.locX = locX;
         lastMoveTime = System.currentTimeMillis();
     }
@@ -81,10 +79,8 @@ public class ClientPlayerFeature {
     }
 
     public void setLocY(int locY) {
-        if (locY > 1985)
-            locY = 1985;
-        else if (locY < 0)
-            locY = 0;
+        if(locY > 1985) locY = 1985;
+        else if(locY < 0) locY = 0;
         this.locY = locY;
         lastMoveTime = System.currentTimeMillis();
     }
@@ -120,15 +116,15 @@ public class ClientPlayerFeature {
     public int getDeadCount() {
         return deadCount;
     }
-
-    public boolean isAttackCD() {
-        if (attackCD <= System.currentTimeMillis())
+    
+    public boolean isAttackCD(){
+        if(attackCD <= System.currentTimeMillis())
             return true;
         else
-            return false;
+            return false;        
     }
-
-    public void setAttackCD() {
+    
+    public void setAttackCD(){
         attackCD = System.currentTimeMillis() + 1000;
     }
 
@@ -185,21 +181,21 @@ public class ClientPlayerFeature {
 
     public void setDead(boolean dead) {
         isDead = dead;
-        if (dead) {
-            resurrectionTime = System.currentTimeMillis() + resurrectionCD;
+        if(dead){
+            resurrectionTime = System.currentTimeMillis()+resurrectionCD;
         }
     }
 
-    public void checkRecover() { // 檢查是否停在原地
-        long stopSecond = System.currentTimeMillis() - lastMoveTime;
-        if (stopSecond >= 5000) {
+    public void checkRecover(){ //檢查是否停在原地
+        long stopSecond = System.currentTimeMillis()- lastMoveTime;
+        if(stopSecond >= 5000){
             HP += 5;
             lastMoveTime += 1000;
         }
     }
-
-    public boolean checkResurrection() { // 檢查復活
-        if (System.currentTimeMillis() >= resurrectionTime)
+    
+    public boolean checkResurrection(){ //檢查復活
+        if(System.currentTimeMillis() >= resurrectionTime)
             return true;
         else
             return false;
