@@ -16,7 +16,6 @@ public class Character extends Entity {
     private boolean attackFlag;
     private boolean attackedFlag;
     private boolean collisionFlag;
-    private boolean isDead;
 
     private int clientno;
 
