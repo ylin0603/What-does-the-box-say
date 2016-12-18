@@ -11,6 +11,8 @@ import java.util.ArrayList;
 
 public class UDP_Server implements Runnable {
 
+	private Gson gson = new Gson();
+
 	public static void initUDPServer() {
 		Thread serverThread = new Thread(new UDP_Server()); // 產生Thread物件
 		serverThread.start();
@@ -40,12 +42,9 @@ public class UDP_Server implements Runnable {
 		}
 	}
 
-	private Gson gson = new Gson();
-
-	public void parseData(String receiveString) {
+	private void parseData(String receiveString) {
 		ArrayList<EncodedData> encodedData = gson.fromJson(receiveString,
 				new TypeToken<ArrayList<EncodedData>>() {}.getType());
-
 
 		ClientPlayerFeature player = null;
 		ClientItemFeature item = null;
@@ -63,6 +62,7 @@ public class UDP_Server implements Runnable {
 							player.getBulletCount(), player.isAttackFlag(),
 							player.isAttackedFlag(), player.isCollisionFlag(),
 							player.isDead());
+
 					break;
 				case "AddP":
 					player = gson.fromJson(eachEnData.getData(),
@@ -71,6 +71,7 @@ public class UDP_Server implements Runnable {
 							player.getNickname());
 
 					System.out.println("Add Player");
+
 					break;
 				case "UpdateI":
 					item = gson.fromJson(eachEnData.getData(),
@@ -79,6 +80,7 @@ public class UDP_Server implements Runnable {
 										item.getItemOwner());
 
 					System.out.println("Update Item");
+
 					break;
 				case "AddI":
 					item = gson.fromJson(eachEnData.getData(),
@@ -87,6 +89,13 @@ public class UDP_Server implements Runnable {
 							item.isDead(), item.getLocX(), item.getLocY());
 
 					System.out.println("Add Item");
+
+					break;
+				case "STOP":
+					//call Game的function跳出總計分板，停止遊戲
+
+					System.out.println(eachEnData.getData());
+
 					break;
 				default:
 					System.out.println("ERROR");
