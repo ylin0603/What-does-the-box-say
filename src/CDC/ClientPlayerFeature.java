@@ -71,7 +71,7 @@ public class ClientPlayerFeature {
         if(locX > 1985) locX = 1984;
         else if(locX < 0) locX = 0;
         this.locX = locX;
-        lastMoveTime = System.currentTimeMillis();
+        setLastMoveTime();
     }
 
     public int getLocY() {
@@ -82,7 +82,7 @@ public class ClientPlayerFeature {
         if(locY > 1985) locY = 1985;
         else if(locY < 0) locY = 0;
         this.locY = locY;
-        lastMoveTime = System.currentTimeMillis();
+        setLastMoveTime();
     }
 
     public double getFaceAngle() {
@@ -199,5 +199,9 @@ public class ClientPlayerFeature {
             return true;
         else
             return false;
+    }
+    
+    public void setLastMoveTime() {
+        lastMoveTime = System.currentTimeMillis();
     }
 }
