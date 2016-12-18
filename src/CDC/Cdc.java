@@ -230,6 +230,7 @@ public class Cdc implements Runnable {
 				//do something
 			}
 			movingPlayer();
+            movingBullet();
 			checkResurrection();//檢查復活
 			checkSupplement();//每十秒補充補包彈藥包
 			try {
