@@ -8,6 +8,8 @@ import tcp.tcpServer.RealTcpServer;
 public class Cdc implements Runnable {
 	private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
 	private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
+	private long startTime;
+	private long tenSeconds;
 
     final static int BOX_SIZE = 16;// this is two are read for all server
     final static int MAP_SIZE = 2000;
@@ -118,8 +120,18 @@ public class Cdc implements Runnable {
                 spin++;
             }
             if(keys[4]) {
+                keys[4] = false;
+                player.setDirection(keys);
+                new Attack().attack(player.getClientNo(), allPlayers, allItems);
 				//attack;
 			}
+            if (keys[5]) {
+                keys[5] = false;
+                player.setDirection(keys);
+                player.setWeaponType(1 - player.getWeaponType());
+                // 1 to 0
+                // 0 to 1
+            }
             switch (move) {
                 case 1:
                     forward(player, radianAngle);
@@ -128,7 +140,7 @@ public class Cdc implements Runnable {
                     backward(player, radianAngle);
                     break;
                 case 0:
-                    // Don't Move
+                    player.checkRecover();
                     break;
                 default:
                     throw new Error("Out of Move direction!");
@@ -148,8 +160,33 @@ public class Cdc implements Runnable {
             }
         }
     }
+	
+	private void checkSupplement(){
+		if(System.currentTimeMillis() >= tenSeconds){ //現在時間超過10秒
+			//補衝 補包 彈藥包
+			tenSeconds += 10*1000;
+		}
+	}
+	
+	private void checkResurrection(){//檢查復活
+		int playerSize = allPlayers.size();
+		for (int i = 0; i < playerSize; i++) {
+			ClientPlayerFeature player = allPlayers.get(i);
+			if(player.isDead()){
+				if(player.checkResurrection()){
+					//復活function
+				}
+			}
+        }
+	}
 
-
+	private boolean finishGame (int gameTime){
+		long now = System.currentTimeMillis();
+		if(now-startTime <= gameTime*1000) 
+			return false;
+		else
+			return true;
+	}
 
     private void forward(ClientPlayerFeature player, double radianAngle) {
                     // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
@@ -185,10 +222,25 @@ public class Cdc implements Runnable {
         player.setFaceAngle(faceAngle - ANGLEVEL);
 	}
 
+    private void movingBullet() {
+
+        for (int i = 0; i < allItems.size(); i++) {
+
+        }
+    }
+
 	@Override
 	public void run() {
+		startTime = System.currentTimeMillis();
+		tenSeconds = startTime + 10*1000;
 		while (true) {
+			if(finishGame(300)){// 5分鐘就是300秒
+				//do something
+			}
 			movingPlayer();
+            movingBullet();
+			checkResurrection();//檢查復活
+			checkSupplement();//每十秒補充補包彈藥包
 			try {
 				Thread.sleep(50); // while(true) + sleep = timer嗎?
 			} catch (InterruptedException e) {

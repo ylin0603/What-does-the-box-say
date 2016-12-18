@@ -2,8 +2,11 @@ package udp.update.server;
 
 public class ClientItemFeature {
 	private int itemID; // unique ID
-	private int itemType; // 0: Fake Box, 1: Add HP, 2: Add Bullet, 3: Moving Bullet
+    private int itemType;
+    // 0: Fake Box, 1: Add HP, 2: Add Bullet, 3: Moving Bullet, 4: Moving Sword
 	private int locX, locY;
+    private int oriLocX, oriLocY;
+    private double faceAngle = 0; // (degree) => use Math.toRadium();
 	private boolean isCollision = false;
 	private boolean isDead = false;
 	private int itemOwner;
@@ -13,6 +16,8 @@ public class ClientItemFeature {
 		this.itemType = itemType;
 		this.locX = x;
 		this.locY = y;
+        this.oriLocX = x;
+        this.oriLocY = y;
 	}
 
 	public int getItemID() {
@@ -46,6 +51,30 @@ public class ClientItemFeature {
 	public void setLocY(int locY) {
 		this.locY = locY;
 	}
+
+    public int getOriLocX() {
+        return oriLocX;
+    }
+
+    public void setOriLocX(int oriLocX) {
+        this.oriLocX = oriLocX;
+    }
+
+    public int getOriLocY() {
+        return oriLocY;
+    }
+
+    public void setOriLocY(int oriLocY) {
+        this.oriLocY = oriLocY;
+    }
+
+    public double getFaceAngle() {
+        return faceAngle;
+    }
+
+    public void setFaceAngle(double faceAngle) {
+        this.faceAngle = faceAngle;
+    }
 
 	public boolean isCollision() {
 		return isCollision;
