@@ -2,10 +2,11 @@ package CDC;
 
 import java.util.ArrayList;
 import java.util.Random;
-
+import java.lang.Math;
 import tcp.tcpServer.RealTcpServer;
 
 public class Cdc implements Runnable {
+	Collision dealCollision;// = new Collision();
 	private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
 	private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
 	private long startTime;
@@ -23,6 +24,7 @@ public class Cdc implements Runnable {
 
 	private final static int VEL = 2;
 	private final static double ANGLEVEL = 2;//degree
+	private final static int setX=0, setY=0;
 
 	private static Cdc instance = null;
 
@@ -58,19 +60,80 @@ public class Cdc implements Runnable {
 		assert !nickName.isEmpty();
 
 		// initial location, but TODO:要解決位置重疊的情況
-		Random random = new Random();
-		//int x = random.nextInt(MAP_SIZE - BOX_SIZE) + 1;
-		//int y = random.nextInt(MAP_SIZE - BOX_SIZE) + 1;
-		int x = 0, y = 0;
+		
+		giveRandomLocation();
+		allPlayers.add(new ClientPlayerFeature(clientNo, nickName, setX, setY));
+		
+	}
 
-		allPlayers.add(new ClientPlayerFeature(clientNo, nickName, x, y));
+	private void giveRandomLocation(){
+		int playerSize = allPlayers.size();
+		int itemSize = allItems.size();
+		int xRange, yRange;
+		boolean needRefound = true;
+		while(needRefound){
+			needRefound = false;
+			Random random = new Random();
+			setX = random.nextInt(MAP_SIZE - BOX_SIZE) + 1;
+			setY = random.nextInt(MAP_SIZE - BOX_SIZE) + 1;
+			for(int curPlayer = 0; curPlayer < playerSize; curPlayer ++){
+				int curPlayerLocx = allPlayers.get(curPlayer).getLocX;
+				int curPlayerLocy = allPlayers.get(curPlayer).getLocY;
+				xRange = Math.abs(setX - curPlayerLocx);
+				yRange = Math.abs(setY - curPlayerLocy);
+				if((xRange <= BOX_SIZE) && (yRange <= BOX_SIZE)){
+					needRefound = true;
+					break;
+				}
+			}
+			for(int curItem = 0; curItem < itemSize; curItem ++){
+				int curItemLocx = allItems.get(curItem).getLocX;
+				int curItemLocy = allItems.get(curItem).getLocY;
+				xRange = Math.abs(setX - curItemLocx);
+				yRange = Math.abs(setY - curItemLocy);
+				if((xRange <= BOX_SIZE) && (yRange <= BOX_SIZE)){
+					needRefound = true;
+					break;
+				}
+			}
+			
+		}
+		
+	}
+
+	public void initPlayerFeature(ClientPlayerFeature player){
+		player.get(initTarget).setWeaponType(0);
+		giveRandomLocation();
+		player.setLocX(setX);
+		player.setLocY(setY);
+		player.setFaceAngle(0.0);
+		player.setHP(100);
+		player.setBulletCount(2);
+		player.setAttackFlag(false);
+		player.setAttackedFlag(false);
+		player.setCollisionFlag(false);
+		player.setDead(false);
+
+	}
+
+	public void initFakeBox(){
+		for(int fakeBoxNum = 0; fakeBoxNum < 30; fakeBoxNum ++){
+			giveRandomLocation();
+			allItems.add(new ClientItemFeature(fakeBoxNum, 0, setX, setY));
+		}
+	}
+
+	public void rebornFakeBox(ClientItemFeature fakeBox){
+		giveRandomLocation();
+		fakeBox.setLocX(setX);
+		fakeBox.setLocY(setY);
+		fakeBox.setDead(false);
+		fakeBox.setCollision(false);
 	}
 
 	public void addItem(int itemID, int itemType, int x, int y) {
 		assert itemID > -1 && itemType > -1;
 		assert x > 0 && y > 0;
-
-		//TODO: 物品的初始位置？
 
 		allItems.add(new ClientItemFeature(itemID, itemType, x, y));
 	}
@@ -86,15 +149,27 @@ public class Cdc implements Runnable {
 	//TODO: 碰到物體則等於吃到，感覺要每秒去確認，但感覺會很慢？
 	private void checkGetItem(ClientPlayerFeature player) {
 		int itemSize = allItems.size();
+		int itemType;
+		boolean isImpacted = false;
+		for(int currItem = 30; currItem < itemSize; currItem++){
+			isImpacted = dealCollision.isCollison(allItems.get(currItem), player)
+			if(isImpacted){
+				itemType = allItems.get(currItem).getItemType();
+				switch(itemType){
 
-		for (int j = 0; j < itemSize; j++) {
-			ClientItemFeature item = allItems.get(j);
+					case 1:
+						player.addHP(60);
+						break;
 
-			if (item.getItemType() > 0 && item.getItemType() < 3) continue; //只考慮補給品
+					case 2:
+						player.addBullet(1);
+						break;
 
-			if (Math.abs(item.getLocX() - player.getLocX()) < 16 &&
-					Math.abs(item.getLocY() - player.getLocY()) < 16)
-				item.setItemOwner(player.getClientNo());
+					default:
+						break;
+				}
+				break;
+			}
 		}
 	}
 
@@ -189,25 +264,37 @@ public class Cdc implements Runnable {
 	}
 
     private void forward(ClientPlayerFeature player, double radianAngle) {
+
+    	boolean isImpacted = false;
                     // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
         double diff;
 					diff = player.getLocX() + Math.sin(radianAngle) * VEL;
-					player.setLocX((int)Math.round(diff));
-
 					diff = player.getLocY() - Math.cos(radianAngle) * VEL;
-					player.setLocY((int)Math.round(diff));
+
+					//isImpacted = box.isCollison()
+
+					//if(!isImpacted){
+						player.setLocX((int)Math.round(diff));
+						player.setLocY((int)Math.round(diff));
+					//}
+					
 
 					checkGetItem(player);//只考慮前進後退才會吃到，旋轉不會碰到補給
     }
 
     private void backward(ClientPlayerFeature player, double radianAngle) {
+    	boolean isImpacted = false;
         // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
         double diff;
 					diff = player.getLocX() - Math.sin(radianAngle) * VEL;
-					player.setLocX((int)Math.round(diff));
-
 					diff = player.getLocY() + Math.cos(radianAngle) * VEL;
-					player.setLocY((int)Math.round(diff));
+
+					//isImpacted = box.isCollison()
+
+					//if(!isImpacted){
+						player.setLocX((int)Math.round(diff));
+						player.setLocY((int)Math.round(diff));
+					//}
 
 					checkGetItem(player);//只考慮前進後退才會吃到，旋轉不會碰到補給
     }

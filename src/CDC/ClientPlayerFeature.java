@@ -16,6 +16,7 @@ public class ClientPlayerFeature {
 	private int HP = 100;
 	private int killCount = 0, deadCount = 0;
 	private int bulletCount = 2;
+	private int maxBulletCount = 3;
 	private boolean attackFlag = false; // TCP設成true，傳送一次後設回false
 	private boolean attackedFlag = false; // CDC設成true，UDP傳回一次後再設回false
 	private boolean collisionFlag = false; // 同上
@@ -104,6 +105,13 @@ public class ClientPlayerFeature {
 		this.HP = HP;
 	}
 
+	public void addHP(int HP){
+		this.HP += HP;
+		if(this.HP > 100){
+			this.HP = 100;
+		}
+	}
+
 	public int getKillCount() {
 		return killCount;
 	}
@@ -137,6 +145,13 @@ public class ClientPlayerFeature {
 
 	public void setBulletCount(int bulletCount) {
 		this.bulletCount = bulletCount;
+	}
+
+	public void addBullet(int bullet){
+		this.bulletCount += bullet;
+		if(this.bulletCount>3){
+			this.bulletCount = 3;
+		}
 	}
 
 	public boolean isAttackFlag() {
