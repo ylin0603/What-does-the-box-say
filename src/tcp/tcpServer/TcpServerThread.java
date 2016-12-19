@@ -53,12 +53,6 @@ public class TcpServerThread implements Runnable {
                 boolean[] keys = gson.fromJson(buf, boolean[].class);
                 // "wsad j"
                 Cdc.getInstance().updateKeys(ClientID, keys);
-                if (keys[4]) {
-                    Cdc.getInstance().attack(ClientID);
-                }
-                if (keys[5]) {
-                    Cdc.getInstance().changeWeapon(ClientID);
-                }
             }
         } catch (Exception e) {
             e.printStackTrace();
