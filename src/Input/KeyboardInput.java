@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 import java.util.Arrays;
 
 import gui.game.GameManager;
+import tcp.tcpClient.RealTcpClient;
 
 /**
  * Created by Tsunglin on 2016/12/15.
@@ -44,6 +45,15 @@ public class KeyboardInput implements KeyListener {
             GameManager.getInsatance().openInfo(HELP);
         if (e.getKeyCode() == KeyEvent.VK_TAB)
             GameManager.getInsatance().openInfo(TAB);
+        RealTcpClient realTcpClient = RealTcpClient.getInstance();
+        try {
+            realTcpClient.inputMoves(getKeys());
+        } catch (Exception e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+            System.out.println("TCP connetction error");
+        }
+        resetOnceKey();
     }
 
     @Override
@@ -64,6 +74,15 @@ public class KeyboardInput implements KeyListener {
             GameManager.getInsatance().closeInfo(HELP);
         if (e.getKeyCode() == KeyEvent.VK_TAB)
             GameManager.getInsatance().closeInfo(TAB);
+        RealTcpClient realTcpClient = RealTcpClient.getInstance();
+        try {
+            realTcpClient.inputMoves(getKeys());
+        } catch (Exception e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+            System.out.println("TCP connetction error");
+        }
+        resetOnceKey();
     }
 
     public boolean[] getKeys() {

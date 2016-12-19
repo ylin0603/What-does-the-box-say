@@ -18,9 +18,11 @@ public class Item extends Entity {
     }
 
 
-    public void update(boolean isDead, int owner) {
+    public void update(boolean isDead, int owner, int x, int y) {
         this.isDead = isDead;
         this.owner = owner;
+        this.x = x;
+        this.y = y;
     }
 
     public void render(int[] pixels) {

@@ -61,7 +61,7 @@ public class Collision {
         return false;
     }
 
-    // for bullet attack
+    // for box revenge
     public static boolean isCollison(int p1LocX, int p1LocY,
             int p1Size, ClientPlayerFeature player2) {
         double size = ((PlayerSize + p1Size) * 1.2);
