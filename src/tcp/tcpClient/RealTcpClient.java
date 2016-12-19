@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import udp.update.server.EncodedData;
-
 public class RealTcpClient {
     final int port = 8888;
     private Socket sc;

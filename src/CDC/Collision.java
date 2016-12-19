@@ -62,17 +62,17 @@ public class Collision {
     }
 
     // for bullet attack
-    public static boolean isCirclePlayerCollison(int c1LocX, int c1LocY,
-            int c1Size, ClientPlayerFeature player2) {
-        double size = ((PlayerSize + c1Size) * 1.2);
-        System.out.println(size + " " + (PlayerSize + c1Size) * 1.2);
+    public static boolean isCollison(int p1LocX, int p1LocY,
+            int p1Size, ClientPlayerFeature player2) {
+        double size = ((PlayerSize + p1Size) * 1.2);
+        System.out.println(size + " " + (PlayerSize + p1Size) * 1.2);
         // this may change to not either 內切圓 外切圓 should be 混和圓
         int p2LocX = player2.getLocX();
         int p2LocY = player2.getLocY();
-        if (distance1d(c1LocX, p2LocX) > size
-                || distance1d(c1LocY, p2LocY) > size)
+        if (distance1d(p1LocX, p2LocX) > size
+                || distance1d(p1LocY, p2LocY) > size)
             return false;
-        if (distance2d(c1LocX, c1LocY, p2LocX, p2LocY) < Math.pow(size, 2))
+        if (distance2d(p1LocX, p1LocY, p2LocX, p2LocY) < Math.pow(size, 2))
             return true;
         return false;
     }

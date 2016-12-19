@@ -77,7 +77,7 @@ public class Cdc implements Runnable {
 
     public void updateDirection(int clientNo, boolean[] moveCode) {
 		assert clientNo > -1;
-        assert moveCode.length == 5;
+        assert moveCode.length == 6;
         // 目前是將所有按住的按鍵記下來
 
 		allPlayers.get(clientNo).setDirection(moveCode);

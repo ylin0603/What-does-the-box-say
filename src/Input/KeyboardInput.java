@@ -40,7 +40,7 @@ public class KeyboardInput implements KeyListener {
             keys[ATTACK] = true;
         if (e.getKeyChar() == 'j') {
             keys[J] = true;
-            GameManager.getInsatance().setWeapon();
+            // GameManager.getInsatance().setWeapon();
         }
         if (e.getKeyChar() == 'h')
             GameManager.getInsatance().openInfo(HELP);
