@@ -178,7 +178,7 @@ public class Cdc implements Runnable {
 		int itemType;
 		boolean isImpacted = false;
 		for(int currItem = 30; currItem < itemSize; currItem++){
-			isImpacted = dealCollision.isCollison(allItems.get(currItem), player);
+			isImpacted = Collision.isCollison(allItems.get(currItem), player);
 			if(isImpacted){
 				itemType = allItems.get(currItem).getItemType();
 				switch(itemType){
@@ -276,33 +276,23 @@ public class Cdc implements Runnable {
 	}
 
     private void forward(ClientPlayerFeature player, double radianAngle) {
-    	boolean isImpacted = false;
-    	boolean colliHappened = false;
-
     	// 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
         double diffX = player.getLocX() + Math.sin(radianAngle) * VEL;
         double diffY = player.getLocY() - Math.cos(radianAngle) * VEL;
 
-        for (ClientPlayerFeature collisionPlayer : allPlayers) {
-            if (collisionPlayer.getClientNo() == player.getClientNo())
-                continue;
-            isImpacted = Collision.isCollison((int) Math.round(diffX),
-                    (int) Math.round(diffY), collisionPlayer);
-        	if(isImpacted){
-        		colliHappened = true;
-        		break;
-        	}
+        if (!moveCollision(player, diffX, diffY)) {
+            player.setLocX((int) Math.round(diffX));
+            player.setLocY((int) Math.round(diffY));
         }
-        for (ClientItemFeature collisionItem : allItems) {
-            isImpacted = Collision.isCollison((int) Math.round(diffX),
-                    (int) Math.round(diffY), collisionItem);
-        	if(isImpacted){
-        		colliHappened = true;
-        		break;
-        	}
+        checkGetItem(player); // 只考慮前進後退才會吃到，旋轉不會碰到補給
         }
 
-		if(!colliHappened){
+    private void backward(ClientPlayerFeature player, double radianAngle) {
+        // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
+        double diffX = player.getLocX() - Math.sin(radianAngle) * VEL;
+        double diffY = player.getLocY() + Math.cos(radianAngle) * VEL;
+
+        if (!moveCollision(player, diffX, diffY)) {
 			player.setLocX((int)Math.round(diffX));
 			player.setLocY((int)Math.round(diffY));
 		}
@@ -310,14 +300,10 @@ public class Cdc implements Runnable {
 		checkGetItem(player); //只考慮前進後退才會吃到，旋轉不會碰到補給
     }
 
-    private void backward(ClientPlayerFeature player, double radianAngle) {
+    private boolean moveCollision(ClientPlayerFeature player, double diffX,
+            double diffY) {
     	boolean isImpacted = false;
     	boolean colliHappened = false;
-
-        // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
-		double diffX = player.getLocX() - Math.sin(radianAngle) * VEL;
-		double diffY = player.getLocY() + Math.cos(radianAngle) * VEL;
-
         for (ClientPlayerFeature collisionPlayer : allPlayers) {
             if (collisionPlayer.getClientNo() == player.getClientNo())
                 continue;
@@ -329,6 +315,8 @@ public class Cdc implements Runnable {
         	}
         }
         for (ClientItemFeature collisionItem : allItems) {
+            if (collisionItem.getItemType() != 0)
+                continue;
             isImpacted = Collision.isCollison((int) Math.round(diffX),
                     (int) Math.round(diffY), collisionItem);
         	if(isImpacted){
@@ -336,13 +324,7 @@ public class Cdc implements Runnable {
         		break;
         	}
         }
-
-		if(!colliHappened){
-			player.setLocX((int)Math.round(diffX));
-			player.setLocY((int)Math.round(diffY));
-		}
-
-		checkGetItem(player);//只考慮前進後退才會吃到，旋轉不會碰到補給
+        return colliHappened;
     }
 
     private void turnRight(ClientPlayerFeature player, double faceAngle) {
