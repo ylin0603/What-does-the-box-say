@@ -25,7 +25,7 @@ public class UDP_Server implements Runnable {
 			serverSocket = new DatagramSocket(3335);
 
 			while (true) {
-				receiveData = new byte[1024];
+			    receiveData = new byte[10240];
 				DatagramPacket receivePacket =
 						new DatagramPacket(receiveData, receiveData.length);
 				serverSocket.receive(receivePacket);

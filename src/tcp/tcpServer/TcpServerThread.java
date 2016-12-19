@@ -52,7 +52,7 @@ public class TcpServerThread implements Runnable {
                 Gson gson = new Gson();
                 boolean[] keys = gson.fromJson(buf, boolean[].class);
                 // "wsad j"
-                Cdc.getInstance().updateDirection(ClientID, keys);
+                Cdc.getInstance().updateKeys(ClientID, keys);
                 if (keys[4]) {
                     Cdc.getInstance().attack(ClientID);
                 }
@@ -63,6 +63,7 @@ public class TcpServerThread implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("sc close");
+            System.exit(0);
             nameList.remove(myName);
         }
     }
@@ -110,6 +111,7 @@ public class TcpServerThread implements Runnable {
             send(output, "Game load");
             new UDP_Client().startUDPBroadCast();
             Cdc.getInstance().startUpdatingThread();
+            Cdc.getInstance().gameItemsInital();
         }
     }
 
