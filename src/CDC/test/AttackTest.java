@@ -70,6 +70,15 @@ public class AttackTest {
                 clientBulletFeature);
         assertEquals(oriBlood, attackedPlayer.getHP());
 
+        // case2.3 打不到 玩家0 在正北方 右邊 斜斜的
+        attackedPlayer.setHP(100);
+        attackedPlayer.setLocX(111);
+        attackedPlayer.setLocY(83);
+        oriBlood = attackedPlayer.getHP();
+        test = new Attack(player, clientPlayerFeature, clientItemFeature,
+                clientBulletFeature);
+        assertEquals(oriBlood - 80, attackedPlayer.getHP());
+
         // case3 打的到 在 玩家0 正東方 被打到
         player.setFaceAngle(90);
         attackedPlayer.setHP(100);
