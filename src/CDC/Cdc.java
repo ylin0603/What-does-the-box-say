@@ -26,7 +26,7 @@ public class Cdc implements Runnable {
 	private static Cdc instance = null;
 
 	public final static int BOX_SIZE = 16;// this is two are read for all server
-	public final static int MAP_SIZE = 2000;
+	public final static int MAP_SIZE = 1024;
 
 	public static void main(String[] args) throws InterruptedException {
 		// tcp
@@ -67,29 +67,34 @@ public class Cdc implements Runnable {
 		int xRange, yRange; //the distance between two objects.
 		boolean isOverlapped = true;
 		while(isOverlapped) {
+		    isOverlapped = false;
 			Random random = new Random();
 			setX = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
 			setY = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
+			if(allPlayers.size()>0){
 			for(int curPlayer = 0; curPlayer < playerSize; curPlayer ++){
 				int curPlayerLocx = allPlayers.get(curPlayer).getLocX();
 				int curPlayerLocy = allPlayers.get(curPlayer).getLocY();
 				xRange = Math.abs(setX - curPlayerLocx);
 				yRange = Math.abs(setY - curPlayerLocy);
 				if((xRange <= BOX_SIZE) && (yRange <= BOX_SIZE)) // overlapped
-					break;
-			}
+				{
+				    isOverlapped = true;
+					break;}
+			}}
 			if(isOverlapped) continue;
-
 			for(int curItem = 0; curItem < itemSize; curItem ++){
 				int curItemLocx = allItems.get(curItem).getLocX();
 				int curItemLocy = allItems.get(curItem).getLocY();
 				xRange = Math.abs(setX - curItemLocx);
 				yRange = Math.abs(setY - curItemLocy);
-				if((xRange <= BOX_SIZE) && (yRange <= BOX_SIZE)) break;
+				if((xRange <= BOX_SIZE) && (yRange <= BOX_SIZE)){
+				    isOverlapped = true;
+				    break;}
 			}
 			if(isOverlapped) continue;
 
-			isOverlapped = false;
+			
 		}
 		
 	}
@@ -106,7 +111,7 @@ public class Cdc implements Runnable {
 		player.setAttackedFlag(false);
 		player.setCollisionFlag(false);
 		player.setDead(false);
-		player.setLastMoveTime();
+		//player.setLastMoveTime();
 	}
 
 	public void initFakeBox(){
@@ -126,16 +131,12 @@ public class Cdc implements Runnable {
 
 	public void initBloodPackge(){
 		giveRandomLocation();
-		allItems.add(new ClientItemFeature(31, 1, setX, setY));
-		giveRandomLocation();
-		allItems.add(new ClientItemFeature(32, 1, setX, setY));
+		allItems.add(new ClientItemFeature(30, 1, setX, setY));
 	}
 
 	public void initBulletPackge(){
 		giveRandomLocation();
-		allItems.add(new ClientItemFeature(33, 2, setX, setY));
-		giveRandomLocation();
-		allItems.add(new ClientItemFeature(34, 2, setX, setY));
+		allItems.add(new ClientItemFeature(31, 2, setX, setY));
 
 	}
 
@@ -177,7 +178,7 @@ public class Cdc implements Runnable {
 		int itemType;
 		boolean isImpacted = false;
 		for(int currItem = 30; currItem < itemSize; currItem++){
-			isImpacted = dealCollision.isItemPlayerCollison(allItems.get(currItem), player);
+			isImpacted = dealCollision.isCollison(allItems.get(currItem), player);
 			if(isImpacted){
 				itemType = allItems.get(currItem).getItemType();
 				switch(itemType){
@@ -277,25 +278,24 @@ public class Cdc implements Runnable {
     private void forward(ClientPlayerFeature player, double radianAngle) {
     	boolean isImpacted = false;
     	boolean colliHappened = false;
-    	int playerSize = allPlayers.size();
-    	int itemSize = allItems.size();
 
     	// 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
         double diffX = player.getLocX() + Math.sin(radianAngle) * VEL;
         double diffY = player.getLocY() - Math.cos(radianAngle) * VEL;
 
-        for(int i=0; i<playerSize;i++){
-        	isImpacted = dealCollision.isCollison((int)Math.round(diffX), (int)Math.round(diffY),
-        		allPlayers.get(i));
+        for (ClientPlayerFeature collisionPlayer : allPlayers) {
+            if (collisionPlayer.getClientNo() == player.getClientNo())
+                continue;
+            isImpacted = Collision.isCollison((int) Math.round(diffX),
+                    (int) Math.round(diffY), collisionPlayer);
         	if(isImpacted){
         		colliHappened = true;
         		break;
         	}
         }
-
-        for(int j=0; j<itemSize;j++){
-        	isImpacted = dealCollision.isCollison((int)Math.round(diffX), (int)Math.round(diffY),
-        		allPlayers.get(j));
+        for (ClientItemFeature collisionItem : allItems) {
+            isImpacted = Collision.isCollison((int) Math.round(diffX),
+                    (int) Math.round(diffY), collisionItem);
         	if(isImpacted){
         		colliHappened = true;
         		break;
@@ -313,25 +313,24 @@ public class Cdc implements Runnable {
     private void backward(ClientPlayerFeature player, double radianAngle) {
     	boolean isImpacted = false;
     	boolean colliHappened = false;
-    	int playerSize = allPlayers.size();
-    	int itemSize = allItems.size();
 
         // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
 		double diffX = player.getLocX() - Math.sin(radianAngle) * VEL;
 		double diffY = player.getLocY() + Math.cos(radianAngle) * VEL;
 
-		for(int i=0; i<playerSize;i++){
-        	isImpacted = dealCollision.isCollison((int)Math.round(diffX), (int)Math.round(diffY),
-        		allPlayers.get(i));
+        for (ClientPlayerFeature collisionPlayer : allPlayers) {
+            if (collisionPlayer.getClientNo() == player.getClientNo())
+                continue;
+            isImpacted = Collision.isCollison((int) Math.round(diffX),
+                    (int) Math.round(diffY), collisionPlayer);
         	if(isImpacted){
         		colliHappened = true;
         		break;
         	}
         }
-
-        for(int j=0; j<itemSize;j++){
-        	isImpacted = dealCollision.isCollison((int)Math.round(diffX), (int)Math.round(diffY),
-        		allPlayers.get(j));
+        for (ClientItemFeature collisionItem : allItems) {
+            isImpacted = Collision.isCollison((int) Math.round(diffX),
+                    (int) Math.round(diffY), collisionItem);
         	if(isImpacted){
         		colliHappened = true;
         		break;
