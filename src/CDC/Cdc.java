@@ -16,8 +16,8 @@ public class Cdc implements Runnable {
 	private final static int STOP = -1;
 	private final static int FORWARD = 0;
 	private final static int BACKWARD = 1;
-	private final static int TURNRIGHT = 2;
-	private final static int TURNLEFT = 3;
+    private final static int TURNLEFT = 2;
+    private final static int TURNRIGHT = 3;
 
 	private final static int VEL = 2;
 	private final static double ANGLEVEL = 2;//degree
@@ -199,16 +199,16 @@ public class Cdc implements Runnable {
             boolean[] keys = player.getDirection();
             // keys "wsad "
             int move = 0, spin = 0;
-            if (keys[0]) {
+            if (keys[FORWARD]) {
                 move++;
             }
-            if (keys[1]) {
+            if (keys[BACKWARD]) {
                 move--;
             }
-            if (keys[2]) {
+            if (keys[TURNLEFT]) {
                 spin--;
             }
-            if (keys[3]) {
+            if (keys[TURNRIGHT]) {
                 spin++;
             }
             switch (move) {
