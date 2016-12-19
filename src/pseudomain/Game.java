@@ -1,14 +1,15 @@
 package pseudomain;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
+import java.awt.Canvas;
+import java.awt.Dimension;
+import java.awt.KeyboardFocusManager;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
 
-import Input.FetchAction;
-import Input.MoveAction;
-
-import Input.RotateAction;
+import Input.KeyboardInput;
+import gui.game.GameManager;
+import renderer.data.DynamicObjectManager;
 import renderer.engine.RenderEngine;
 import tcp.tcpClient.RealTcpClient;
 import udp.update.server.UDP_Server;
@@ -26,39 +27,15 @@ public class Game extends Canvas implements Runnable {
 
     private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 
-    private final static int TURNEAST = 0;
-    private final static int TURNSOUTH = 1;
-    private final static int TURNNORTH = 2;
-    private final static int TURNWEST = 3;
-    private final static int ROTATE_CLOCKWISE = 4;
-    private final static int ROTATE_COUNTER_CLOCKWISE = 5;
-    private final static String GET = "get";
-
+    private KeyboardInput keyInput;
 
     public Game() {
         Dimension size = new Dimension(WIDTH * scale, HEIGHT * scale);
+        keyInput = new KeyboardInput();
+        this.addKeyListener(keyInput);
         setPreferredSize(size);
         frame = new JFrame();
-        initialKeyBinding();
-    }
-
-    private void initialKeyBinding() {
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("UP"), TURNNORTH);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("DOWN"), TURNSOUTH);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("LEFT"), TURNWEST);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("RIGHT"), TURNEAST);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("GET"), GET);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("A"),ROTATE_CLOCKWISE);
-        frame.getRootPane().getInputMap(IFW).put(KeyStroke.getKeyStroke("D"),ROTATE_COUNTER_CLOCKWISE);
-
-        frame.getRootPane().getActionMap().put(TURNNORTH, new MoveAction(TURNNORTH));
-        frame.getRootPane().getActionMap().put(TURNSOUTH, new MoveAction(TURNSOUTH));
-        frame.getRootPane().getActionMap().put(TURNWEST, new MoveAction(TURNWEST));
-        frame.getRootPane().getActionMap().put(TURNEAST, new MoveAction(TURNEAST));
-        frame.getRootPane().getActionMap().put(GET, new FetchAction());
-
-        frame.getRootPane().getActionMap().put(ROTATE_CLOCKWISE,new RotateAction(ROTATE_CLOCKWISE));
-        frame.getRootPane().getActionMap().put(ROTATE_COUNTER_CLOCKWISE, new RotateAction(ROTATE_COUNTER_CLOCKWISE));
+        this.setFocusTraversalKeysEnabled(false);
     }
 
     public synchronized void start() {
@@ -106,10 +83,23 @@ public class Game extends Canvas implements Runnable {
                 updates = 0;
             }
         }
+        stop();
     }
 
     public void update() {
 
+        RealTcpClient realTcpClient = RealTcpClient.getInstance();
+
+        try {
+            realTcpClient.inputMoves(keyInput.getKeys());
+            keyInput.resetOnceKey();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        GameManager.getInsatance().update();
+        
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -120,6 +110,8 @@ public class Game extends Canvas implements Runnable {
         UDP_Server.initUDPServer();
         realTcpClient.joinRoom("aaa");
         realTcpClient.loadGame();
+        DynamicObjectManager dom = DynamicObjectManager.getInstance();
+        while(dom.getCharacterList().size()==0);
         Game game = new Game();
         game.frame.setResizable(false);
         game.frame.setTitle("Rain");

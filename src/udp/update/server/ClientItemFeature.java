@@ -1,47 +1,102 @@
 package udp.update.server;
 
 public class ClientItemFeature {
+    private int itemID; // unique ID
+    private int itemType;
+    // 0: Fake Box, 1: Add HP, 2: Add Bullet, 3: Moving Bullet, 4: Moving Sword
+    private int locX, locY;
+    private int oriLocX, oriLocY;
+    private double faceAngle = 0; // (degree) => use Math.toRadium();
+    private boolean isCollision = false;
+    private boolean isDead = false;
+    private int itemOwner;
 
-	private int itemIndex;
-	private int itemOwner;
-	private int locationX, locationY;
-	private boolean isShared, isOwned;
-	private String type = "";
+    public ClientItemFeature(int itemID, int itemType, int x, int y) {
+        this.itemID = itemID;
+        this.itemType = itemType;
+        this.locX = x;
+        this.locY = y;
+        this.oriLocX = x;
+        this.oriLocY = y;
+    }
 
-	public ClientItemFeature(String name, int index, boolean shared, int x, int y)
-	{
-		this.type = name;
-		this.itemIndex = index;
-		this.locationX = x;
-		this.locationY = y;
-		this.isShared = shared;
-	}
+    public int getItemID() {
+        return itemID;
+    }
 
-	public int getItemIndex() {
-		return itemIndex;
-	}
+    public void setItemID(int itemID) {
+        this.itemID = itemID;
+    }
 
-	public int getItemOwner() {
-		return itemOwner;
-	}
+    public int getItemType() {
+        return itemType;
+    }
 
-	public int getLocationX() {
-		return locationX;
-	}
+    public void setItemType(int itemType) {
+        this.itemType = itemType;
+    }
 
-	public int getLocationY() {
-		return locationY;
-	}
+    public int getLocX() {
+        return locX;
+    }
 
-	public boolean isShared() {
-		return isShared;
-	}
+    public void setLocX(int locX) {
+        this.locX = locX;
+    }
 
-	public boolean isOwned() {
-		return isOwned;
-	}
+    public int getLocY() {
+        return locY;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public void setLocY(int locY) {
+        this.locY = locY;
+    }
+
+    public int getOriLocX() {
+        return oriLocX;
+    }
+
+    public void setOriLocX(int oriLocX) {
+        this.oriLocX = oriLocX;
+    }
+
+    public int getOriLocY() {
+        return oriLocY;
+    }
+
+    public void setOriLocY(int oriLocY) {
+        this.oriLocY = oriLocY;
+    }
+
+    public double getFaceAngle() {
+        return faceAngle;
+    }
+
+    public void setFaceAngle(double faceAngle) {
+        this.faceAngle = faceAngle;
+    }
+
+    public boolean isCollision() {
+        return isCollision;
+    }
+
+    public void setCollision(boolean collision) {
+        isCollision = collision;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
+    }
+
+    public int getItemOwner() {
+        return itemOwner;
+    }
+
+    public void setItemOwner(int itemOwner) {
+        this.itemOwner = itemOwner;
+    }
 }

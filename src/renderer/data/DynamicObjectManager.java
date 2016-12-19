@@ -3,6 +3,7 @@ package renderer.data;
 import renderer.data.entity.Character;
 import renderer.data.entity.Entity;
 import renderer.data.entity.Item;
+import tcp.tcpClient.RealTcpClient;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -12,8 +13,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DynamicObjectManager {
-    public List<Character> characterList = Collections.synchronizedList(new ArrayList<Character>());
-    public List<Item> itemList = Collections.synchronizedList(new ArrayList<Item>());
+    private List<Character> characterList = Collections.synchronizedList(new ArrayList<Character>());
+    private List<Item> itemList = Collections.synchronizedList(new ArrayList<Item>());
 
     private static DynamicObjectManager instance = null;
 
@@ -27,24 +28,29 @@ public class DynamicObjectManager {
         return instance;
     }
 
-    public void addVirtualCharacter(int clientno) {
+    public void addVirtualCharacter(int clientno, String nickName) {
 
-        this.characterList.add(new Character(clientno));
+        this.characterList.add(new Character(clientno,nickName));
     }
 
-    public void addItem(String name, int index, Boolean shared, int x, int y) {
-        this.itemList.add(new Item(name, index, shared, x, y));
+    public void addItem(int itemType, int index, boolean isDead, int x, int y) {
+        this.itemList.add(new Item(itemType,index,isDead,x,y));
     }
 
-    public void updateVirtualCharacter(int clientno, double dir, int speed, int x, int y) {
+    public void updateVirtualCharacter(int clientno, int weaponType, String nickname,
+                                       int x, int y, double angle, int HP, int killCount,
+                                       int deadCount, int bulletCount, boolean isAttack,
+                                       boolean isAttacked, boolean isCollision,
+                                       boolean isDead) {
         Character character = this.characterList.get(clientno);
-        character.update(dir, speed, x, y);
+        character.update(weaponType, nickname, x, y, angle, HP, killCount, deadCount,
+                bulletCount, isAttack, isAttacked, isCollision, isDead);
     }
 
-    public void updateItem(int index, Boolean shared, int owner) {
+    public void updateItem(int index, boolean isDead, int owner) {
 
         Item item = this.itemList.get(index);
-        item.update(shared, owner);
+        item.update(isDead, owner);
     }
 
     public List<Entity> getAllDynamicObjects() {
@@ -52,16 +58,31 @@ public class DynamicObjectManager {
                 itemList.stream()).collect(Collectors.toList());
         return joinList;
     }
+    
+    public List<Character> getCharacterList() {
+        return characterList;
+    }
+    
+    public List<Item> getItemList() {
+        return itemList;
+    }
 
     public Point getVirtualCharacterXY() {
-        if(characterList.size() == 0) return new Point(0,0);
-        int localClientNo = 0; //TODO: localClientNo should get from TCP?
+        if (characterList.size() == 0) return new Point(0, 0);
+        int localClientNo = RealTcpClient.getInstance().getClientNo();
         Character character = this.characterList.get(localClientNo);
         return new Point(character.x, character.y);
     }
+    
+    public Character getLocalCharacter() {
+    	assert characterList.size() > 0;
+    	int localClientNo = RealTcpClient.getInstance().getClientNo();
+        return this.characterList.get(localClientNo);
+    }
 
     public void keyGETPressed() {
-        int localClientNo = 0;
+        //TODO: unify this method with CDC
+        /*int localClientNo = 0;
         Character character = this.characterList.get(localClientNo);
 
         for (Item item : this.itemList) {
@@ -72,7 +93,7 @@ public class DynamicObjectManager {
                     break;
                 }
             }
-        }
+        }*/
 
     }
 
