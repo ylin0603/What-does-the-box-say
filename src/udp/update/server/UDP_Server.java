@@ -25,14 +25,14 @@ public class UDP_Server implements Runnable {
 			serverSocket = new DatagramSocket(3335);
 
 			while (true) {
-				receiveData = new byte[1024];
+			    receiveData = new byte[10240];
 				DatagramPacket receivePacket =
 						new DatagramPacket(receiveData, receiveData.length);
 				serverSocket.receive(receivePacket);
 
 				// get EncodedData in ArrayList and parse.
 				String receiveString =
-						new String(receivePacket.getData()).trim();
+				        new String(receivePacket.getData()).trim();
 				parseData(receiveString);
 			}
 		} catch (IOException e) {

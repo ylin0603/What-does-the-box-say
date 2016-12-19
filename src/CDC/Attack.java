@@ -94,11 +94,14 @@ public class Attack {
 
     private boolean subBlood(ClientPlayerFeature player2, int attackType) {
         int HP = player2.getHP();
-        int minusBlood = (attackType) * +10 + 40;// 0:子彈:40, 1:刀:50
+        System.out.println("HP" + HP);
+        int minusBlood = (attackType) * +10 + 40;// 0:子彈:40, 1:刀:50 2:假箱爆:60
         HP -= minusBlood;
+        player2.setHP(HP);
         if (HP <= 0) {
             return true;
         }
+        System.out.println("HP after" + HP);
         return false;
     }
 
@@ -107,19 +110,41 @@ public class Attack {
             ArrayList<ClientItemFeature> clientItemFeature) {
         boolean isAttack = false;
         for (ClientItemFeature item2 : clientItemFeature) {
-            if (item2.getItemType() != 0)
+            if (item2.getItemType() != 0 || item2.isDead())
                 continue;
             if (Collision.isCollison(item1, item2)) {
                 item2.setDead(true);
                 isAttack = true;
-                // boxRevenge(clientPlayerFeature);
+                boxRevenge(item2, clientPlayerFeature);
             }
         }
         return isAttack;
     }
 
-    private void boxRevenge(
+    private void boxRevenge(ClientItemFeature item2,
             ArrayList<ClientPlayerFeature> clientPlayerFeature) {
+        double faceAngle = item2.getFaceAngle();
+        double radianAngle = Math.toRadians(faceAngle);
+        double sin = Math.sin(radianAngle);
+        double cos = Math.cos(radianAngle);
+
+        double fakeX =
+                item2.getLocX() + sin * Cdc.BOX_SIZE - cos * Cdc.BOX_SIZE * 0.5;
+        double fakeY =
+                item2.getLocY() - cos * Cdc.BOX_SIZE + sin * Cdc.BOX_SIZE * 0.5;
+
+        for (ClientPlayerFeature player2 : clientPlayerFeature) {
+
+            if (Collision.isCollison((int) Math.round(fakeX),
+                    (int) Math.round(fakeY), 8 * 3, player2)) {
+                player2.setAttackedFlag(true);
+                if (subBlood(player2, 2)) {
+                    player2.setDeadCount(player2.getDeadCount() + 1);
+                    player2.setDead(true);
+                }
+            }
+
+        }
 
     }
 

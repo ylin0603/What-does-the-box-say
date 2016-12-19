@@ -74,4 +74,5 @@ public class GameManager {
         if (type == "tab")
             scoreBoard.setInvisible();
     }
+    
 }
