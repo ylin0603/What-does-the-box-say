@@ -63,6 +63,7 @@ public class TcpServerThread implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("sc close");
+            System.exit(0);
             nameList.remove(myName);
         }
     }
@@ -110,6 +111,7 @@ public class TcpServerThread implements Runnable {
             send(output, "Game load");
             new UDP_Client().startUDPBroadCast();
             Cdc.getInstance().startUpdatingThread();
+            Cdc.getInstance().gameItemsInital();
         }
     }
 
