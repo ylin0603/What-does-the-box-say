@@ -6,12 +6,12 @@ import java.lang.Math;
 import tcp.tcpServer.RealTcpServer;
 
 public class Cdc implements Runnable {
-	private int setX = 0, setY = 0;
+	Random random = new Random();
 	private long startTime;
 	private long tenSeconds;
 	private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
 	private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
-	private Collision dealCollision = new Collision();
+	
 
 	//TODO: reset these
 	private final static int STOP = -1;
@@ -21,7 +21,7 @@ public class Cdc implements Runnable {
 	private final static int TURNLEFT = 3;
 
 	private final static int VEL = 2;
-	private final static double ANGLEVEL = 2;//degree
+	private final static double ANGLEVEL = 7;//degree
 
 	private static Cdc instance = null;
 
@@ -57,26 +57,27 @@ public class Cdc implements Runnable {
 	public void addVirtualCharacter(int clientNo, String nickName) {
 		assert clientNo > -1;
 		assert !nickName.isEmpty();
-		giveRandomLocation(); //initial position
-		allPlayers.add(new ClientPlayerFeature(clientNo, nickName, setX, setY));
+		int[] loc = giveRandomLocation(); //initial position
+		allPlayers.add(new ClientPlayerFeature(clientNo, nickName, loc[0], loc[1]));
 	}
 
-	public void giveRandomLocation() {
+	public int[] giveRandomLocation() {
+		int []location = new int[2];
 		int playerSize = allPlayers.size();
 		int itemSize = allItems.size();
 		int xRange, yRange; //the distance between two objects.
 		boolean isOverlapped = true;
 		while(isOverlapped) {
 		    isOverlapped = false;
-			Random random = new Random();
-			setX = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
-			setY = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
+			
+			location[0] = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
+			location[1] = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
 			if(allPlayers.size()>0){
 			for(int curPlayer = 0; curPlayer < playerSize; curPlayer ++){
 				int curPlayerLocx = allPlayers.get(curPlayer).getLocX();
 				int curPlayerLocy = allPlayers.get(curPlayer).getLocY();
-				xRange = Math.abs(setX - curPlayerLocx);
-				yRange = Math.abs(setY - curPlayerLocy);
+				xRange = Math.abs(location[0] - curPlayerLocx);
+				yRange = Math.abs(location[1] - curPlayerLocy);
 				if((xRange <= BOX_SIZE) && (yRange <= BOX_SIZE)) // overlapped
 				{
 				    isOverlapped = true;
@@ -86,24 +87,24 @@ public class Cdc implements Runnable {
 			for(int curItem = 0; curItem < itemSize; curItem ++){
 				int curItemLocx = allItems.get(curItem).getLocX();
 				int curItemLocy = allItems.get(curItem).getLocY();
-				xRange = Math.abs(setX - curItemLocx);
-				yRange = Math.abs(setY - curItemLocy);
+				xRange = Math.abs(location[0] - curItemLocx);
+				yRange = Math.abs(location[1] - curItemLocy);
 				if((xRange <= BOX_SIZE) && (yRange <= BOX_SIZE)){
 				    isOverlapped = true;
 				    break;}
 			}
 			if(isOverlapped) continue;
 
-			
 		}
+		return location;
 		
 	}
 
 	public void rebornPlayer(ClientPlayerFeature player){
 		player.setWeaponType(0);
-		giveRandomLocation();
-		player.setLocX(setX);
-		player.setLocY(setY);
+		int[] loc = giveRandomLocation();
+		player.setLocX(loc[0]);
+		player.setLocY(loc[1]);
 		player.setFaceAngle(0.0);
 		player.setHP(100);
 		player.setBulletCount(2);
@@ -116,27 +117,27 @@ public class Cdc implements Runnable {
 
 	public void initFakeBox(){
 		for(int fakeBoxNum = 0; fakeBoxNum < 30; fakeBoxNum ++){
-			giveRandomLocation();
-			allItems.add(new ClientItemFeature(fakeBoxNum, 0, setX, setY));
+			int[] loc = giveRandomLocation();
+			allItems.add(new ClientItemFeature(fakeBoxNum, 0, loc[0], loc[1]));
 		}
 	}
 
 	public void rebornFakeBox(ClientItemFeature fakeBox){
-		giveRandomLocation();
-		fakeBox.setLocX(setX);
-		fakeBox.setLocY(setY);
+		int[] loc = giveRandomLocation();
+		fakeBox.setLocX(loc[0]);
+		fakeBox.setLocY(loc[1]);
 		fakeBox.setDead(false);
 		fakeBox.setCollision(false);
 	}
 
 	public void initBloodPackge(){
-		giveRandomLocation();
-		allItems.add(new ClientItemFeature(30, 1, setX, setY));
+		int[] loc = giveRandomLocation();
+		allItems.add(new ClientItemFeature(30, 1, loc[0], loc[1]));
 	}
 
 	public void initBulletPackge(){
-		giveRandomLocation();
-		allItems.add(new ClientItemFeature(31, 2, setX, setY));
+		int[] loc = giveRandomLocation();
+		allItems.add(new ClientItemFeature(31, 2, loc[0], loc[1]));
 
 	}
 
@@ -145,9 +146,9 @@ public class Cdc implements Runnable {
 		item.setFaceAngle(0.0);
 		item.setDead(false);
 		item.setCollision(false);
-		giveRandomLocation();
-		item.setLocX(setX);
-		item.setLocY(setY);
+		int[] loc = giveRandomLocation();
+		item.setLocX(loc[0]);
+		item.setLocY(loc[1]);
 	}
 
 	public void gameItemsInital(){
@@ -174,20 +175,22 @@ public class Cdc implements Runnable {
 
 	//TODO: 碰到物體則等於吃到，感覺要每秒去確認，但感覺會很慢？
 	private void checkGetItem(ClientPlayerFeature player) {
-		int itemSize = allItems.size();
+		int itemSize = 32;
 		int itemType;
 		boolean isImpacted = false;
 		for(int currItem = 30; currItem < itemSize; currItem++){
-			isImpacted = dealCollision.isCollison(allItems.get(currItem), player);
+			isImpacted = Collision.isCollison(allItems.get(currItem), player);
 			if(isImpacted){
 				itemType = allItems.get(currItem).getItemType();
 				switch(itemType){
 					case 1:
 						player.addHP(60);
+						allItems.get(currItem).setDead(true);
 						break;
 
 					case 2:
 						player.addBullet(1);
+						allItems.get(currItem).setDead(true);
 						break;
 
 					default:
@@ -197,7 +200,7 @@ public class Cdc implements Runnable {
 			}
 		}
 	}
-
+	
 	public void movingPlayer() {
 		int playerSize = allPlayers.size();
 		for (int i = 0; i < playerSize; i++) {
@@ -250,11 +253,28 @@ public class Cdc implements Runnable {
 	
 	private void checkSupplement(){
 		if(System.currentTimeMillis() >= tenSeconds){ //現在時間超過10秒
-			//補衝 補包 彈藥包
+			if(allItems.get(30).isDead()){
+				rebornFunctionalPack(allItems.get(30));
+			}
+			if(allItems.get(31).isDead()){
+				rebornFunctionalPack(allItems.get(31));
+			}
+			
+			/*int[] loc = giveRandomLocation();
+			allItems.get(30).setDead(false);
+			allItems.get(30).setLocX(loc[0]);
+			allItems.get(30).setLocY(loc[1]);
+			loc = giveRandomLocation();
+			allItems.get(31).setDead(false);
+			allItems.get(31).setLocX(loc[0]);
+			allItems.get(31).setLocY(loc[1]);*/
+			//rebornFunctionalPack(allItems.get(30));
+			//rebornFunctionalPack(allItems.get(31));
 			tenSeconds += 10*1000;
 		}
 	}
 	
+
 	private void checkResurrection(){//檢查復活
 		int playerSize = allPlayers.size();
 		for (int i = 0; i < playerSize; i++) {
@@ -266,6 +286,31 @@ public class Cdc implements Runnable {
 			}
         }
 	}
+	
+	private boolean moveCollision(int x, int y, ClientPlayerFeature player){
+		boolean isImpacted = false;
+		boolean colliHappened = false;
+		for (ClientPlayerFeature collisionPlayer : allPlayers) {
+            if (collisionPlayer.getClientNo() == player.getClientNo())
+                continue;
+            isImpacted = Collision.isCollison(x,y, collisionPlayer);
+        	if(isImpacted){
+        		colliHappened = true;
+        		break;
+        	}
+        }
+		for (ClientItemFeature collisionItem : allItems) {// only 30 fake boxes
+															// will collision
+			if (collisionItem.getItemType() != 0)
+				continue;
+        		isImpacted = Collision.isCollison(x, y, collisionItem);
+        	if(isImpacted){
+        		colliHappened = true;
+        		break;
+        	}
+        }
+        return colliHappened;
+	}
 
 	private boolean finishGame (int gameTime){
 		long now = System.currentTimeMillis();
@@ -276,33 +321,12 @@ public class Cdc implements Runnable {
 	}
 
     private void forward(ClientPlayerFeature player, double radianAngle) {
-    	boolean isImpacted = false;
-    	boolean colliHappened = false;
 
     	// 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
         double diffX = player.getLocX() + Math.sin(radianAngle) * VEL;
         double diffY = player.getLocY() - Math.cos(radianAngle) * VEL;
 
-        for (ClientPlayerFeature collisionPlayer : allPlayers) {
-            if (collisionPlayer.getClientNo() == player.getClientNo())
-                continue;
-            isImpacted = Collision.isCollison((int) Math.round(diffX),
-                    (int) Math.round(diffY), collisionPlayer);
-        	if(isImpacted){
-        		colliHappened = true;
-        		break;
-        	}
-        }
-        for (ClientItemFeature collisionItem : allItems) {
-            isImpacted = Collision.isCollison((int) Math.round(diffX),
-                    (int) Math.round(diffY), collisionItem);
-        	if(isImpacted){
-        		colliHappened = true;
-        		break;
-        	}
-        }
-
-		if(!colliHappened){
+		if(!moveCollision((int)Math.round(diffX),(int)Math.round(diffY),player)){
 			player.setLocX((int)Math.round(diffX));
 			player.setLocY((int)Math.round(diffY));
 		}
@@ -311,33 +335,12 @@ public class Cdc implements Runnable {
     }
 
     private void backward(ClientPlayerFeature player, double radianAngle) {
-    	boolean isImpacted = false;
-    	boolean colliHappened = false;
 
         // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
 		double diffX = player.getLocX() - Math.sin(radianAngle) * VEL;
 		double diffY = player.getLocY() + Math.cos(radianAngle) * VEL;
 
-        for (ClientPlayerFeature collisionPlayer : allPlayers) {
-            if (collisionPlayer.getClientNo() == player.getClientNo())
-                continue;
-            isImpacted = Collision.isCollison((int) Math.round(diffX),
-                    (int) Math.round(diffY), collisionPlayer);
-        	if(isImpacted){
-        		colliHappened = true;
-        		break;
-        	}
-        }
-        for (ClientItemFeature collisionItem : allItems) {
-            isImpacted = Collision.isCollison((int) Math.round(diffX),
-                    (int) Math.round(diffY), collisionItem);
-        	if(isImpacted){
-        		colliHappened = true;
-        		break;
-        	}
-        }
-
-		if(!colliHappened){
+		if(!moveCollision((int)Math.round(diffX),(int)Math.round(diffY),player)){
 			player.setLocX((int)Math.round(diffX));
 			player.setLocY((int)Math.round(diffY));
 		}
@@ -377,13 +380,14 @@ public class Cdc implements Runnable {
 	public void run() {
 		startTime = System.currentTimeMillis();
 		tenSeconds = startTime + 10*1000;
+		
 		while (true) {
 			if(finishGame(300)){// 5分鐘就是300秒
 				//do something
 			}
 			movingPlayer();
             movingBullet();
-			checkResurrection();//檢查復活
+            checkResurrection();//檢查復活
 			checkSupplement();//每十秒補充補包彈藥包
 			try {
 				Thread.sleep(50); // while(true) + sleep = timer嗎?

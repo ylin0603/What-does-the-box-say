@@ -53,17 +53,7 @@ public class CollisionTest {
         ClientPlayerFeature p1 = new ClientPlayerFeature(0, "aaa", 0, 0);
 
 
-        assert Collision.isCirclePlayerCollison(0, 0, 8, p1);
-        assert Collision.isCirclePlayerCollison(0, 8, 8, p1);
-        assert Collision.isCirclePlayerCollison(0, 16, 8, p1);
-        assert Collision.isCirclePlayerCollison(0, 19, 8, p1);
-        assert !Collision.isCirclePlayerCollison(0, 20, 8, p1);
-
-        assert Collision.isCirclePlayerCollison(0, 0, 8, p1);
-        assert Collision.isCirclePlayerCollison(0, 8, 8, p1);
-        assert Collision.isCirclePlayerCollison(0, 16, 8, p1);
-        assert Collision.isCirclePlayerCollison(0, 19, 8, p1);
-        assert !Collision.isCirclePlayerCollison(0, 20, 8, p1);
+       
     }
 
     @Test

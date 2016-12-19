@@ -79,7 +79,7 @@ public class UDP_Server implements Runnable {
 					instance.updateItem(item.getItemID(), item.isDead(),
 										item.getItemOwner());
 
-					System.out.println("Update Item");
+					//System.out.println("Update Item");
 
 					break;
 				case "AddI":

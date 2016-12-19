@@ -2,6 +2,10 @@ package CDC;
 
 import java.util.ArrayList;
 
+import CDC.Cdc;
+import CDC.ClientItemFeature;
+import CDC.ClientPlayerFeature;
+
 public class Attack {
     final static int BULLETVEL = 4;
     final static int MAPSIZE = 1985;
