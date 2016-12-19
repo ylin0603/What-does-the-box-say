@@ -12,7 +12,7 @@ public class GuiBloodBar extends GuiComponent {
     private final static int BLOODBAR_X = 20;
     private final static int BLOODBAR_Y = 445;
 
-    private static int bloodWidth = BLOODBAR_WIDTH;
+    private int bloodWidth = BLOODBAR_WIDTH;
 
     private GuiLabel bloodLabel;
     private String bloodText = " / 100";
@@ -34,6 +34,7 @@ public class GuiBloodBar extends GuiComponent {
 
     public void update() {
         bloodWidth = dom.getLocalCharacter().getHP() * Game.scale;
-        bloodLabel.setText(bloodWidth / Game.scale + bloodText);
+        bloodLabel.setText(dom.getLocalCharacter().getHP() + bloodText);
     }
+
 }

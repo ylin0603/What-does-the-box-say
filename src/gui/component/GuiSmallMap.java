@@ -52,6 +52,7 @@ public class GuiSmallMap extends GuiComponent {
 
     private void renderBags() {
         itemList = DynamicObjectManager.getInstance().getItemList();
+        functionBags.clear();
         for (Item item : itemList) {
             if (item.getType() == 1) // blood bag
                 functionBags.add(new GuiCircle(MAP_X + item.x / mapScale,
