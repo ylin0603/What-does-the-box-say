@@ -10,7 +10,7 @@ import renderer.data.entity.Character;
 
 public class GuiPlayerAngle extends GuiComponent {
 
-    private final static int DIAMETER = 48;
+    private final static int DIAMETER = 60;
     private GuiLabel showAngle;
     private int angle = 0;
     
@@ -23,7 +23,7 @@ public class GuiPlayerAngle extends GuiComponent {
         g.setColor(Color.RED);
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(7));
-        g.drawArc(Game.WIDTH*Game.scale/2, Game.HEIGHT*Game.scale/2, 
+        g.drawArc(Game.WIDTH*Game.scale/2-6, Game.HEIGHT*Game.scale/2-6, 
                 DIAMETER, DIAMETER, angle+90, 1);
     }
 
