@@ -6,11 +6,20 @@ import java.lang.Math;
 import tcp.tcpServer.RealTcpServer;
 
 public class Cdc implements Runnable {
+<<<<<<< HEAD
     private int setX = 0, setY = 0;
 	private long startTime;
 	private long tenSeconds;
     private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
     private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
+=======
+	private int setX = 0, setY = 0;
+	private long startTime;
+	private long tenSeconds;
+	private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
+	private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
+	private Collision dealCollision = new Collision();
+>>>>>>> refs/remotes/origin/dev
 
 	//TODO: reset these
 	private final static int STOP = -1;
@@ -49,7 +58,6 @@ public class Cdc implements Runnable {
 	public ArrayList<ClientPlayerFeature> getPlayersUpdateInfo() {
 		return allPlayers;
 	}
-
 	public ArrayList<ClientItemFeature> getItemsUpdateInfo() {
 		return allItems;
 	}
@@ -60,6 +68,7 @@ public class Cdc implements Runnable {
 		giveRandomLocation(); //initial position
 		allPlayers.add(new ClientPlayerFeature(clientNo, nickName, setX, setY));
 	}
+<<<<<<< HEAD
 
 	public void giveRandomLocation() {
 		int playerSize = allPlayers.size();
@@ -156,6 +165,112 @@ public class Cdc implements Runnable {
 		initBulletPackge();
 	}
 
+=======
+
+	public void giveRandomLocation() {
+		int playerSize = allPlayers.size();
+		int itemSize = allItems.size();
+		int xRange, yRange; //the distance between two objects.
+		boolean isOverlapped = true;
+		while(isOverlapped) {
+		    isOverlapped = false;
+			Random random = new Random();
+			setX = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
+			setY = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
+			if(allPlayers.size()>0){
+			for(int curPlayer = 0; curPlayer < playerSize; curPlayer ++){
+				int curPlayerLocx = allPlayers.get(curPlayer).getLocX();
+				int curPlayerLocy = allPlayers.get(curPlayer).getLocY();
+				xRange = Math.abs(setX - curPlayerLocx);
+				yRange = Math.abs(setY - curPlayerLocy);
+				if((xRange <= BOX_SIZE) && (yRange <= BOX_SIZE)) // overlapped
+				{
+				    isOverlapped = true;
+					break;}
+			}}
+			if(isOverlapped) continue;
+			for(int curItem = 0; curItem < itemSize; curItem ++){
+				int curItemLocx = allItems.get(curItem).getLocX();
+				int curItemLocy = allItems.get(curItem).getLocY();
+				xRange = Math.abs(setX - curItemLocx);
+				yRange = Math.abs(setY - curItemLocy);
+				if((xRange <= BOX_SIZE) && (yRange <= BOX_SIZE)){
+				    isOverlapped = true;
+				    break;}
+			}
+			if(isOverlapped) continue;
+
+			
+		}
+		
+	}
+
+	public void rebornPlayer(ClientPlayerFeature player){
+		player.setWeaponType(0);
+		giveRandomLocation();
+		player.setLocX(setX);
+		player.setLocY(setY);
+		player.setFaceAngle(0.0);
+		player.setHP(100);
+		player.setBulletCount(2);
+		player.setAttackFlag(false);
+		player.setAttackedFlag(false);
+		player.setCollisionFlag(false);
+		player.setDead(false);
+		//player.setLastMoveTime();
+	}
+
+	public void initFakeBox(){
+		for(int fakeBoxNum = 0; fakeBoxNum < 30; fakeBoxNum ++){
+			giveRandomLocation();
+			allItems.add(new ClientItemFeature(fakeBoxNum, 0, setX, setY));
+		}
+	}
+
+	public void rebornFakeBox(ClientItemFeature fakeBox){
+		giveRandomLocation();
+		fakeBox.setLocX(setX);
+		fakeBox.setLocY(setY);
+		fakeBox.setDead(false);
+		fakeBox.setCollision(false);
+	}
+
+	public void initBloodPackge(){
+		giveRandomLocation();
+		allItems.add(new ClientItemFeature(30, 1, setX, setY));
+	}
+
+	public void initBulletPackge(){
+		giveRandomLocation();
+		allItems.add(new ClientItemFeature(31, 2, setX, setY));
+
+	}
+
+	//to reborn bullet or blood packages
+	public void rebornFunctionalPack(ClientItemFeature item){
+		item.setFaceAngle(0.0);
+		item.setDead(false);
+		item.setCollision(false);
+		giveRandomLocation();
+		item.setLocX(setX);
+		item.setLocY(setY);
+	}
+
+	public void gameItemsInital(){
+		initFakeBox();
+		initBloodPackge();
+		initBulletPackge();
+	}
+	//不知道還需不需要，一開始都initial好了
+	/*public void addItem(int itemID, int itemType, int x, int y) {
+		assert itemID > -1 && itemType > -1;
+		assert x > 0 && y > 0;
+
+		//itemID要從30開始
+		allItems.add(new ClientItemFeature(itemID, itemType, x, y));
+	}*/
+
+>>>>>>> refs/remotes/origin/dev
     public void updateKeys(int clientNo, boolean[] moveCode) {
 		assert clientNo > -1;
         assert moveCode.length == 6;
@@ -261,14 +376,18 @@ public class Cdc implements Runnable {
 
 	private boolean finishGame (int gameTime){
 		long now = System.currentTimeMillis();
-		if(now-startTime <= gameTime*1000) 
+		if(now - startTime <= gameTime*1000)
 			return false;
 		else
 			return true;
 	}
 
     private void forward(ClientPlayerFeature player, double radianAngle) {
+<<<<<<< HEAD
                     // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
+=======
+    	// 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
+>>>>>>> refs/remotes/origin/dev
         double diffX = player.getLocX() + Math.sin(radianAngle) * VEL;
         double diffY = player.getLocY() - Math.cos(radianAngle) * VEL;
 
@@ -276,8 +395,13 @@ public class Cdc implements Runnable {
             player.setLocX((int) Math.round(diffX));
             player.setLocY((int) Math.round(diffY));
         }
+<<<<<<< HEAD
 					checkGetItem(player);//只考慮前進後退才會吃到，旋轉不會碰到補給
     }
+=======
+        checkGetItem(player); // 只考慮前進後退才會吃到，旋轉不會碰到補給
+        }
+>>>>>>> refs/remotes/origin/dev
 
     private void backward(ClientPlayerFeature player, double radianAngle) {
         // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
@@ -285,11 +409,44 @@ public class Cdc implements Runnable {
         double diffY = player.getLocY() + Math.cos(radianAngle) * VEL;
 
         if (!moveCollision(player, diffX, diffY)) {
+<<<<<<< HEAD
             player.setLocX((int) Math.round(diffX));
             player.setLocY((int) Math.round(diffY));
         }
+=======
+			player.setLocX((int)Math.round(diffX));
+			player.setLocY((int)Math.round(diffY));
+		}
 
-					checkGetItem(player);//只考慮前進後退才會吃到，旋轉不會碰到補給
+		checkGetItem(player); //只考慮前進後退才會吃到，旋轉不會碰到補給
+    }
+>>>>>>> refs/remotes/origin/dev
+
+    private boolean moveCollision(ClientPlayerFeature player, double diffX,
+            double diffY) {
+    	boolean isImpacted = false;
+    	boolean colliHappened = false;
+        for (ClientPlayerFeature collisionPlayer : allPlayers) {
+            if (collisionPlayer.getClientNo() == player.getClientNo())
+                continue;
+            isImpacted = Collision.isCollison((int) Math.round(diffX),
+                    (int) Math.round(diffY), collisionPlayer);
+        	if(isImpacted){
+        		colliHappened = true;
+        		break;
+        	}
+        }
+        for (ClientItemFeature collisionItem : allItems) {
+            if (collisionItem.getItemType() != 0)
+                continue;
+            isImpacted = Collision.isCollison((int) Math.round(diffX),
+                    (int) Math.round(diffY), collisionItem);
+        	if(isImpacted){
+        		colliHappened = true;
+        		break;
+        	}
+        }
+        return colliHappened;
     }
 
     private boolean moveCollision(ClientPlayerFeature player, double diffX,
