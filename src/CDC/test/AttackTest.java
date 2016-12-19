@@ -40,7 +40,6 @@ public class AttackTest {
         clientPlayerFeature.add(new ClientPlayerFeature(0, "bbb", 100, 100));
         clientPlayerFeature.add(new ClientPlayerFeature(1, "bbb", 5000, 5000));
         int oriBlood;
-        // clientItemFeature.add(new ClientItemFeature(1,1, 210, 210));// id =1 ,假箱子
         ClientPlayerFeature player = clientPlayerFeature.get(0);
         ClientPlayerFeature attackedPlayer = clientPlayerFeature.get(1);
         player.setWeaponType(0); // 0 是近戰
@@ -59,8 +58,17 @@ public class AttackTest {
         oriBlood = attackedPlayer.getHP();
         test = new Attack(player, clientPlayerFeature, clientItemFeature,
                 clientBulletFeature);
-        System.out.println(attackedPlayer.getHP());
+        // System.out.println(attackedPlayer.getHP());
         assertEquals(oriBlood - 80, attackedPlayer.getHP());
+
+        // case2.1 打不到 玩家0 在正北方
+        attackedPlayer.setHP(100);
+        attackedPlayer.setLocX(100);
+        attackedPlayer.setLocY(66);
+        oriBlood = attackedPlayer.getHP();
+        test = new Attack(player, clientPlayerFeature, clientItemFeature,
+                clientBulletFeature);
+        assertEquals(oriBlood, attackedPlayer.getHP());
 
         // case3 打的到 在 玩家0 正東方 被打到
         player.setFaceAngle(90);
@@ -70,7 +78,7 @@ public class AttackTest {
         oriBlood = attackedPlayer.getHP();
         test = new Attack(player, clientPlayerFeature, clientItemFeature,
                 clientBulletFeature);
-        System.out.println(attackedPlayer.getHP());
+        // System.out.println(attackedPlayer.getHP());
         assertEquals(oriBlood - 80, attackedPlayer.getHP());
 
         // case4 打的到 在 玩家0 正東方 被打到
@@ -81,7 +89,7 @@ public class AttackTest {
         oriBlood = attackedPlayer.getHP();
         test = new Attack(player, clientPlayerFeature, clientItemFeature,
                 clientBulletFeature);
-        System.out.println(attackedPlayer.getHP());
+        // System.out.println(attackedPlayer.getHP());
         assertEquals(oriBlood - 80, attackedPlayer.getHP());
 
         // case5 打的到 在 玩家0 正南方 被打到
@@ -92,7 +100,7 @@ public class AttackTest {
         oriBlood = attackedPlayer.getHP();
         test = new Attack(player, clientPlayerFeature, clientItemFeature,
                 clientBulletFeature);
-        System.out.println(attackedPlayer.getHP());
+        // System.out.println(attackedPlayer.getHP());
         assertEquals(oriBlood - 80, attackedPlayer.getHP());
 
         // case6 打的到 在 玩家0 正西方 被打到
@@ -103,8 +111,18 @@ public class AttackTest {
         oriBlood = attackedPlayer.getHP();
         test = new Attack(player, clientPlayerFeature, clientItemFeature,
                 clientBulletFeature);
-        System.out.println(attackedPlayer.getHP());
+        // System.out.println(attackedPlayer.getHP());
         assertEquals(oriBlood - 80, attackedPlayer.getHP());
+
+        // case7 假箱子 假設他在玩家正北方 打到 扣 60
+        clientItemFeature.add(new ClientItemFeature(0, 0, 100, 67));// id =1 ,假箱子
+        player.setFaceAngle(0);
+        oriBlood = player.getHP();
+        assertEquals(false, clientItemFeature.get(0).isDead());
+        test = new Attack(player, clientPlayerFeature, clientItemFeature,
+                clientBulletFeature);
+        assertEquals(oriBlood - 60, player.getHP());
+        assertEquals(true, clientItemFeature.get(0).isDead());
 
     }
 
