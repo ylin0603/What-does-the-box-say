@@ -141,6 +141,16 @@ public class Cdc implements Runnable {
 
 	}
 
+	//to reborn bullet or blood packages
+	public void rebornFunctionalPack(ClientItemFeature item){
+		item.setFaceAngle(0.0);
+		item.setDead(false);
+		item.setCollision(false);
+		giveRandomLocation();
+		item.setLocX(setX);
+		item.setLocY(setY);
+	}
+
 	public void gameItemsInital(){
 		initFakeBox();
 		initBloodPackge();
