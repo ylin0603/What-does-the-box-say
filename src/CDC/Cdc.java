@@ -2,14 +2,15 @@ package CDC;
 
 import java.util.ArrayList;
 import java.util.Random;
-
+import java.lang.Math;
 import tcp.tcpServer.RealTcpServer;
 
 public class Cdc implements Runnable {
-	private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
-	private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
+    private int setX = 0, setY = 0;
 	private long startTime;
 	private long tenSeconds;
+    private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
+    private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
 
 	//TODO: reset these
 	private final static int STOP = -1;
@@ -154,14 +155,6 @@ public class Cdc implements Runnable {
 		initBloodPackge();
 		initBulletPackge();
 	}
-	//不知道還需不需要，一開始都initial好了
-	/*public void addItem(int itemID, int itemType, int x, int y) {
-		assert itemID > -1 && itemType > -1;
-		assert x > 0 && y > 0;
-
-		//itemID要從30開始
-		allItems.add(new ClientItemFeature(itemID, itemType, x, y));
-	}*/
 
     public void updateKeys(int clientNo, boolean[] moveCode) {
 		assert clientNo > -1;
