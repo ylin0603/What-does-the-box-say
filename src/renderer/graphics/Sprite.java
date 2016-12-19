@@ -48,6 +48,35 @@ public class Sprite {
 			
 	};*/
 
+    public static Sprite[] BOX_ATTACK_UP = {
+            new Sprite(16, 0, 8, SpriteSheet.character),
+			new Sprite(16, 1, 8, SpriteSheet.character),
+			new Sprite(16, 2, 8, SpriteSheet.character),
+            new Sprite(16, 3, 8, SpriteSheet.character),
+	};
+
+	public static Sprite BOX_ATTACK_RIGHT[] = {
+            new Sprite(16, 0, 9, SpriteSheet.character),
+            new Sprite(16, 1, 9, SpriteSheet.character),
+            new Sprite(16, 2, 9, SpriteSheet.character),
+            new Sprite(16, 3, 9, SpriteSheet.character),
+	};
+	public static Sprite BOX_ATTACK_DOWN[] = {
+            new Sprite(16, 0, 10, SpriteSheet.character),
+            new Sprite(16, 1, 10, SpriteSheet.character),
+            new Sprite(16, 2, 10, SpriteSheet.character),
+            new Sprite(16, 3, 10, SpriteSheet.character),
+	};
+	public static Sprite BOX_ATTACK_LEFT[] = {
+            new Sprite(16, 0, 10, SpriteSheet.character),
+            new Sprite(16, 1, 10, SpriteSheet.character),
+            new Sprite(16, 2, 10, SpriteSheet.character),
+            new Sprite(16, 3, 10, SpriteSheet.character),
+
+	};
+
+
+
     public Sprite(int size, int x, int y, SpriteSheet sheet) {
         SIZE = size;
         this.sheetX = x * size;

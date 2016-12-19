@@ -339,6 +339,7 @@ public class Cdc implements Runnable {
 
     public void attack(int clientNo) {
         new Attack(clientNo, allPlayers, allItems);
+		allPlayers.get(clientNo).setAttackFlag(true);
     }
 
     public void changeWeapon(int clientNo) {
