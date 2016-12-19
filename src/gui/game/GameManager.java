@@ -61,10 +61,6 @@ public class GameManager {
         }
     }
 
-    /*
-     * public void setWeapon() { statusBar.setWeopon(); }
-     */
-
     public void openInfo(String type) {
         if (type == "help")
             helpPanel.setVisible();
