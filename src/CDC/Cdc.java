@@ -164,7 +164,7 @@ public class Cdc implements Runnable {
 		allItems.add(new ClientItemFeature(itemID, itemType, x, y));
 	}*/
 
-    public void updateDirection(int clientNo, boolean[] moveCode) {
+    public void updateKeys(int clientNo, boolean[] moveCode) {
 		assert clientNo > -1;
         assert moveCode.length == 5;
         // 目前是將所有按住的按鍵記下來
