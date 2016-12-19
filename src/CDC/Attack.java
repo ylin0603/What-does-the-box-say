@@ -69,7 +69,7 @@ public class Attack {
         attackI2B(attackArea2, clientPlayerFeature, clientItemFeature);
     }
 
-    private boolean attackI2P(int ClientNO, ClientItemFeature item1,
+    public boolean attackI2P(int ClientNO, ClientItemFeature item1,
             ArrayList<ClientPlayerFeature> clientPlayerFeature,
             boolean[] isAttacked) {
         boolean isThisAttack = false;
@@ -113,7 +113,7 @@ public class Attack {
         return isDead;
     }
 
-    private boolean attackI2B(ClientItemFeature item1,
+    public boolean attackI2B(ClientItemFeature item1,
             ArrayList<ClientPlayerFeature> clientPlayerFeature,
             ArrayList<ClientItemFeature> clientItemFeature) {
         boolean isAttack = false;
