@@ -60,8 +60,15 @@ public class UDP_Client {
 				type = "AddP";
 				clientNo = player.getClientNo();
 			}
+
 			encodedData.add(new EncodedData(type, gson.toJson(player)));
+
+			if(player.isAttackedFlag() || player.isAttackFlag()) {
+				player.setAttackFlag(false);
+				player.setAttackedFlag(false);
+			}
 		}
+
 		for (ClientItemFeature item : updateItems) {
 			if (itemId >= item.getItemID()) {
 				type = "UpdateI";
@@ -69,7 +76,12 @@ public class UDP_Client {
 				type = "AddI";
 				itemId = item.getItemID();
 			}
+
 			encodedData.add(new EncodedData(type, gson.toJson(item)));
+
+			if((item.getItemType() == 0 && item.isDead())) {
+				instance.rebornFakeBox(item);
+			}
 		}
 
 		return encodedData;
