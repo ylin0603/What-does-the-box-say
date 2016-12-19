@@ -11,7 +11,6 @@ public class Cdc implements Runnable {
 	private long tenSeconds;
 	private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
 	private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
-	
 
 	//TODO: reset these
 	private final static int STOP = -1;
@@ -72,6 +71,7 @@ public class Cdc implements Runnable {
 			
 			location[0] = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
 			location[1] = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
+
 			if(allPlayers.size()>0){
 			for(int curPlayer = 0; curPlayer < playerSize; curPlayer ++){
 				int curPlayerLocx = allPlayers.get(curPlayer).getLocX();
@@ -205,6 +205,8 @@ public class Cdc implements Runnable {
 		int playerSize = allPlayers.size();
 		for (int i = 0; i < playerSize; i++) {
 			ClientPlayerFeature player = allPlayers.get(i);
+			if (player.isDead())
+                continue;
 			double faceAngle = player.getFaceAngle();
 			double radianAngle = Math.toRadians(faceAngle);
             boolean[] keys = player.getDirection();
@@ -251,25 +253,17 @@ public class Cdc implements Runnable {
         }
     }
 	
-	private void checkSupplement(){
-		if(System.currentTimeMillis() >= tenSeconds){ //現在時間超過10秒
-			if(allItems.get(30).isDead()){
+	private void checkSupplement() {
+		if(System.currentTimeMillis() >= tenSeconds) { //現在時間超過10秒
+
+			if(allItems.get(30).isDead()) {
 				rebornFunctionalPack(allItems.get(30));
 			}
-			if(allItems.get(31).isDead()){
+
+			if(allItems.get(31).isDead()) {
 				rebornFunctionalPack(allItems.get(31));
 			}
-			
-			/*int[] loc = giveRandomLocation();
-			allItems.get(30).setDead(false);
-			allItems.get(30).setLocX(loc[0]);
-			allItems.get(30).setLocY(loc[1]);
-			loc = giveRandomLocation();
-			allItems.get(31).setDead(false);
-			allItems.get(31).setLocX(loc[0]);
-			allItems.get(31).setLocY(loc[1]);*/
-			//rebornFunctionalPack(allItems.get(30));
-			//rebornFunctionalPack(allItems.get(31));
+
 			tenSeconds += 10*1000;
 		}
 	}

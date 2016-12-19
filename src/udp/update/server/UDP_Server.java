@@ -77,7 +77,7 @@ public class UDP_Server implements Runnable {
 					item = gson.fromJson(eachEnData.getData(),
 							ClientItemFeature.class);
 					instance.updateItem(item.getItemID(), item.isDead(),
-										item.getItemOwner());
+										item.getItemOwner(), item.getLocX(), item.getLocY());
 
 					//System.out.println("Update Item");
 
