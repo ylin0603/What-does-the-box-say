@@ -6,7 +6,7 @@ public class ClientPlayerFeature {
 	private int weaponType = 0; // 0 for knife, 1 for gun
 	private String nickname;
 	private int locX, locY;
-	private long lastMoveTime;
+	private long lastMoveTime = System.currentTimeMillis();
 	private long attackCD = 0;
 	private long changeWeaponCD = 0;
 	private long resurrectionTime = 0;
@@ -215,4 +215,8 @@ public class ClientPlayerFeature {
 		else
 			return false;
 	}
+
+    public void setLastMoveTime() {
+        lastMoveTime = System.currentTimeMillis();
+    }
 }
