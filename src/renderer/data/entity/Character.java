@@ -43,6 +43,7 @@ public class Character extends Entity {
         this.x = x;
         this.y = y;
         this.faceAngle = angle;
+        this.HP = HP;
         this. killCount = killCount;
         this.deadCount = deadCount;
         this.bulletCount = bulletCount;

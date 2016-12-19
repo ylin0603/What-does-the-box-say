@@ -1,6 +1,5 @@
 package udp.update.server;
 
-
 public class ClientPlayerFeature {
     private int clientNo;
     private int weaponType = 0; // 0 for knife, 1 for gun
@@ -8,6 +7,7 @@ public class ClientPlayerFeature {
     private int locX, locY;
     private long lastMoveTime;
     private long attackCD = 0;
+    private long changeWeaponCD = 0;
     private long resurrectionTime = 0;
     private final int resurrectionCD = 4000;
 
@@ -136,6 +136,17 @@ public class ClientPlayerFeature {
     }
 
     public void setAttackCD() {
+        attackCD = System.currentTimeMillis() + 1000;
+    }
+
+    public boolean isChangeWeaponCD() {
+        if (changeWeaponCD <= System.currentTimeMillis())
+            return true;
+        else
+            return false;
+    }
+
+    public void setChangeWeaponCD() {
         attackCD = System.currentTimeMillis() + 1000;
     }
 

@@ -87,17 +87,6 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void update() {
-
-        RealTcpClient realTcpClient = RealTcpClient.getInstance();
-
-        try {
-            realTcpClient.inputMoves(keyInput.getKeys());
-            keyInput.resetOnceKey();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        
         GameManager.getInsatance().update();
         
     }
