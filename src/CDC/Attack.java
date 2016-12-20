@@ -131,18 +131,19 @@ public class Attack {
 
     public void boxRevenge(ClientItemFeature item2,
             ArrayList<ClientPlayerFeature> clientPlayerFeature) {
-        double fakeX = item2.getLocX() ;
-        double fakeY = item2.getLocY() ;
+        double fakeX = item2.getLocX();
+        double fakeY = item2.getLocY();
         for (ClientPlayerFeature player2 : clientPlayerFeature) {
             if (Collision.isCollison((int) Math.round(fakeX),
-                    (int) Math.round(fakeY), 8 * 2, player2)) {
+                    (int) Math.round(fakeY), 23.853939383417143058403447179797,
+                    player2)) {
                 player2.setAttackedFlag(true);
                 if (subBlood(player2, 2)) {
                     player2.setDeadCount(player2.getDeadCount() + 1);
                     player2.setDead(true);
                 }
             }
-
+            // ((1.2 * 16) ^ 2 - (8) ^ 2) ^ (1 / 2) + 8 * (2 - 1.2)
         }
 
     }
