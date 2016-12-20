@@ -45,7 +45,6 @@ public class GuiSmallMap extends GuiComponent {
 
     public void update() {
         p = DynamicObjectManager.getInstance().getVirtualCharacterXY();
-        System.out.println(p);
         localPlayer.setLocation(MAP_X + p.x / mapScale, MAP_Y + p.y / mapScale);
         renderBags();
     }
