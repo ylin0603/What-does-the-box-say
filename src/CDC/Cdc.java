@@ -28,7 +28,7 @@ public class Cdc implements Runnable {
     private static Cdc instance = null;
 
     public final static int BOX_SIZE = 16;// this is two are read for all server
-    public final static int MAP_SIZE = 1024;
+    public final static int MAP_SIZE = 512;
 
     public static void main(String[] args) throws InterruptedException {
         // tcp
@@ -67,8 +67,6 @@ public class Cdc implements Runnable {
 
     public int[] giveRandomLocation() {
         int[] location = new int[2];
-        int playerSize = allPlayers.size();
-        int itemSize = allItems.size();
         int xRange, yRange; // the distance between two objects.
         boolean isOverlapped = true;
         while (isOverlapped) {
@@ -77,9 +75,9 @@ public class Cdc implements Runnable {
             location[0] = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
             location[1] = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
             if (allPlayers.size() > 0) {
-                for (int curPlayer = 0; curPlayer < playerSize; curPlayer++) {
-                    int curPlayerLocx = allPlayers.get(curPlayer).getLocX();
-                    int curPlayerLocy = allPlayers.get(curPlayer).getLocY();
+                for (ClientPlayerFeature player : allPlayers) {
+                    int curPlayerLocx = player.getLocX();
+                    int curPlayerLocy = player.getLocY();
                     xRange = Math.abs(location[0] - curPlayerLocx);
                     yRange = Math.abs(location[1] - curPlayerLocy);
                     if ((xRange <= BOX_SIZE) && (yRange <= BOX_SIZE)) // overlapped
@@ -91,9 +89,9 @@ public class Cdc implements Runnable {
             }
             if (isOverlapped)
                 continue;
-            for (int curItem = 0; curItem < itemSize; curItem++) {
-                int curItemLocx = allItems.get(curItem).getLocX();
-                int curItemLocy = allItems.get(curItem).getLocY();
+            for (ClientItemFeature item : allItems) {
+                int curItemLocx = item.getLocX();
+                int curItemLocy = item.getLocY();
                 xRange = Math.abs(location[0] - curItemLocx);
                 yRange = Math.abs(location[1] - curItemLocy);
                 if ((xRange <= BOX_SIZE) && (yRange <= BOX_SIZE)) {
@@ -105,22 +103,6 @@ public class Cdc implements Runnable {
                 continue;
         }
         return location;
-
-    }
-
-    public void rebornPlayer(ClientPlayerFeature player) {
-        player.setWeaponType(0);
-        int[] loc = giveRandomLocation();
-        player.setLocX(loc[0]);
-        player.setLocY(loc[1]);
-        player.setFaceAngle(0.0);
-        player.setHP(100);
-        player.setBulletCount(2);
-        player.setAttackFlag(false);
-        player.setAttackedFlag(false);
-        player.setCollisionFlag(false);
-        player.setDead(false);
-        player.setLastMoveTime();
     }
 
     public void initFakeBox() {
@@ -128,14 +110,6 @@ public class Cdc implements Runnable {
             int[] loc = giveRandomLocation();
             allItems.add(new ClientItemFeature(fakeBoxNum, 0, loc[0], loc[1]));
         }
-    }
-
-    public void rebornFakeBox(ClientItemFeature fakeBox) {
-        int[] loc = giveRandomLocation();
-        fakeBox.setLocX(loc[0]);
-        fakeBox.setLocY(loc[1]);
-        fakeBox.setDead(false);
-        fakeBox.setCollision(false);
     }
 
     public void initBloodPackge() {
@@ -146,7 +120,6 @@ public class Cdc implements Runnable {
     public void initBulletPackge() {
         int[] loc = giveRandomLocation();
         allItems.add(new ClientItemFeature(BULLETPACKGE, 2, loc[0], loc[1]));
-
     }
 
     // to reborn bullet or blood packages
@@ -206,9 +179,7 @@ public class Cdc implements Runnable {
     }
 
     public void movingPlayer() {
-        int playerSize = allPlayers.size();
-        for (int i = 0; i < playerSize; i++) {
-            ClientPlayerFeature player = allPlayers.get(i);
+        for (ClientPlayerFeature player : allPlayers) {
             if (player.isDead())
                 continue;
             double faceAngle = player.getFaceAngle();
@@ -230,6 +201,8 @@ public class Cdc implements Runnable {
             }
             if (keys[ATTACK])
                 attack(player.getClientNo());
+            else
+                player.setAttackFlag(false);
             if (keys[CHANGEWEAPON]) {
                 keys[CHANGEWEAPON] = false;
                 changeWeapon(player);
@@ -280,7 +253,8 @@ public class Cdc implements Runnable {
         for (ClientPlayerFeature player : allPlayers) {
             if (player.isDead()) {
                 if (player.checkResurrection()) {
-                    rebornPlayer(player);
+                    int[] loc = Cdc.getInstance().giveRandomLocation();
+                    player.reborn(loc[0], loc[1]);
                 }
             }
         }
