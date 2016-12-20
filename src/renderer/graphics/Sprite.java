@@ -6,6 +6,7 @@ public class Sprite {
     public int[] pixels;
     private SpriteSheet sheet;
 
+    public static Sprite EMPTY = new Sprite(32,0xffffffff);
 
     public static Sprite GRASS = new Sprite(16, 0, 1, SpriteSheet.tiles);
     public static Sprite STONE = new Sprite(16, 0, 2, SpriteSheet.tiles);
@@ -25,53 +26,35 @@ public class Sprite {
     public static Sprite SPWAN_FLOOR = new Sprite(16, 2, 1, SpriteSheet.SPWAN_LEVEL);
 
     // below is for animation, dear StanleyLin.
-    /*public static Sprite[] PLAYER_FORWARD = {
-            new Sprite(16, 1, 3, SpriteSheet.characterList),
-			new Sprite(16, 0, 3, SpriteSheet.characterList),
-			new Sprite(16, 2, 3, SpriteSheet.characterList),
-	};
-	
-	public static Sprite PLAYER_BACKWARD[] = {
-			new Sprite(16, 1, 0, SpriteSheet.characterList),
-			new Sprite(16, 0, 0, SpriteSheet.characterList),
-			new Sprite(16, 2, 0, SpriteSheet.characterList),
-	};
-	public static Sprite PLAYER_LEFT[] = {
-			new Sprite(16, 1, 1, SpriteSheet.characterList),
-			new Sprite(16, 0, 1, SpriteSheet.characterList),
-			new Sprite(16, 2, 1, SpriteSheet.characterList),
-	};
-	public static Sprite PLAYER_RIGHT[] = {
-			new Sprite(16, 1, 2, SpriteSheet.characterList),
-			new Sprite(16, 0, 2, SpriteSheet.characterList),
-			new Sprite(16, 2, 2, SpriteSheet.characterList),
-			
-	};*/
 
-    public static Sprite[] BOX_ATTACK_UP = {
-            new Sprite(16, 0, 8, SpriteSheet.character),
-			new Sprite(16, 1, 8, SpriteSheet.character),
-			new Sprite(16, 2, 8, SpriteSheet.character),
-            new Sprite(16, 3, 8, SpriteSheet.character),
+    public static Sprite[] SWORD_UPWARD_ATTACK = {
+            new Sprite(32, 4, 5, SpriteSheet.character),
+			new Sprite(32, 5, 5, SpriteSheet.character),
+			new Sprite(32, 6, 5, SpriteSheet.character),
+            new Sprite(32, 7, 5, SpriteSheet.character),
+            new Sprite(32, 0, 4, SpriteSheet.character),
 	};
 
-	public static Sprite BOX_ATTACK_RIGHT[] = {
-            new Sprite(16, 0, 9, SpriteSheet.character),
-            new Sprite(16, 1, 9, SpriteSheet.character),
-            new Sprite(16, 2, 9, SpriteSheet.character),
-            new Sprite(16, 3, 9, SpriteSheet.character),
+	public static Sprite SWORD_RIGHT_ATTACK[] = {
+            new Sprite(32, 0, 4, SpriteSheet.character),
+            new Sprite(32, 1, 4, SpriteSheet.character),
+            new Sprite(32, 2, 4, SpriteSheet.character),
+            new Sprite(32, 3, 4, SpriteSheet.character),
+            new Sprite(32, 4, 4, SpriteSheet.character),
 	};
-	public static Sprite BOX_ATTACK_DOWN[] = {
-            new Sprite(16, 0, 10, SpriteSheet.character),
-            new Sprite(16, 1, 10, SpriteSheet.character),
-            new Sprite(16, 2, 10, SpriteSheet.character),
-            new Sprite(16, 3, 10, SpriteSheet.character),
+	public static Sprite SWORD_DOWNWARD_ATTCK[] = {
+            new Sprite(32, 4, 4, SpriteSheet.character),
+            new Sprite(32, 5, 4, SpriteSheet.character),
+            new Sprite(32, 6, 4, SpriteSheet.character),
+            new Sprite(32, 7, 4, SpriteSheet.character),
+            new Sprite(32, 0, 5, SpriteSheet.character),
 	};
-	public static Sprite BOX_ATTACK_LEFT[] = {
-            new Sprite(16, 0, 10, SpriteSheet.character),
-            new Sprite(16, 1, 10, SpriteSheet.character),
-            new Sprite(16, 2, 10, SpriteSheet.character),
-            new Sprite(16, 3, 10, SpriteSheet.character),
+	public static Sprite SWORD_LEFT_ATTACK[] = {
+            new Sprite(32, 0, 5, SpriteSheet.character),
+            new Sprite(32, 1, 5, SpriteSheet.character),
+            new Sprite(32, 2, 5, SpriteSheet.character),
+            new Sprite(32, 3, 5, SpriteSheet.character),
+            new Sprite(32, 4, 5, SpriteSheet.character),
 
 	};
 

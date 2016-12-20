@@ -20,6 +20,7 @@ public class Character extends Entity {
     private int timer = 0;
     private boolean animationFinished = true;
     private int clientno;
+    private Sword sword = new Sword();
 
     public Character(int clientno, String nickName) {
         this.clientno = clientno;
@@ -34,6 +35,7 @@ public class Character extends Entity {
         this.HP = 100;
 
         sprite = Sprite.PLAYER;
+        sword.sprite = Sprite.EMPTY;
     }
 
     public void set(int weaponType, String nickName, int x, int y,
@@ -58,28 +60,34 @@ public class Character extends Entity {
 
     public void update() {
         timer++;
-        if (timer % 5 == 0) {
+        if (timer % 4 == 0) {
             count++;
         }
 
         if (attackFlag || !animationFinished) {
-
             animationFinished = false;
-
             if (faceAngle >= 45 && faceAngle < 135) {
-                this.sprite = Sprite.BOX_ATTACK_RIGHT[count % 4];
+                sword.sprite = Sprite.SWORD_RIGHT_ATTACK[count % 5];
+                sword.x = x;
+                sword.y = y - this.sprite.SIZE / 2;
             } else if (faceAngle >= 135 && faceAngle < 225) {
-                this.sprite = Sprite.BOX_ATTACK_DOWN[count % 4];
+                sword.sprite = Sprite.SWORD_DOWNWARD_ATTCK[count % 5];
+                sword.x = x - this.sprite.SIZE / 2;
+                sword.y = y - this.sprite.SIZE /3 ;
             } else if (faceAngle >= 225 && faceAngle < 315) {
-                this.sprite = Sprite.BOX_ATTACK_LEFT[count % 4];
+                sword.sprite = Sprite.SWORD_LEFT_ATTACK[count % 5];
+                sword.x = x - this.sprite.SIZE ;
+                sword.y = y - this.sprite.SIZE / 3;
             } else if ((faceAngle >= 315 && faceAngle < 360) || (faceAngle >= 0 && faceAngle < 45)) {
-                this.sprite = Sprite.BOX_ATTACK_UP[count % 4];
+                sword.sprite = Sprite.SWORD_UPWARD_ATTACK[count % 5];
+                sword.x = x - this.sprite.SIZE / 2;
+                sword.y = y - this.sprite.SIZE;
             }
 
             animationFinished = (count % 4 == 3);
 
         } else {
-            this.sprite = Sprite.PLAYER;
+            sword.sprite = Sprite.EMPTY;
         }
 
         if (count == 12000) {
@@ -92,6 +100,7 @@ public class Character extends Entity {
         //TODO: If attack flag == true, draw addition animation
         //TODO: bullet should have additional class and draw additionally.
         super.render(pixels);
+        sword.render(pixels);
     }
 
     public int getWeaponType() {
