@@ -35,7 +35,6 @@ public class ClientPlayerFeature {
         this.attackCD = 0;
         this.changeWeaponCD = 0;
         faceAngle = 0.0;
-        this.bulletCount = 2;
         this.attackFlag = false;
         this.attackedFlag = false;
         this.collisionFlag = false;
@@ -45,8 +44,9 @@ public class ClientPlayerFeature {
         this.locX = locX;
         this.locY = locY;
         this.HP = 100;
-        setLastMoveTime();
+        this.bulletCount = 2;
         isDead = false;
+        setLastMoveTime();
     }
 
     public int getClientNo() {
