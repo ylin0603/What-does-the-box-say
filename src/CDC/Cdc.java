@@ -230,6 +230,8 @@ public class Cdc implements Runnable {
             }
             if (keys[ATTACK])
                 attack(player.getClientNo());
+            else
+                player.setAttackFlag(false);
             if (keys[CHANGEWEAPON]) {
                 keys[CHANGEWEAPON] = false;
                 changeWeapon(player);

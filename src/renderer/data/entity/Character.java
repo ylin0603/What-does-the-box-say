@@ -65,35 +65,34 @@ public class Character extends Entity {
         timer++;
         if (timer % 6 == 0) {
             count++;
-        }
-        if (!animationFinished) {
-            if (faceAngle >= 45 && faceAngle < 135) {
-                sword.sprite = Sprite.SWORD_RIGHT_ATTACK[count % 5];
-                sword.x = x;
-                sword.y = y - this.sprite.SIZE / 2;
-            } else if (faceAngle >= 135 && faceAngle < 225) {
-                sword.sprite = Sprite.SWORD_DOWNWARD_ATTCK[count % 5];
-                sword.x = x - this.sprite.SIZE / 2;
-                sword.y = y - this.sprite.SIZE / 3;
-            } else if (faceAngle >= 225 && faceAngle < 315) {
-                sword.sprite = Sprite.SWORD_LEFT_ATTACK[count % 5];
-                sword.x = x - this.sprite.SIZE;
-                sword.y = y - this.sprite.SIZE / 3;
-            } else if ((faceAngle >= 315 && faceAngle < 360) || (faceAngle >= 0 && faceAngle < 45)) {
-                sword.sprite = Sprite.SWORD_UPWARD_ATTACK[count % 5];
-                sword.x = x - this.sprite.SIZE / 2;
-                sword.y = y - this.sprite.SIZE;
+            if (!animationFinished) {
+                if (faceAngle >= 45 && faceAngle < 135) {
+                    sword.sprite = Sprite.SWORD_RIGHT_ATTACK[count % 5];
+                    sword.x = x;
+                    sword.y = y - this.sprite.SIZE / 2;
+                } else if (faceAngle >= 135 && faceAngle < 225) {
+                    sword.sprite = Sprite.SWORD_DOWNWARD_ATTCK[count % 5];
+                    sword.x = x - this.sprite.SIZE / 2;
+                    sword.y = y - this.sprite.SIZE / 3;
+                } else if (faceAngle >= 225 && faceAngle < 315) {
+                    sword.sprite = Sprite.SWORD_LEFT_ATTACK[count % 5];
+                    sword.x = x - this.sprite.SIZE;
+                    sword.y = y - this.sprite.SIZE / 3;
+                } else if ((faceAngle >= 315 && faceAngle < 360) || (faceAngle >= 0 && faceAngle < 45)) {
+                    sword.sprite = Sprite.SWORD_UPWARD_ATTACK[count % 5];
+                    sword.x = x - this.sprite.SIZE / 2;
+                    sword.y = y - this.sprite.SIZE;
+                }
+
+                animationFinished = (count % 5 == 0);
+
+            } else {
+                sword.sprite = Sprite.EMPTY;
+                count = 0;
+                timer = 0;
             }
-
-            animationFinished = (count % 5 == 0);
-
-        } else {
-            sword.sprite = Sprite.EMPTY;
         }
 
-        if (count == 12000) {
-            count = 0;
-        }
 
     }
 

@@ -75,7 +75,6 @@ public class Attack {
                 continue;// for prevent synchronize problem
             } else {
                 if (Collision.isCollison(item1, player2)) {
-                    player1.setAttackFlag(true);
                     player2.setAttackedFlag(true);
                     isThisAttack = true;
                     isAttacked[clientPlayerFeature.indexOf(player2)] = true;
