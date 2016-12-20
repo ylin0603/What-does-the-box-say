@@ -102,8 +102,9 @@ public class Game extends Canvas implements Runnable {
         for (Entity entity : DynamicObjectManager.getInstance().getAllDynamicObjects()) {
             entity.update();
         }
-        GameManager.getInsatance().update();
 
+        GameManager.getInstance().update();
+        
     }
 
     public static void main(String[] args) throws InterruptedException {

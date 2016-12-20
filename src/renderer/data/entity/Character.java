@@ -47,6 +47,7 @@ public class Character extends Entity {
         this.x = x;
         this.y = y;
         this.faceAngle = angle;
+        this.HP = HP;
         this.killCount = killCount;
         this.deadCount = deadCount;
         this.bulletCount = bulletCount;
@@ -54,18 +55,18 @@ public class Character extends Entity {
         this.attackedFlag = attackedFlag;
         this.collisionFlag = collisionFlag;
         this.isDead = isDead;
+        if (this.attackFlag)
+            animationFinished = false;
 
         //this.sprite = Sprite.rotate(Sprite.PLAYER,angle);
     }
 
     public void update() {
         timer++;
-        if (timer % 4 == 0) {
+        if (timer % 6 == 0) {
             count++;
         }
-
-        if (attackFlag || !animationFinished) {
-            animationFinished = false;
+        if (!animationFinished) {
             if (faceAngle >= 45 && faceAngle < 135) {
                 sword.sprite = Sprite.SWORD_RIGHT_ATTACK[count % 5];
                 sword.x = x;
@@ -73,10 +74,10 @@ public class Character extends Entity {
             } else if (faceAngle >= 135 && faceAngle < 225) {
                 sword.sprite = Sprite.SWORD_DOWNWARD_ATTCK[count % 5];
                 sword.x = x - this.sprite.SIZE / 2;
-                sword.y = y - this.sprite.SIZE /3 ;
+                sword.y = y - this.sprite.SIZE / 3;
             } else if (faceAngle >= 225 && faceAngle < 315) {
                 sword.sprite = Sprite.SWORD_LEFT_ATTACK[count % 5];
-                sword.x = x - this.sprite.SIZE ;
+                sword.x = x - this.sprite.SIZE;
                 sword.y = y - this.sprite.SIZE / 3;
             } else if ((faceAngle >= 315 && faceAngle < 360) || (faceAngle >= 0 && faceAngle < 45)) {
                 sword.sprite = Sprite.SWORD_UPWARD_ATTACK[count % 5];
@@ -84,7 +85,7 @@ public class Character extends Entity {
                 sword.y = y - this.sprite.SIZE;
             }
 
-            animationFinished = (count % 4 == 3);
+            animationFinished = (count % 5 == 0);
 
         } else {
             sword.sprite = Sprite.EMPTY;

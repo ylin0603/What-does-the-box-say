@@ -47,10 +47,10 @@ public class DynamicObjectManager {
                 bulletCount, isAttack, isAttacked, isCollision, isDead);
     }
 
-    public void updateItem(int index, boolean isDead, int owner) {
+    public void updateItem(int index, boolean isDead, int owner, int x, int y) {
 
         Item item = this.itemList.get(index);
-        item.update(isDead, owner);
+        item.update(isDead, owner, x, y);
     }
 
     public List<Entity> getAllDynamicObjects() {

@@ -33,7 +33,7 @@ public class GameManager {
         componentList.add(playerAngle);
     }
 
-    public static GameManager getInsatance() {
+    public static GameManager getInstance() {
         if (gameManager == null) {
             gameManager = new GameManager();
         }
@@ -61,10 +61,6 @@ public class GameManager {
         }
     }
 
-    /*
-     * public void setWeapon() { statusBar.setWeopon(); }
-     */
-
     public void openInfo(String type) {
         if (type == "help")
             helpPanel.setVisible();
@@ -78,4 +74,5 @@ public class GameManager {
         if (type == "tab")
             scoreBoard.setInvisible();
     }
+    
 }

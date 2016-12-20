@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 import java.util.Arrays;
 
 import gui.game.GameManager;
+import tcp.tcpClient.RealTcpClient;
 
 /**
  * Created by Tsunglin on 2016/12/15.
@@ -38,14 +39,21 @@ public class KeyboardInput implements KeyListener {
             keys[D] = true;
         if (e.getKeyChar() == ' ')
             keys[ATTACK] = true;
-        if (e.getKeyChar() == 'j') {
+        if (e.getKeyChar() == 'j')
             keys[J] = true;
-            // GameManager.getInsatance().setWeapon();
-        }
         if (e.getKeyChar() == 'h')
-            GameManager.getInsatance().openInfo(HELP);
+            GameManager.getInstance().openInfo(HELP);
         if (e.getKeyCode() == KeyEvent.VK_TAB)
-            GameManager.getInsatance().openInfo(TAB);
+            GameManager.getInstance().openInfo(TAB);
+        RealTcpClient realTcpClient = RealTcpClient.getInstance();
+        try {
+            realTcpClient.inputMoves(getKeys());
+        } catch (Exception e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+            System.out.println("TCP connetction error");
+        }
+        resetOnceKey();
     }
 
     @Override
@@ -63,9 +71,18 @@ public class KeyboardInput implements KeyListener {
         if (e.getKeyChar() == 'j')
             keys[J] = false;
         if (e.getKeyChar() == 'h')
-            GameManager.getInsatance().closeInfo(HELP);
+            GameManager.getInstance().closeInfo(HELP);
         if (e.getKeyCode() == KeyEvent.VK_TAB)
-            GameManager.getInsatance().closeInfo(TAB);
+            GameManager.getInstance().closeInfo(TAB);
+        RealTcpClient realTcpClient = RealTcpClient.getInstance();
+        try {
+            realTcpClient.inputMoves(getKeys());
+        } catch (Exception e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+            System.out.println("TCP connetction error");
+        }
+        resetOnceKey();
     }
 
     public boolean[] getKeys() {

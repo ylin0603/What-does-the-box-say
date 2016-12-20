@@ -25,14 +25,14 @@ public class UDP_Server implements Runnable {
 			serverSocket = new DatagramSocket(3335);
 
 			while (true) {
-			    receiveData = new byte[10240];
+				receiveData = new byte[10240];
 				DatagramPacket receivePacket =
 						new DatagramPacket(receiveData, receiveData.length);
 				serverSocket.receive(receivePacket);
 
 				// get EncodedData in ArrayList and parse.
 				String receiveString =
-				        new String(receivePacket.getData()).trim();
+						new String(receivePacket.getData()).trim();
 				parseData(receiveString);
 			}
 		} catch (IOException e) {
@@ -62,6 +62,8 @@ public class UDP_Server implements Runnable {
 							player.getBulletCount(), player.isAttackFlag(),
 							player.isAttackedFlag(), player.isCollisionFlag(),
 							player.isDead());
+					if(player.isAttackFlag())
+						System.out.println("ATTACK is true");
 
 					break;
 				case "AddP":
@@ -77,9 +79,9 @@ public class UDP_Server implements Runnable {
 					item = gson.fromJson(eachEnData.getData(),
 							ClientItemFeature.class);
 					instance.updateItem(item.getItemID(), item.isDead(),
-										item.getItemOwner());
+										item.getItemOwner(), item.getLocX(), item.getLocY());
 
-					System.out.println("Update Item");
+					//System.out.println("Update Item");
 
 					break;
 				case "AddI":

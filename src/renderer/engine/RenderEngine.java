@@ -51,7 +51,7 @@ public class RenderEngine {
 
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
-		GameManager.getInsatance().render(g);
+		GameManager.getInstance().render(g);
 		g.dispose();
 		bs.show();
 	}
