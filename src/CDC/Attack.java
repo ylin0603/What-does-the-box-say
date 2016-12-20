@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Attack {
     final static int BULLETVEL = 4;
+    final static double revengeSize = 23.853939383417143058403447179797;
     final static int MAPSIZE = 1985;
     final static int WINDOWSIZEX = 150;
     final static int WINDOWSIZEY = 72;
@@ -129,20 +130,20 @@ public class Attack {
         return isAttack;
     }
 
-    private void boxRevenge(ClientItemFeature item2,
+    public void boxRevenge(ClientItemFeature item2,
             ArrayList<ClientPlayerFeature> clientPlayerFeature) {
-        double fakeX = item2.getLocX() - 16;
-        double fakeY = item2.getLocY() - 16;
+        double fakeX = item2.getLocX();
+        double fakeY = item2.getLocY();
         for (ClientPlayerFeature player2 : clientPlayerFeature) {
             if (Collision.isCollison((int) Math.round(fakeX),
-                    (int) Math.round(fakeY), 8 * 3, player2)) {
+                    (int) Math.round(fakeY), revengeSize, player2)) {
                 player2.setAttackedFlag(true);
                 if (subBlood(player2, 2)) {
                     player2.setDeadCount(player2.getDeadCount() + 1);
                     player2.setDead(true);
                 }
             }
-
+            // ((1.2 * 16) ^ 2 - (8) ^ 2) ^ (1 / 2) + 8 * (2 - 1.2)
         }
 
     }
