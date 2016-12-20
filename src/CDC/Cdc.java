@@ -8,7 +8,6 @@ import tcp.tcpServer.RealTcpServer;
 public class Cdc implements Runnable {
     Random random = new Random();
     private long startTime;
-    private long tenSeconds;
     private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
     private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
 
@@ -20,14 +19,18 @@ public class Cdc implements Runnable {
     private final static int ATTACK = 4;
     private final static int CHANGEWEAPON = 5;
 
+    private final static int BLOODPACKGE = 30;
+    private final static int BULLETPACKGE = 31;
+    
     private final static int VEL = 2;
     private final static double ANGLEVEL = 7;// degree
 
     private static Cdc instance = null;
 
     public final static int BOX_SIZE = 16;// this is two are read for all server
-    public final static int MAP_SIZE = 1024;
-
+    public final static int MAP_SIZE_X = 640;
+    public final static int MAP_SIZE_Y = 1200;
+    
     public static void main(String[] args) throws InterruptedException {
         // tcp
         RealTcpServer realTcpServer = RealTcpServer.getInstance();
@@ -65,19 +68,17 @@ public class Cdc implements Runnable {
 
     public int[] giveRandomLocation() {
         int[] location = new int[2];
-        int playerSize = allPlayers.size();
-        int itemSize = allItems.size();
         int xRange, yRange; // the distance between two objects.
         boolean isOverlapped = true;
         while (isOverlapped) {
             isOverlapped = false;
 
-            location[0] = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
-            location[1] = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
+            location[0] = random.nextInt(MAP_SIZE_X - BOX_SIZE + 1);
+            location[1] = random.nextInt(MAP_SIZE_Y - BOX_SIZE + 1);
             if (allPlayers.size() > 0) {
-                for (int curPlayer = 0; curPlayer < playerSize; curPlayer++) {
-                    int curPlayerLocx = allPlayers.get(curPlayer).getLocX();
-                    int curPlayerLocy = allPlayers.get(curPlayer).getLocY();
+                for (ClientPlayerFeature player : allPlayers) {
+                    int curPlayerLocx = player.getLocX();
+                    int curPlayerLocy = player.getLocY();
                     xRange = Math.abs(location[0] - curPlayerLocx);
                     yRange = Math.abs(location[1] - curPlayerLocy);
                     if ((xRange <= BOX_SIZE) && (yRange <= BOX_SIZE)) // overlapped
@@ -89,9 +90,9 @@ public class Cdc implements Runnable {
             }
             if (isOverlapped)
                 continue;
-            for (int curItem = 0; curItem < itemSize; curItem++) {
-                int curItemLocx = allItems.get(curItem).getLocX();
-                int curItemLocy = allItems.get(curItem).getLocY();
+            for (ClientItemFeature item : allItems) {
+                int curItemLocx = item.getLocX();
+                int curItemLocy = item.getLocY();
                 xRange = Math.abs(location[0] - curItemLocx);
                 yRange = Math.abs(location[1] - curItemLocy);
                 if ((xRange <= BOX_SIZE) && (yRange <= BOX_SIZE)) {
@@ -103,48 +104,23 @@ public class Cdc implements Runnable {
                 continue;
         }
         return location;
-
-    }
-
-    public void rebornPlayer(ClientPlayerFeature player) {
-        player.setWeaponType(0);
-        int[] loc = giveRandomLocation();
-        player.setLocX(loc[0]);
-        player.setLocY(loc[1]);
-        player.setFaceAngle(0.0);
-        player.setHP(100);
-        player.setBulletCount(2);
-        player.setAttackFlag(false);
-        player.setAttackedFlag(false);
-        player.setCollisionFlag(false);
-        player.setDead(false);
-        player.setLastMoveTime();
     }
 
     public void initFakeBox() {
-        for (int fakeBoxNum = 0; fakeBoxNum < 30; fakeBoxNum++) {
+        for (int fakeBoxNum = 0; fakeBoxNum < BLOODPACKGE; fakeBoxNum++) {
             int[] loc = giveRandomLocation();
             allItems.add(new ClientItemFeature(fakeBoxNum, 0, loc[0], loc[1]));
         }
     }
 
-    public void rebornFakeBox(ClientItemFeature fakeBox) {
-        int[] loc = giveRandomLocation();
-        fakeBox.setLocX(loc[0]);
-        fakeBox.setLocY(loc[1]);
-        fakeBox.setDead(false);
-        fakeBox.setCollision(false);
-    }
-
     public void initBloodPackge() {
         int[] loc = giveRandomLocation();
-        allItems.add(new ClientItemFeature(30, 1, loc[0], loc[1]));
+        allItems.add(new ClientItemFeature(BLOODPACKGE, 1, loc[0], loc[1]));
     }
 
     public void initBulletPackge() {
         int[] loc = giveRandomLocation();
-        allItems.add(new ClientItemFeature(31, 2, loc[0], loc[1]));
-
+        allItems.add(new ClientItemFeature(BULLETPACKGE, 2, loc[0], loc[1]));
     }
 
     // to reborn bullet or blood packages
@@ -176,7 +152,9 @@ public class Cdc implements Runnable {
         int itemSize = allItems.size();
         int itemType;
         boolean isImpacted = false;
-        for (int currItem = 30; currItem < itemSize; currItem++) {
+        for (int currItem = BLOODPACKGE; currItem < itemSize; currItem++) {
+            if (allItems.get(currItem).isDead())
+                continue;
             isImpacted = Collision.isCollison(allItems.get(currItem), player);
             if (isImpacted) {
                 itemType = allItems.get(currItem).getItemType();
@@ -184,13 +162,15 @@ public class Cdc implements Runnable {
                     case 1:
                         player.addHP(60);
                         allItems.get(currItem).setDead(true);
+                        allItems.get(currItem).setRebornTime(
+                                System.currentTimeMillis() + 10 * 1000);
                         break;
-
                     case 2:
                         player.addBullet(1);
                         allItems.get(currItem).setDead(true);
+                        allItems.get(currItem).setRebornTime(
+                                System.currentTimeMillis() + 10 * 1000);
                         break;
-
                     default:
                         break;
                 }
@@ -200,9 +180,7 @@ public class Cdc implements Runnable {
     }
 
     public void movingPlayer() {
-        int playerSize = allPlayers.size();
-        for (int i = 0; i < playerSize; i++) {
-            ClientPlayerFeature player = allPlayers.get(i);
+        for (ClientPlayerFeature player : allPlayers) {
             if (player.isDead())
                 continue;
             double faceAngle = player.getFaceAngle();
@@ -222,10 +200,10 @@ public class Cdc implements Runnable {
             if (keys[TURNRIGHT]) {
                 spin++;
             }
-            if (keys[ATTACK]) {
-                keys[ATTACK] = false;
+            if (keys[ATTACK])
                 attack(player.getClientNo());
-            }
+            else
+                player.setAttackFlag(false);
             if (keys[CHANGEWEAPON]) {
                 keys[CHANGEWEAPON] = false;
                 changeWeapon(player);
@@ -261,14 +239,14 @@ public class Cdc implements Runnable {
     }
 
     private void checkSupplement() {
-        if (System.currentTimeMillis() >= tenSeconds) { // 現在時間超過10秒
-            if (allItems.get(30).isDead()) {
-                rebornFunctionalPack(allItems.get(30));
-            }
-            if (allItems.get(31).isDead()) {
-                rebornFunctionalPack(allItems.get(31));
-            }
-            tenSeconds += 10 * 1000;
+        long now = System.currentTimeMillis();
+        if (allItems.get(BLOODPACKGE).isDead()
+                && allItems.get(BLOODPACKGE).getRebornTime() < now) {
+            rebornFunctionalPack(allItems.get(BLOODPACKGE));
+        }
+        if (allItems.get(BULLETPACKGE).isDead()
+                && allItems.get(BULLETPACKGE).getRebornTime() < now) {
+            rebornFunctionalPack(allItems.get(BULLETPACKGE));
         }
     }
 
@@ -276,7 +254,8 @@ public class Cdc implements Runnable {
         for (ClientPlayerFeature player : allPlayers) {
             if (player.isDead()) {
                 if (player.checkResurrection()) {
-                    rebornPlayer(player);
+                    int[] loc = Cdc.getInstance().giveRandomLocation();
+                    player.reborn(loc[0], loc[1]);
                 }
             }
         }
@@ -353,8 +332,14 @@ public class Cdc implements Runnable {
     }
 
     public void attack(int clientNo) {
-        allPlayers.get(clientNo).setAttackFlag(true);
-        new Attack(clientNo, allPlayers, allItems);
+        if (!allPlayers.get(clientNo).isAttackCD()) {
+            allPlayers.get(clientNo).setAttackFlag(false);
+            return;
+        } else {
+            allPlayers.get(clientNo).setAttackFlag(true);
+            allPlayers.get(clientNo).setAttackCD();
+            new Attack(clientNo, allPlayers, allItems);
+        }
     }
 
     public void changeWeapon(ClientPlayerFeature player) {
@@ -375,7 +360,6 @@ public class Cdc implements Runnable {
     @Override
     public void run() {
         startTime = System.currentTimeMillis();
-        tenSeconds = startTime + 10 * 1000;
         while (true) {
             if (finishGame(300)) {// 5分鐘就是300秒
                 // do something

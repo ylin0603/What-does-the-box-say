@@ -33,7 +33,7 @@ public class GameManager {
         componentList.add(playerAngle);
     }
 
-    public static GameManager getInsatance() {
+    public static GameManager getInstance() {
         if (gameManager == null) {
             gameManager = new GameManager();
         }

@@ -10,18 +10,25 @@ public class ClientItemFeature {
 	private boolean isCollision = false;
 	private boolean isDead = false;
 	private int itemOwner;
+	private long rebornTime;
 
 	public ClientItemFeature(int itemID, int itemType, int x, int y) {
 		this.itemID = itemID;
 		this.itemType = itemType;
-		this.locX = x;
-		this.locY = y;
+		init(x,y);
         this.oriLocX = x;
         this.oriLocY = y;
 	}
 
-	public int getItemID() {
-		return itemID;
+    public void init(int locX, int locY) {
+        setLocX(locX);
+        setLocY(locY);
+        setDead(false);
+        setCollision(false);
+    }
+
+    public int getItemID() {
+        return itemID;
 	}
 
 	public void setItemID(int itemID) {
@@ -99,4 +106,12 @@ public class ClientItemFeature {
 	public void setItemOwner(int itemOwner) {
 		this.itemOwner = itemOwner;
 	}
+
+    public long getRebornTime() {
+        return rebornTime;
+    }
+
+    public void setRebornTime(long rebornTime) {
+        this.rebornTime = rebornTime;
+    }
 }

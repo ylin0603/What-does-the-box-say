@@ -78,10 +78,6 @@ public class UDP_Client {
 			}
 
 			encodedData.add(new EncodedData(type, gson.toJson(item)));
-
-			if((item.getItemType() == 0 && item.isDead())) {
-				instance.rebornFakeBox(item);
-			}
 		}
 
 		return encodedData;

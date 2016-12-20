@@ -27,9 +27,26 @@ public class ClientPlayerFeature {
             int locY) {
         this.clientNo = clientNo;
         this.nickname = nickName;
+        init();
+        reborn(locX, locY);
+    }
+
+    public void init() {
+        this.attackCD = 0;
+        this.changeWeaponCD = 0;
+        faceAngle = 0.0;
+        this.attackFlag = false;
+        this.attackedFlag = false;
+        this.collisionFlag = false;
+    }
+
+    public void reborn(int locX, int locY) {
         this.locX = locX;
         this.locY = locY;
         this.HP = 100;
+        this.bulletCount = 2;
+        isDead = false;
+        setLastMoveTime();
     }
 
     public int getClientNo() {
@@ -69,8 +86,8 @@ public class ClientPlayerFeature {
     }
 
     public void setLocX(int locX) {
-        if (locX > 1985)
-            locX = 1984;
+        if (locX > Cdc.MAP_SIZE_X - 16)
+            locX = Cdc.MAP_SIZE_X - 16;
         else if (locX < 0)
             locX = 0;
         this.locX = locX;
@@ -82,8 +99,8 @@ public class ClientPlayerFeature {
     }
 
     public void setLocY(int locY) {
-        if (locY > 1985)
-            locY = 1985;
+        if (locY > Cdc.MAP_SIZE_Y - 16)
+            locY = Cdc.MAP_SIZE_Y - 16;
         else if (locY < 0)
             locY = 0;
         this.locY = locY;
@@ -165,8 +182,8 @@ public class ClientPlayerFeature {
 
     public void addBullet(int bullet) {
         this.bulletCount += bullet;
-        if (this.bulletCount > 3) {
-            this.bulletCount = 3;
+        if (this.bulletCount > maxBulletCount) {
+            this.bulletCount = maxBulletCount;
         }
     }
 
