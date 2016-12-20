@@ -28,8 +28,9 @@ public class Cdc implements Runnable {
     private static Cdc instance = null;
 
     public final static int BOX_SIZE = 16;// this is two are read for all server
-    public final static int MAP_SIZE = 512;
-
+    public final static int MAP_SIZE_X = 640;
+    public final static int MAP_SIZE_Y = 1200;
+    
     public static void main(String[] args) throws InterruptedException {
         // tcp
         RealTcpServer realTcpServer = RealTcpServer.getInstance();
@@ -72,8 +73,8 @@ public class Cdc implements Runnable {
         while (isOverlapped) {
             isOverlapped = false;
 
-            location[0] = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
-            location[1] = random.nextInt(MAP_SIZE - BOX_SIZE + 1);
+            location[0] = random.nextInt(MAP_SIZE_X - BOX_SIZE + 1);
+            location[1] = random.nextInt(MAP_SIZE_Y - BOX_SIZE + 1);
             if (allPlayers.size() > 0) {
                 for (ClientPlayerFeature player : allPlayers) {
                     int curPlayerLocx = player.getLocX();
