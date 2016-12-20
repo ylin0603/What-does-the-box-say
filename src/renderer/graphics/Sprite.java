@@ -14,7 +14,7 @@ public class Sprite {
     public static Sprite VOID_SPRITE = new Sprite(16, 0x1B87E0);
 
     //for demo
-    public static Sprite ITEM = new Sprite(16, 3, 4, SpriteSheet.character);
+    public static Sprite ITEM = new Sprite(16, 0, 4, SpriteSheet.character);
     public static Sprite PLAYER = new Sprite(16, 1, 0, SpriteSheet.character);
 
     //Spawn Level Sprites here:

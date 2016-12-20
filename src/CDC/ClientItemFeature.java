@@ -15,14 +15,20 @@ public class ClientItemFeature {
 	public ClientItemFeature(int itemID, int itemType, int x, int y) {
 		this.itemID = itemID;
 		this.itemType = itemType;
-		this.locX = x;
-		this.locY = y;
+		init(x,y);
         this.oriLocX = x;
         this.oriLocY = y;
 	}
 
-	public int getItemID() {
-		return itemID;
+    public void init(int locX, int locY) {
+        setLocX(locX);
+        setLocY(locY);
+        setDead(false);
+        setCollision(false);
+    }
+
+    public int getItemID() {
+        return itemID;
 	}
 
 	public void setItemID(int itemID) {

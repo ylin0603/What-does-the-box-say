@@ -81,8 +81,7 @@ public class Attack {
                     if (subBlood(player2, item1.getItemType() - 3)) {
                         player1.setKillCount(player1.getKillCount() + 1);
 
-                        player2.setDeadCount(player2.getDeadCount() + 1);
-                        player2.setDead(true);
+                        kill(player2);
                     }
                 }
             }
@@ -93,7 +92,6 @@ public class Attack {
     private boolean subBlood(ClientPlayerFeature player2, int attackType) {
         int HP = player2.getHP();
         boolean isDead = false;
-        System.out.println("HP" + HP);
         int minusBlood = (attackType) * +10 + 40;// 0:子彈:40, 1:刀:50 2:假箱爆:60
         HP -= minusBlood;
         if (HP <= 0) {
@@ -103,8 +101,13 @@ public class Attack {
             isDead = false;
         }
         player2.setHP(HP);
-        System.out.println("HP after" + HP);
         return isDead;
+    }
+
+    private void kill(ClientPlayerFeature player) {
+        player.setDeadCount(player.getDeadCount() + 1);
+        player.setDead(true);
+        player.init();
     }
 
     public boolean attackI2B(ClientItemFeature item1,
@@ -118,6 +121,9 @@ public class Attack {
                 item2.setDead(true);
                 isAttack = true;
                 boxRevenge(item2, clientPlayerFeature);
+
+                int[] loc = Cdc.getInstance().giveRandomLocation();
+                item2.init(loc[0], loc[1]);
             }
         }
         return isAttack;
@@ -132,8 +138,7 @@ public class Attack {
                     (int) Math.round(fakeY), revengeSize, player2)) {
                 player2.setAttackedFlag(true);
                 if (subBlood(player2, 2)) {
-                    player2.setDeadCount(player2.getDeadCount() + 1);
-                    player2.setDead(true);
+                    kill(player2);
                 }
             }
             // ((1.2 * 16) ^ 2 - (8) ^ 2) ^ (1 / 2) + 8 * (2 - 1.2)

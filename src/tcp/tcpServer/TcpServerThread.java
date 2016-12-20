@@ -104,7 +104,6 @@ public class TcpServerThread implements Runnable {
         if (ClientID == 0) {
             send(output, "Game load");
             new UDP_Client().startUDPBroadCast();
-
             Cdc.getInstance().gameItemsInital();
             Cdc.getInstance().startUpdatingThread();
         }
