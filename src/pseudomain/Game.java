@@ -87,7 +87,7 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void update() {
-        GameManager.getInsatance().update();
+        GameManager.getInstance().update();
         
     }
 
