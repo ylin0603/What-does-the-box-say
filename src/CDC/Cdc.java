@@ -223,7 +223,6 @@ public class Cdc implements Runnable {
                 spin++;
             }
             if (keys[ATTACK]) {
-                keys[ATTACK] = false;
                 attack(player.getClientNo());
             }
             if (keys[CHANGEWEAPON]) {
@@ -353,9 +352,13 @@ public class Cdc implements Runnable {
     }
 
     public void attack(int clientNo) {
-        allPlayers.get(clientNo).setAttackFlag(true);
-        new Attack(clientNo, allPlayers, allItems);
-		allPlayers.get(clientNo).setAttackFlag(true);
+        if (!allPlayers.get(clientNo).isAttackCD())
+            return;
+        else {
+            allPlayers.get(clientNo).setAttackCD();
+            allPlayers.get(clientNo).setAttackFlag(true);
+            new Attack(clientNo, allPlayers, allItems);
+        }
     }
 
     public void changeWeapon(ClientPlayerFeature player) {

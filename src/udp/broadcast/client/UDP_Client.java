@@ -63,10 +63,10 @@ public class UDP_Client {
 
 			encodedData.add(new EncodedData(type, gson.toJson(player)));
 
-			if(player.isAttackedFlag() || player.isAttackFlag()) {
+			/*if(player.isAttackedFlag() || player.isAttackFlag()) {
 				player.setAttackFlag(false);
 				player.setAttackedFlag(false);
-			}
+			}*/
 		}
 
 		for (ClientItemFeature item : updateItems) {
