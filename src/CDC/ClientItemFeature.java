@@ -10,6 +10,7 @@ public class ClientItemFeature {
 	private boolean isCollision = false;
 	private boolean isDead = false;
 	private int itemOwner;
+	private long rebornTime;
 
 	public ClientItemFeature(int itemID, int itemType, int x, int y) {
 		this.itemID = itemID;
@@ -99,4 +100,12 @@ public class ClientItemFeature {
 	public void setItemOwner(int itemOwner) {
 		this.itemOwner = itemOwner;
 	}
+
+    public long getRebornTime() {
+        return rebornTime;
+    }
+
+    public void setRebornTime(long rebornTime) {
+        this.rebornTime = rebornTime;
+    }
 }

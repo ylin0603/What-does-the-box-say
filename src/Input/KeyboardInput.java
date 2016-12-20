@@ -53,7 +53,6 @@ public class KeyboardInput implements KeyListener {
             e1.printStackTrace();
             System.out.println("TCP connetction error");
         }
-        resetOnceKey();
     }
 
     @Override
@@ -82,7 +81,6 @@ public class KeyboardInput implements KeyListener {
             e1.printStackTrace();
             System.out.println("TCP connetction error");
         }
-        resetOnceKey();
     }
 
     public boolean[] getKeys() {
@@ -91,10 +89,5 @@ public class KeyboardInput implements KeyListener {
 
     public void reset() {
         Arrays.fill(keys, false);
-    }
-
-    public void resetOnceKey() {
-        keys[ATTACK] = false;
-        keys[J] = false;
     }
 }
