@@ -42,9 +42,9 @@ public class KeyboardInput implements KeyListener {
         if (e.getKeyChar() == 'j')
             keys[J] = true;
         if (e.getKeyChar() == 'h')
-            GameManager.getInsatance().openInfo(HELP);
+            GameManager.getInstance().openInfo(HELP);
         if (e.getKeyCode() == KeyEvent.VK_TAB)
-            GameManager.getInsatance().openInfo(TAB);
+            GameManager.getInstance().openInfo(TAB);
         RealTcpClient realTcpClient = RealTcpClient.getInstance();
         try {
             realTcpClient.inputMoves(getKeys());
@@ -71,9 +71,9 @@ public class KeyboardInput implements KeyListener {
         if (e.getKeyChar() == 'j')
             keys[J] = false;
         if (e.getKeyChar() == 'h')
-            GameManager.getInsatance().closeInfo(HELP);
+            GameManager.getInstance().closeInfo(HELP);
         if (e.getKeyCode() == KeyEvent.VK_TAB)
-            GameManager.getInsatance().closeInfo(TAB);
+            GameManager.getInstance().closeInfo(TAB);
         RealTcpClient realTcpClient = RealTcpClient.getInstance();
         try {
             realTcpClient.inputMoves(getKeys());

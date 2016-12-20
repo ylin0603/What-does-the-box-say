@@ -19,6 +19,7 @@ public class GuiPlayerAngle extends GuiComponent {
     }
     
     public void render(Graphics g) {
+        if (dom.getLocalCharacter().isDead()) return;
         showAngle.render(g);
         g.setColor(Color.RED);
         Graphics2D g2 = (Graphics2D) g;
