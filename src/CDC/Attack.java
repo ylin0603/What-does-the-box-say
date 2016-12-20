@@ -13,12 +13,6 @@ public class Attack {
             ArrayList<ClientPlayerFeature> clientPlayerFeature,
             ArrayList<ClientItemFeature> clientItemFeature) {
         ClientPlayerFeature player = clientPlayerFeature.get(ClientNO);
-
-        if (!player.isAttackCD())
-            return;
-        else
-            player.setAttackCD();
-
         switch (player.getWeaponType()) {
             case 0:
                 attackShortRange(ClientNO, clientPlayerFeature,
