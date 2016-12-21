@@ -259,6 +259,12 @@ public class Cdc implements Runnable {
                 }
             }
         }
+        for (ClientItemFeature item : allItems) {
+            if (item.isDead()) {
+                int[] loc = giveRandomLocation();
+                item.init(loc[0], loc[1]);
+            }
+        }
     }
 
     private boolean moveCollision(int x, int y, ClientPlayerFeature player) {

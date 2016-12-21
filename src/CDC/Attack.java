@@ -122,9 +122,6 @@ public class Attack {
                 item2.setDead(true);
                 isAttack = true;
                 boxRevenge(item2, clientPlayerFeature);
-
-                int[] loc = Cdc.getInstance().giveRandomLocation();
-                item2.init(loc[0], loc[1]);
             }
         }
         return isAttack;
