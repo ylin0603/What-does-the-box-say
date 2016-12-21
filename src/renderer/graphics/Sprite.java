@@ -30,34 +30,34 @@ public class Sprite {
 
     public static Sprite[] SWORD_UPWARD_ATTACK = {
             new Sprite(32, 4, 5, SpriteSheet.character),
-            new Sprite(32, 5, 5, SpriteSheet.character),
-            new Sprite(32, 6, 5, SpriteSheet.character),
+			new Sprite(32, 5, 5, SpriteSheet.character),
+			new Sprite(32, 6, 5, SpriteSheet.character),
             new Sprite(32, 7, 5, SpriteSheet.character),
             new Sprite(32, 0, 4, SpriteSheet.character),
-    };
+	};
 
-    public static Sprite SWORD_RIGHT_ATTACK[] = {
+	public static Sprite SWORD_RIGHT_ATTACK[] = {
             new Sprite(32, 0, 4, SpriteSheet.character),
             new Sprite(32, 1, 4, SpriteSheet.character),
             new Sprite(32, 2, 4, SpriteSheet.character),
             new Sprite(32, 3, 4, SpriteSheet.character),
             new Sprite(32, 4, 4, SpriteSheet.character),
-    };
-    public static Sprite SWORD_DOWNWARD_ATTCK[] = {
+	};
+	public static Sprite SWORD_DOWNWARD_ATTCK[] = {
             new Sprite(32, 4, 4, SpriteSheet.character),
             new Sprite(32, 5, 4, SpriteSheet.character),
             new Sprite(32, 6, 4, SpriteSheet.character),
             new Sprite(32, 7, 4, SpriteSheet.character),
             new Sprite(32, 0, 5, SpriteSheet.character),
-    };
-    public static Sprite SWORD_LEFT_ATTACK[] = {
+	};
+	public static Sprite SWORD_LEFT_ATTACK[] = {
             new Sprite(32, 0, 5, SpriteSheet.character),
             new Sprite(32, 1, 5, SpriteSheet.character),
             new Sprite(32, 2, 5, SpriteSheet.character),
             new Sprite(32, 3, 5, SpriteSheet.character),
             new Sprite(32, 4, 5, SpriteSheet.character),
 
-    };
+	};
 
     public static Sprite BOX_EXPLOSION[] = {
             new Sprite(16,6,1,SpriteSheet.character),

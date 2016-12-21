@@ -10,7 +10,8 @@ public class FakeBox extends Item {
     private ExplosionParticle ep = new ExplosionParticle();
     private int counter = 0, timer = 0;
     private boolean animationFinished = true;
-
+    private int deadPosX = 0;
+    private int deadPosY = 0;
     public FakeBox(int type, int index, boolean isDead, int x, int y) {
         super(type, index, isDead, x, y);
         this.sprite = Sprite.PLAYER;
@@ -19,9 +20,11 @@ public class FakeBox extends Item {
     @Override
     public void update(boolean isDead, int owner, int x, int y) {
         super.update(isDead, owner, x, y);
-        if (isDead)
+        if (isDead) {
             animationFinished = false;
-
+            deadPosX = x;
+            deadPosY = y;
+        }
     }
 
     @Override
@@ -30,11 +33,14 @@ public class FakeBox extends Item {
         if (timer % 6 == 0) {
             counter++;
             if (!animationFinished) {
+                ep.x = deadPosX;
+                ep.y = deadPosY;
                 ep.sprite = Sprite.BOX_EXPLOSION[counter%4];
                 animationFinished = (counter%4==0);
             } else{
                 timer = 0;
                 counter = 0;
+                ep.sprite = Sprite.EMPTY;
             }
         }
     }
