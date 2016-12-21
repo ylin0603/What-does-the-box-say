@@ -3,14 +3,16 @@ package CDC;
 import java.util.ArrayList;
 import java.util.Random;
 import java.lang.Math;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import tcp.tcpServer.RealTcpServer;
+import udp.broadcast.client.UDP_Client;
 
-public class Cdc implements Runnable {
-    Random random = new Random();
-    private long startTime;
-    private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
-    private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
-
+public class Cdc {
+    public final static int BOX_SIZE = 16;// this is two are read for all server
+    public final static int MAP_SIZE_X = 640;
+    public final static int MAP_SIZE_Y = 1200;
     // TODO: reset these
     private final static int FORWARD = 0;
     private final static int BACKWARD = 1;
@@ -18,37 +20,57 @@ public class Cdc implements Runnable {
     private final static int TURNRIGHT = 3;
     private final static int ATTACK = 4;
     private final static int CHANGEWEAPON = 5;
-
     private final static int BLOODPACKGE = 30;
     private final static int BULLETPACKGE = 31;
-    
     private final static int VEL = 2;
     private final static double ANGLEVEL = 7;// degree
+    private static Cdc instance;
+    private static RealTcpServer realTcpServer;
+    private static UDP_Client UDPinstance;
 
-    private static Cdc instance = null;
+    Random random = new Random();
+    private long startTime;
+    private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
+    private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
 
-    public final static int BOX_SIZE = 16;// this is two are read for all server
-    public final static int MAP_SIZE_X = 640;
-    public final static int MAP_SIZE_Y = 1200;
-    
     public static void main(String[] args) throws InterruptedException {
         // tcp
-        RealTcpServer realTcpServer = RealTcpServer.getInstance();
+        realTcpServer = RealTcpServer.getInstance();
         realTcpServer.initTCPServer();
     }
-
-    public void startUpdatingThread() {
-        Thread game = new Thread(instance);
-        game.start();
-    }
-
-    private void Cdc() {}
 
     public static Cdc getInstance() {
         if (instance == null)
             instance = new Cdc();
         return instance;
     }
+
+    public void startUpdatingTimer() {
+        Timer gameTimer = new Timer();
+        TimerTask startUpdating = new TimerTask() {
+            @Override
+            public void run() {
+                startTime = System.currentTimeMillis();
+                UDPinstance = UDP_Client.getInstance();
+
+                if (finishGame(300)) {// 5分鐘就是300秒
+                    // do something
+                }
+
+                movingPlayer();
+                movingBullet();
+                checkResurrection();// 檢查復活
+                checkSupplement();// 每十秒補充補包彈藥包
+
+                UDPinstance.broadcast(realTcpServer.getClientIPTable(),
+                        UDPinstance.encapsulateData(getPlayersUpdateInfo(),
+                                getItemsUpdateInfo()));// broadcast
+            }
+        };
+        gameTimer.schedule(startUpdating, 0, 17);
+    }
+
+    private void Cdc() {}
 
     public ArrayList<ClientPlayerFeature> getPlayersUpdateInfo() {
         return allPlayers;
@@ -183,6 +205,7 @@ public class Cdc implements Runnable {
         for (ClientPlayerFeature player : allPlayers) {
             if (player.isDead())
                 continue;
+            // TODO: key parsing should be out of this function
             double faceAngle = player.getFaceAngle();
             double radianAngle = Math.toRadians(faceAngle);
             boolean[] keys = player.getDirection();
@@ -260,10 +283,12 @@ public class Cdc implements Runnable {
             }
         }
         for (ClientItemFeature item : allItems) {
-            if (item.isDead()) {
+            if (item.isReborn()) {// initial at next round
                 int[] loc = giveRandomLocation();
                 item.init(loc[0], loc[1]);
             }
+            if (item.isDead())// don't initial at dead
+                item.setReborn(true);
         }
     }
 
@@ -361,24 +386,5 @@ public class Cdc implements Runnable {
          * 
          * }
          */
-    }
-
-    @Override
-    public void run() {
-        startTime = System.currentTimeMillis();
-        while (true) {
-            if (finishGame(300)) {// 5分鐘就是300秒
-                // do something
-            }
-            movingPlayer();
-            movingBullet();
-            checkResurrection();// 檢查復活
-            checkSupplement();// 每十秒補充補包彈藥包
-            try {
-                Thread.sleep(50); // while(true) + sleep = timer嗎?
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }
