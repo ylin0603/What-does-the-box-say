@@ -81,7 +81,8 @@ public class UDP_Server implements Runnable {
 					instance.updateItem(item.getItemID(), item.isDead(),
 										item.getItemOwner(), item.getLocX(), item.getLocY());
 
-					//System.out.println("Update Item");
+					if(item.isDead())
+						System.out.println("Item dead");
 
 					break;
 				case "AddI":

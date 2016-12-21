@@ -59,7 +59,12 @@ public class Sprite {
 
     };
 
-
+    public static Sprite BOX_EXPLOSION[] = {
+            new Sprite(16,6,1,SpriteSheet.character),
+            new Sprite(16,5,1,SpriteSheet.character),
+            new Sprite(16,4,1,SpriteSheet.character),
+            new Sprite(16,3,1,SpriteSheet.character),
+    };
     public Sprite(int size, int x, int y, SpriteSheet sheet) {
         SIZE = size;
         this.sheetX = x * size;
