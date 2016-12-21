@@ -1,64 +1,102 @@
 package CDC;
 
 public class ClientItemFeature {
-
-	private int itemIndex;
+	private int itemID; // unique ID
+    private int itemType;
+    // 0: Fake Box, 1: Add HP, 2: Add Bullet, 3: Moving Bullet, 4: Moving Sword
+	private int locX, locY;
+    private int oriLocX, oriLocY;
+    private double faceAngle = 0; // (degree) => use Math.toRadium();
+	private boolean isCollision = false;
+	private boolean isDead = false;
 	private int itemOwner;
-	private int locationX, locationY;
-	private boolean isShared, isOwned;
-	private String type = "";
+	private long rebornTime;
 
-	public ClientItemFeature(String name, int index, boolean shared, int x, int y)
-	{
-		this.type = name;
-		this.itemIndex = index;
-		this.locationX = x;
-		this.locationY = y;
-		this.isShared = shared;
+	public ClientItemFeature(int itemID, int itemType, int x, int y) {
+		this.itemID = itemID;
+		this.itemType = itemType;
+		init(x,y);
+        this.oriLocX = x;
+        this.oriLocY = y;
 	}
 
-	public int getItemIndex() {
-		return itemIndex;
+    public void init(int locX, int locY) {
+        setLocX(locX);
+        setLocY(locY);
+        setDead(false);
+        setCollision(false);
+    }
+
+    public int getItemID() {
+        return itemID;
 	}
 
-	public int getLocationX() {
-		return locationX;
+	public void setItemID(int itemID) {
+		this.itemID = itemID;
 	}
 
-	public void setLocationX(int locationX) {
-		this.locationX = locationX;
+	public int getItemType() {
+		return itemType;
 	}
 
-	public int getLocationY() {
-		return locationY;
+	public void setItemType(int itemType) {
+		this.itemType = itemType;
 	}
 
-	public void setLocationY(int locationY) {
-		this.locationY = locationY;
+	public int getLocX() {
+		return locX;
 	}
 
-	public boolean isShared() {
-		return isShared;
+	public void setLocX(int locX) {
+		this.locX = locX;
 	}
 
-	public void setShared(boolean shared) {
-		isShared = shared;
+	public int getLocY() {
+		return locY;
 	}
 
-	public boolean isOwned() {
-		return isOwned;
+	public void setLocY(int locY) {
+		this.locY = locY;
 	}
 
-	public void setOwned(boolean owned) {
-		isOwned = owned;
+    public int getOriLocX() {
+        return oriLocX;
+    }
+
+    public void setOriLocX(int oriLocX) {
+        this.oriLocX = oriLocX;
+    }
+
+    public int getOriLocY() {
+        return oriLocY;
+    }
+
+    public void setOriLocY(int oriLocY) {
+        this.oriLocY = oriLocY;
+    }
+
+    public double getFaceAngle() {
+        return faceAngle;
+    }
+
+    public void setFaceAngle(double faceAngle) {
+        this.faceAngle = faceAngle;
+    }
+
+	public boolean isCollision() {
+		return isCollision;
 	}
 
-	public String getType() {
-		return type;
+	public void setCollision(boolean collision) {
+		isCollision = collision;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public boolean isDead() {
+		return isDead;
+	}
+
+	public void setDead(boolean dead) {
+		isDead = dead;
 	}
 
 	public int getItemOwner() {
@@ -68,4 +106,12 @@ public class ClientItemFeature {
 	public void setItemOwner(int itemOwner) {
 		this.itemOwner = itemOwner;
 	}
+
+    public long getRebornTime() {
+        return rebornTime;
+    }
+
+    public void setRebornTime(long rebornTime) {
+        this.rebornTime = rebornTime;
+    }
 }

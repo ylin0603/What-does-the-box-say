@@ -6,6 +6,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
+import gui.game.GameManager;
 import pseudomain.Game;
 
 public class RenderEngine {
@@ -50,6 +51,7 @@ public class RenderEngine {
 
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
+		GameManager.getInstance().render(g);
 		g.dispose();
 		bs.show();
 	}
