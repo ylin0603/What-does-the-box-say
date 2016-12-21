@@ -5,13 +5,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import CDC.ClientItemFeature;
 import CDC.ClientPlayerFeature;
-import CDC.Cdc;
-import tcp.tcpServer.RealTcpServer;
 
 import com.google.gson.Gson;
 
@@ -19,38 +15,26 @@ public class UDP_Client {
 
 	private int clientNo = -1, itemId = -1;
 	private Gson gson = new Gson();
-	private Timer timerBroadcast = new Timer();
+	private static UDP_Client instance;
 
-	public void startUDPBroadCast() {
-		ArrayList<String> allIPAddress =
-				RealTcpServer.getInstance().getClientIPTable();
-
-		TimerTask startBroadcast = new TimerTask() {
-			@Override
-			public void run() {
-				ArrayList<EncodedData> encodedData = encapsulateData();
-				broadcast(allIPAddress, encodedData);
-			}
-		};
-		timerBroadcast.schedule(startBroadcast, 0, 50); // 20 times/per second
+	public static UDP_Client getInstance() {
+		if (instance == null)
+			instance = new UDP_Client();
+		return instance;
 	}
 
-	public void stopBroadCast() {
-		timerBroadcast.cancel();
-
-		ArrayList<String> allIPAddress =
-				RealTcpServer.getInstance().getClientIPTable();
+	public void stopBroadCast(ArrayList<String> allIPAddress) {
+		//allIPAddress = RealTcpServer.getInstance().getClientIPTable();
 		ArrayList<EncodedData> stopFlag = new ArrayList<>();
 		stopFlag.add(new EncodedData("STOP", "stop client"));
 
 		broadcast(allIPAddress, stopFlag);
 	}
 
-	private ArrayList<EncodedData> encapsulateData() {
+	public ArrayList<EncodedData> encapsulateData(
+			ArrayList<ClientPlayerFeature> updatePlayers,
+			ArrayList<ClientItemFeature> updateItems) {
 		String type;
-		Cdc instance = Cdc.getInstance();
-		ArrayList<ClientPlayerFeature> updatePlayers = instance.getPlayersUpdateInfo();
-		ArrayList<ClientItemFeature> updateItems = instance.getItemsUpdateInfo();
 		ArrayList<EncodedData> encodedData = new ArrayList<>();
 
 		for (ClientPlayerFeature player : updatePlayers) {
@@ -62,11 +46,6 @@ public class UDP_Client {
 			}
 
 			encodedData.add(new EncodedData(type, gson.toJson(player)));
-
-			if(player.isAttackedFlag() || player.isAttackFlag()) {
-				player.setAttackFlag(false);
-				player.setAttackedFlag(false);
-			}
 		}
 
 		for (ClientItemFeature item : updateItems) {
@@ -83,7 +62,7 @@ public class UDP_Client {
 		return encodedData;
 	}
 
-	private void broadcast(ArrayList<String> allIP,
+	public void broadcast(ArrayList<String> allIP,
 			ArrayList<EncodedData> encodedData) {
 		String jsonEncodedData = gson.toJson(encodedData);
 		byte[] sendData = jsonEncodedData.getBytes();
@@ -95,8 +74,9 @@ public class UDP_Client {
 				clientSocket = new DatagramSocket();
 				IPAddress = InetAddress.getByName(ip);
 
-				DatagramPacket sendPacket = new DatagramPacket(sendData,
-						sendData.length, IPAddress, 3335);
+				DatagramPacket sendPacket =
+						new DatagramPacket(sendData, sendData.length, IPAddress,
+								3335);
 				clientSocket.send(sendPacket);
 			}
 		} catch (IOException e) {

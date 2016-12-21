@@ -43,7 +43,7 @@ public class DynamicObjectManager {
                                        boolean isAttacked, boolean isCollision,
                                        boolean isDead) {
         Character character = this.characterList.get(clientno);
-        character.update(weaponType, nickname, x, y, angle, HP, killCount, deadCount,
+        character.set(weaponType, nickname, x, y, angle, HP, killCount, deadCount,
                 bulletCount, isAttack, isAttacked, isCollision, isDead);
     }
 

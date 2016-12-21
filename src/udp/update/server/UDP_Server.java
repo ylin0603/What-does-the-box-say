@@ -62,6 +62,8 @@ public class UDP_Server implements Runnable {
 							player.getBulletCount(), player.isAttackFlag(),
 							player.isAttackedFlag(), player.isCollisionFlag(),
 							player.isDead());
+					if(player.isAttackFlag())
+						System.out.println("ATTACK is true");
 
 					break;
 				case "AddP":
