@@ -14,7 +14,6 @@ public class Item extends Entity {
         this.isDead = isDead;
         this.x = x;
         this.y = y;
-        this.sprite = Sprite.ITEM;
     }
 
 

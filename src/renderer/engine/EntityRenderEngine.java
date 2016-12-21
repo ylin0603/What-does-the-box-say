@@ -2,9 +2,7 @@ package renderer.engine;
 
 import pseudomain.Game;
 import renderer.data.DynamicObjectManager;
-import renderer.data.entity.Character;
 import renderer.data.entity.Entity;
-import renderer.data.entity.Item;
 import renderer.graphics.Sprite;
 
 import java.util.List;

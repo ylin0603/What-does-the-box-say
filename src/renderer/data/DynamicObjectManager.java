@@ -1,11 +1,10 @@
 package renderer.data;
 
+import renderer.data.entity.*;
 import renderer.data.entity.Character;
-import renderer.data.entity.Entity;
-import renderer.data.entity.Item;
 import tcp.tcpClient.RealTcpClient;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,12 +28,27 @@ public class DynamicObjectManager {
     }
 
     public void addVirtualCharacter(int clientno, String nickName) {
-
+        assert clientno >=0;
         this.characterList.add(new Character(clientno,nickName));
     }
 
     public void addItem(int itemType, int index, boolean isDead, int x, int y) {
-        this.itemList.add(new Item(itemType,index,isDead,x,y));
+        Item item = null;
+        switch (itemType){
+            case 0:
+                item = new FakeBox(itemType,index,isDead,x,y);
+                break;
+            case 1:
+                item = new BloodPackage(itemType,index,isDead,x,y);
+                break;
+            case 2:
+                item = new AmmoPackage(itemType,index,isDead,x,y);
+                break;
+            default:
+                assert false;
+
+        }
+        this.itemList.add(item);
     }
 
     public void updateVirtualCharacter(int clientno, int weaponType, String nickname,
@@ -60,15 +74,17 @@ public class DynamicObjectManager {
     }
     
     public List<Character> getCharacterList() {
+        assert characterList.size() > 0;
         return characterList;
     }
     
     public List<Item> getItemList() {
+        assert itemList.size() > 0;
         return itemList;
     }
 
     public Point getVirtualCharacterXY() {
-        if (characterList.size() == 0) return new Point(0, 0);
+        assert characterList.size() > 0;
         int localClientNo = RealTcpClient.getInstance().getClientNo();
         Character character = this.characterList.get(localClientNo);
         return new Point(character.x, character.y);
