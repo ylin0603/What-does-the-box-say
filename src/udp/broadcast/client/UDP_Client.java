@@ -32,7 +32,7 @@ public class UDP_Client {
 				broadcast(allIPAddress, encodedData);
 			}
 		};
-		timerBroadcast.schedule(startBroadcast, 0, 50); // 20 times/per second
+		timerBroadcast.schedule(startBroadcast, 0, 17); // 20 times/per second
 	}
 
 	public void stopBroadCast() {
@@ -62,11 +62,6 @@ public class UDP_Client {
 			}
 
 			encodedData.add(new EncodedData(type, gson.toJson(player)));
-
-			if(player.isAttackedFlag() || player.isAttackFlag()) {
-				player.setAttackFlag(false);
-				player.setAttackedFlag(false);
-			}
 		}
 
 		for (ClientItemFeature item : updateItems) {

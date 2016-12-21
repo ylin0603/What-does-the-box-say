@@ -183,6 +183,7 @@ public class Cdc implements Runnable {
         for (ClientPlayerFeature player : allPlayers) {
             if (player.isDead())
                 continue;
+            //TODO: key parsing should be out of this function
             double faceAngle = player.getFaceAngle();
             double radianAngle = Math.toRadians(faceAngle);
             boolean[] keys = player.getDirection();
@@ -369,7 +370,7 @@ public class Cdc implements Runnable {
             checkResurrection();// 檢查復活
             checkSupplement();// 每十秒補充補包彈藥包
             try {
-                Thread.sleep(50); // while(true) + sleep = timer嗎?
+                Thread.sleep(17); // while(true) + sleep = timer嗎?
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
