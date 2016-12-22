@@ -13,7 +13,7 @@ public class Collision {
         return isCollison(p1LocX, p1LocY, p2LocX, p2LocY);
     }
 
-    // for attack player
+    // for player eat package
     public static boolean isCollison(ClientItemFeature item,
             ClientPlayerFeature player2) {
         int p1LocX = item.getLocX();
@@ -23,7 +23,18 @@ public class Collision {
         return isCollison(p1LocX, p1LocY, p2LocX, p2LocY);
     }
 
-    // for normal player collision
+    // for attack player
+    public static boolean isCollison(ClientBulletFeature bullet,
+            ClientPlayerFeature player2) {
+        int p1LocX = bullet.getLocX();
+        int p1LocY = bullet.getLocY();
+        int p2LocX = player2.getLocX();
+        int p2LocY = player2.getLocY();
+        return isCollison(p1LocX, p1LocY, p2LocX, p2LocY);
+    }
+
+    // for normal player player collision
+    // for respawn player
     public static boolean isCollison(int p1LocX, int p1LocY,
             ClientPlayerFeature player2) {
         int p2LocX = player2.getLocX();
@@ -31,7 +42,7 @@ public class Collision {
         return isCollison(p1LocX, p1LocY, p2LocX, p2LocY);
     }
 
-    // for attack box
+    // no use
     public static boolean isCollison(ClientItemFeature item1,
             ClientItemFeature item2) {
         int p1LocX = item1.getLocX();
@@ -41,6 +52,17 @@ public class Collision {
         return isCollison(p1LocX, p1LocY, p2LocX, p2LocY);
     }
 
+    // for attack box
+    public static boolean isCollison(ClientBulletFeature bullet,
+            ClientItemFeature item2) {
+        int p1LocX = bullet.getLocX();
+        int p1LocY = bullet.getLocY();
+        int p2LocX = item2.getLocX();
+        int p2LocY = item2.getLocY();
+        return isCollison(p1LocX, p1LocY, p2LocX, p2LocY);
+    }
+
+    // for normal player item collision
     // for respawn box
     public static boolean isCollison(int p1LocX, int p1LocY,
             ClientItemFeature item2) {
