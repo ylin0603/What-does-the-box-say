@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import gui.game.BeforeGameManager;
 import gui.gameInterface.GuiFrame;
+import tcp.tcpClient.RealTcpClient;
 
 public class ButtonClick implements ActionListener {
     
@@ -23,6 +24,7 @@ public class ButtonClick implements ActionListener {
                 System.exit(0);
                 break;
             case "start_game":
+                RealTcpClient.getInstance().loadGame();
                 BeforeGameManager.getInstance().setGameCanvas();
                 break;
             default:

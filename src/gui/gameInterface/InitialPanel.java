@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -26,7 +25,6 @@ public class InitialPanel extends JPanel {
         this.add(Box.createGlue());
         this.add(Box.createGlue());
         this.add(showButtons());
-        this.add(Box.createGlue());
     }
 
     private JPanel showButtons() {
@@ -36,16 +34,18 @@ public class InitialPanel extends JPanel {
         joinGame = new GuiButton("JOIN", "join_game");
         exitGame = new GuiButton("EXIT", "exit_game");
         buttons.add(Box.createGlue());
+        buttons.add(Box.createGlue());
         buttons.add(joinGame);
         buttons.add(Box.createGlue());
         buttons.add(exitGame);
-        exitGame.setVisible(true);
+        buttons.add(Box.createGlue());
         buttons.add(Box.createGlue());
         return buttons;
     }
     
     @Override
     public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         this.g = g;
         // sky
         g.setColor(new Color(120,204,240));

@@ -3,12 +3,19 @@ package gui.gameInterface;
 import java.util.TimerTask;
 
 import gui.game.BeforeGameManager;
+import tcp.tcpClient.RealTcpClient;
 
 public class RoomPanelTask extends TimerTask {
 
     @Override
     public void run() {
-        BeforeGameManager.getInstance().addRoomPanel();
+        BeforeGameManager bgm = BeforeGameManager.getInstance();
+        bgm.addRoomPanel();
+        
+        if (!bgm.isRoomOwner()) {
+            if (RealTcpClient.getInstance().loadGame())
+                bgm.setGameCanvas();
+        }
     }
 
 }

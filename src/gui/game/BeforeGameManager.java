@@ -80,12 +80,18 @@ public class BeforeGameManager {
         timer.schedule(new RoomPanelTask(), 0, 1000);
     }
     
+    public boolean isRoomOwner() {
+        return realTcpClient.getClientNo() == 0;
+    }
+    
     // Only called when game start!
     public void setGameCanvas() {
         timer.cancel();
+        frame.getContentPane().removeAll();
         Game game = new Game();
         frame.add(game);
-        realTcpClient.loadGame();
+        frame.getContentPane().repaint();
+        frame.setVisible(true);
         DynamicObjectManager dom = DynamicObjectManager.getInstance();
         while (dom.getCharacterList().size() == 0) ;
         game.start();
