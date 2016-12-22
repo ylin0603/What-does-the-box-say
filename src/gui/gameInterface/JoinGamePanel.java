@@ -43,16 +43,9 @@ public class JoinGamePanel extends JPanel {
         }
         UDP_Server.initUDPServer();
         realTcpClient.joinRoom(name);
-        // BeforeGameManager.getInstance().startTimer();
-        BeforeGameManager bgm = BeforeGameManager.getInstance();
+        BeforeGameManager.getInstance().startTimer();
 
-        while(!RealTcpClient.getInstance().loadGame()) {
-            bgm.updateNameList();
-            if (!bgm.isRoomOwner()) {
-                bgm.setGameCanvas();
-            }
-            bgm.addRoomPanel();
-        }
+
     }
 
 }

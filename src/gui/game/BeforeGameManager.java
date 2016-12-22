@@ -84,6 +84,7 @@ public class BeforeGameManager {
     
     public void stopTimer() {
         timer.cancel();
+        timer.purge();
     }
     
     public boolean isRoomOwner() {
