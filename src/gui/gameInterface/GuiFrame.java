@@ -16,7 +16,7 @@ public class GuiFrame extends JFrame {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ImageIcon icon = new ImageIcon("res/box.png");
-        this.setIconImage(icon.getImage());
+        //ImageIcon icon = new ImageIcon("res/box.png");
+        //this.setIconImage(icon.getImage());
     }
 }

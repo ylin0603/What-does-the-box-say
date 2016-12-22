@@ -1,5 +1,6 @@
 package gui.game;
 
+import java.util.ArrayList;
 import java.util.Timer;
 
 import Input.ButtonClick;
@@ -20,6 +21,7 @@ public class BeforeGameManager {
     private ButtonClick buttonClick;
     private InitialPanel initialPanel;
     private Timer timer;
+    private ArrayList<String> nameList;
     
     private BeforeGameManager() {
         frame = new GuiFrame();
@@ -80,13 +82,16 @@ public class BeforeGameManager {
         timer.schedule(new RoomPanelTask(), 0, 1000);
     }
     
+    public void stopTimer() {
+        timer.cancel();
+    }
+    
     public boolean isRoomOwner() {
         return realTcpClient.getClientNo() == 0;
     }
     
     // Only called when game start!
     public void setGameCanvas() {
-        timer.cancel();
         frame.getContentPane().removeAll();
         Game game = new Game();
         frame.add(game);
@@ -95,5 +100,12 @@ public class BeforeGameManager {
         DynamicObjectManager dom = DynamicObjectManager.getInstance();
         while (dom.getCharacterList().size() == 0) ;
         game.start();
+    }
+    
+    public void updateNameList() {
+        nameList = RealTcpClient.getInstance().getNameList();
+    }
+    public ArrayList<String> getNameList() {
+        return nameList;
     }
 }

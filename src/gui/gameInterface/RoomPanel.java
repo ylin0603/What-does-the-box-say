@@ -10,6 +10,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import gui.game.BeforeGameManager;
 import tcp.tcpClient.RealTcpClient;
 
 @SuppressWarnings("serial")
@@ -18,7 +19,7 @@ public class RoomPanel extends JPanel {
     private ArrayList<String> nameList;
     
     public RoomPanel() {
-        nameList = RealTcpClient.getInstance().getNameList();
+        nameList = BeforeGameManager.getInstance().getNameList();
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(Box.createGlue());
         JPanel panel = new JPanel();
