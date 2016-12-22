@@ -15,16 +15,23 @@ public class Attack {
 
     // ((1.2 * 16) ^ 2 - (8) ^ 2) ^ (1 / 2) + 8 * (2 - 1.2)
     // 23.853939383417143058403447179797
+
+    final static int SHORTRANGE = 0;
+    final static int LONGRANGE = 1;
+
+    final static int BULLET = 0;
+    final static int SWORD = 1;
+
     public Attack(ClientPlayerFeature player,
             ArrayList<ClientPlayerFeature> clientPlayerFeature,
             ArrayList<ClientItemFeature> clientItemFeature,
             ArrayList<ClientBulletFeature> clientBulletFeature) {
         switch (player.getWeaponType()) {
-            case 0:
+            case SHORTRANGE:
                 attackShortRange(player, clientPlayerFeature,
                         clientItemFeature);
                 break;
-            case 1:
+            case LONGRANGE:
                 attackLongRange(player, clientPlayerFeature, clientItemFeature,
                         clientBulletFeature);
                 break;
@@ -54,10 +61,10 @@ public class Attack {
                 + sin * Cdc.BOX_SIZE * 0.5;
         // attack area 1
         ClientBulletFeature attackArea1 =
-                new ClientBulletFeature(1, (int) Math.round(fakeX),
+                new ClientBulletFeature(SWORD, (int) Math.round(fakeX),
                         (int) Math.round(fakeY), 0, player.getClientNo());
-        attackI2P(attackArea1, clientPlayerFeature);
-        attackI2B(attackArea1, clientPlayerFeature, clientItemFeature);
+        attackBulletToPlayer(attackArea1, clientPlayerFeature);
+        attackBulletToBox(attackArea1, clientPlayerFeature, clientItemFeature);
 
         // 先往前走一步，轉另一方向的90度
         fakeX = player.getLocX() + sin * Cdc.BOX_SIZE
@@ -66,13 +73,13 @@ public class Attack {
                 - sin * Cdc.BOX_SIZE * 0.5;
         // attack area 2
         ClientBulletFeature attackArea2 =
-                new ClientBulletFeature(1, (int) Math.round(fakeX),
+                new ClientBulletFeature(SWORD, (int) Math.round(fakeX),
                         (int) Math.round(fakeY), 0, player.getClientNo());
-        attackI2P(attackArea2, clientPlayerFeature);
-        attackI2B(attackArea2, clientPlayerFeature, clientItemFeature);
+        attackBulletToPlayer(attackArea2, clientPlayerFeature);
+        attackBulletToBox(attackArea2, clientPlayerFeature, clientItemFeature);
     }
 
-    public boolean attackI2P(ClientBulletFeature bullet,
+    public boolean attackBulletToPlayer(ClientBulletFeature bullet,
             ArrayList<ClientPlayerFeature> clientPlayerFeature) {
         boolean isThisAttack = false;
         boolean[] isAttacked = bullet.getIsAttacked();
@@ -119,7 +126,7 @@ public class Attack {
         player.init();
     }
 
-    public boolean attackI2B(ClientBulletFeature bullet,
+    public boolean attackBulletToBox(ClientBulletFeature bullet,
             ArrayList<ClientPlayerFeature> clientPlayerFeature,
             ArrayList<ClientItemFeature> clientItemFeature) {
         boolean isAttack = false;
@@ -159,8 +166,8 @@ public class Attack {
             int LocX = player.getLocX();
             int LocY = player.getLocY();
             double faceAngle = player.getFaceAngle();
-            ClientBulletFeature bullet = new ClientBulletFeature(0, LocX, LocY,
-                    faceAngle, player.getClientNo());
+            ClientBulletFeature bullet = new ClientBulletFeature(BULLET, LocX,
+                    LocY, faceAngle, player.getClientNo());
             clientBulletFeature.add(bullet);
         }
     }
@@ -195,8 +202,9 @@ public class Attack {
 
             bullet.setLocX(locX);
             bullet.setLocY(loxY);
-            if (attackI2P(bullet, clientPlayerFeature) || attackI2B(bullet,
-                    clientPlayerFeature, clientItemFeature))
+            if (attackBulletToPlayer(bullet, clientPlayerFeature)
+                    || attackBulletToBox(bullet, clientPlayerFeature,
+                            clientItemFeature))
                 clientBulletFeature.remove(bullet);
         }
     }
