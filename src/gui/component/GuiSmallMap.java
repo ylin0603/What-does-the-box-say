@@ -13,11 +13,13 @@ import renderer.data.entity.Item;
 
 public class GuiSmallMap extends GuiComponent {
 
-    private final static int SMALL_MAP_WIDTH = SceneManager.MAP_SQUARE_SIDE / 2;
+    private static int mapScale = 5;
+    private final static int SMALL_MAP_WIDTH = SceneManager.MAP_SIZE_X / mapScale;
+    private final static int SMALL_MAP_HEIGHT = SceneManager.MAP_SIZE_Y / mapScale;
     private final static int MAP_X = Game.WIDTH * Game.scale - SMALL_MAP_WIDTH - 20;
-    private final static int MAP_Y = Game.HEIGHT * Game.scale - SMALL_MAP_WIDTH - 20;
+    private final static int MAP_Y = Game.HEIGHT * Game.scale - SMALL_MAP_HEIGHT - 20;
 
-    private final int mapScale = 6;
+    //private final int itemScale = Game.scale * mapScale;
     private Color backgroundColor = new Color(0, 0, 0, 191);
 
     private List<Item> itemList = null;
@@ -35,7 +37,7 @@ public class GuiSmallMap extends GuiComponent {
 
     public void render(Graphics g) {
         g.setColor(backgroundColor);
-        g.fillRoundRect(x, y, SMALL_MAP_WIDTH, SMALL_MAP_WIDTH, arcWidth, arcWidth);
+        g.fillRoundRect(x, y, SMALL_MAP_WIDTH, SMALL_MAP_HEIGHT, arcWidth, arcWidth);
         localPlayer.render(g);
         for (GuiCircle bag : functionBags) {
             if (bag.isVisible())
