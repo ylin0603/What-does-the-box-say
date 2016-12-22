@@ -21,8 +21,8 @@ public class Attack {
             ArrayList<ClientBulletFeature> clientBulletFeature) {
         switch (player.getWeaponType()) {
             case 0:
-                attackShortRange(player, clientPlayerFeature, clientItemFeature,
-                        clientBulletFeature);
+                attackShortRange(player, clientPlayerFeature,
+                        clientItemFeature);
                 break;
             case 1:
                 attackLongRange(player, clientPlayerFeature, clientItemFeature,
@@ -39,8 +39,7 @@ public class Attack {
 
     public void attackShortRange(ClientPlayerFeature player,
             ArrayList<ClientPlayerFeature> clientPlayerFeature,
-            ArrayList<ClientItemFeature> clientItemFeature,
-            ArrayList<ClientBulletFeature> clientBulletFeature) {
+            ArrayList<ClientItemFeature> clientItemFeature) {
         double faceAngle = player.getFaceAngle();
         double radianAngle = Math.toRadians(faceAngle);
         double sin = Math.sin(radianAngle);
