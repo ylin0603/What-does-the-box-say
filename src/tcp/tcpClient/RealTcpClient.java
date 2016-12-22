@@ -15,7 +15,7 @@ public class RealTcpClient {
     private Socket sc;
     private BufferedReader input;
     private PrintWriter output;
-    private int clientNo = -1;
+    private int clientID = -1;
     private ArrayList<String> NameList = new ArrayList<String>();
 
     private static RealTcpClient realTcpClient;
@@ -46,12 +46,10 @@ public class RealTcpClient {
 
     // all client join game
     public int joinRoom(String nickName) {
-
         output.println(nickName);
         String clientNoS = recv(input);
-        clientNo = Integer.valueOf(clientNoS);
-
-        return clientNo;
+        clientID = Integer.valueOf(clientNoS);
+        return clientID;
     }
 
     // all room member call it periodically
@@ -64,10 +62,16 @@ public class RealTcpClient {
     }
 
     // all room member call it periodically
-    public boolean loadGame() {
-        output.println("Start");
+    public boolean isGameload() {
+        output.println("game load?");
         boolean gameLoaded = Boolean.parseBoolean(recv(input));
+        System.out.println(gameLoaded);
         return gameLoaded;
+    }
+
+    // room leader call it when want start
+    public void startGame() {
+        output.println("Start");
     }
 
     public void inputMoves(boolean[] keys) throws Exception {
@@ -81,9 +85,9 @@ public class RealTcpClient {
     }
 
     public int getClientNo() {
-        assert clientNo != -1;
+        assert clientID != -1;
 
-        return clientNo;
+        return clientID;
     }
 
     private String recv(BufferedReader input) {
