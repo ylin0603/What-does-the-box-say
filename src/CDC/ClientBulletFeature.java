@@ -6,7 +6,7 @@ public class ClientBulletFeature {
     private int locX, locY;
     private int oriLocX, oriLocY;
     private double faceAngle = 0; // (degree) => use Math.toRadium();
-    private boolean isDead = false;
+    private boolean isDead = false;// useless
     private int itemOwner;
     boolean[] isAttacked = new boolean[4];
 

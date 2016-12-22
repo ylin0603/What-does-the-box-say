@@ -20,8 +20,8 @@ public class Cdc {
     private final static int TURNRIGHT = 3;
     private final static int ATTACK = 4;
     private final static int CHANGEWEAPON = 5;
-    private final static int BLOODPACKGE = 30;
-    private final static int BULLETPACKGE = 31;
+    private final static int BLOODPACKGEINDEX = 30;
+    private final static int BULLETPACKGEINDEX = 31;
     private final static int VEL = 2;
     private final static double ANGLEVEL = 7;// degree
     private static Cdc instance;
@@ -130,7 +130,7 @@ public class Cdc {
     }
 
     public void initFakeBox() {
-        for (int fakeBoxNum = 0; fakeBoxNum < BLOODPACKGE; fakeBoxNum++) {
+        for (int fakeBoxNum = 0; fakeBoxNum < BLOODPACKGEINDEX; fakeBoxNum++) {
             int[] loc = giveRandomLocation();
             allItems.add(new ClientItemFeature(fakeBoxNum, 0, loc[0], loc[1]));
         }
@@ -138,18 +138,14 @@ public class Cdc {
 
     public void initBloodPackge() {
         int[] loc = giveRandomLocation();
-        allItems.add(new ClientItemFeature(BLOODPACKGE, 1, loc[0], loc[1]));
+        allItems.add(
+                new ClientItemFeature(BLOODPACKGEINDEX, 1, loc[0], loc[1]));
     }
 
     public void initBulletPackge() {
         int[] loc = giveRandomLocation();
-        allItems.add(new ClientItemFeature(BULLETPACKGE, 2, loc[0], loc[1]));
-    }
-
-    // to reborn bullet or blood packages
-    public void rebornFunctionalPack(ClientItemFeature item) {
-        int[] loc = giveRandomLocation();
-        item.init(loc[0], loc[1]);
+        allItems.add(
+                new ClientItemFeature(BULLETPACKGEINDEX, 2, loc[0], loc[1]));
     }
 
     public void gameItemsInital() {
@@ -291,23 +287,24 @@ public class Cdc {
         int itemSize = allItems.size();
         int itemType;
         boolean isImpacted = false;
-        for (int currItem = BLOODPACKGE; currItem < itemSize; currItem++) {
-            if (allItems.get(currItem).isDead())
+        for (int currItemIndex =
+                BLOODPACKGEINDEX; currItemIndex < itemSize; currItemIndex++) {
+            if (allItems.get(currItemIndex).isDead())
                 continue;
-            isImpacted = Collision.isCollison(allItems.get(currItem), player);
+            isImpacted =
+                    Collision.isCollison(allItems.get(currItemIndex), player);
             if (isImpacted) {
-                itemType = allItems.get(currItem).getItemType();
-                switch (itemType) {
-                    case 1:
+                switch (currItemIndex) {
+                    case BLOODPACKGEINDEX:
                         player.addHP(60);
-                        allItems.get(currItem).setDead(true);
-                        allItems.get(currItem).setRebornTime(
+                        allItems.get(currItemIndex).setDead(true);
+                        allItems.get(currItemIndex).setRebornTime(
                                 System.currentTimeMillis() + 10 * 1000);
                         break;
-                    case 2:
+                    case BULLETPACKGEINDEX:
                         player.addBullet(1);
-                        allItems.get(currItem).setDead(true);
-                        allItems.get(currItem).setRebornTime(
+                        allItems.get(currItemIndex).setDead(true);
+                        allItems.get(currItemIndex).setRebornTime(
                                 System.currentTimeMillis() + 10 * 1000);
                         break;
                     default:
@@ -370,13 +367,19 @@ public class Cdc {
 
     private void checkSupplement() {
         long now = System.currentTimeMillis();
-        if (allItems.get(BLOODPACKGE).isDead()
-                && allItems.get(BLOODPACKGE).getRebornTime() < now) {
-            rebornFunctionalPack(allItems.get(BLOODPACKGE));
+        if (allItems.get(BLOODPACKGEINDEX).isDead()
+                && allItems.get(BLOODPACKGEINDEX).getRebornTime() < now) {
+            rebornFunctionalPack(allItems.get(BLOODPACKGEINDEX));
         }
-        if (allItems.get(BULLETPACKGE).isDead()
-                && allItems.get(BULLETPACKGE).getRebornTime() < now) {
-            rebornFunctionalPack(allItems.get(BULLETPACKGE));
+        if (allItems.get(BULLETPACKGEINDEX).isDead()
+                && allItems.get(BULLETPACKGEINDEX).getRebornTime() < now) {
+            rebornFunctionalPack(allItems.get(BULLETPACKGEINDEX));
         }
+    }
+
+    // to reborn bullet or blood packages
+    public void rebornFunctionalPack(ClientItemFeature item) {
+        int[] loc = giveRandomLocation();
+        item.init(loc[0], loc[1]);
     }
 }
