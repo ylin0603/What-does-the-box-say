@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 public class Attack {
     final static int BULLETVEL = 4;
-    final static int MAP_SIZE_X = Cdc.MAP_SIZE_X - 16;
-    final static int MAP_SIZE_Y = Cdc.MAP_SIZE_Y - 16;
+    final static int BOXSIZE = 16;
+    final static int MAP_SIZE_X = Cdc.MAP_SIZE_X - BOXSIZE;
+    final static int MAP_SIZE_Y = Cdc.MAP_SIZE_Y - BOXSIZE;
     final static int WINDOWSIZEX = 150;
     final static int WINDOWSIZEY = 72;
-    final static int BOXSIZE = 16;
     final static double revengeSize =
             Math.pow((Math.pow(1.2 * BOXSIZE, 2) - Math.pow(BOXSIZE / 2, 2)),
                     (0.5)) + 8 * (2 - 1.2);
