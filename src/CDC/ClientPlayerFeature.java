@@ -86,8 +86,8 @@ public class ClientPlayerFeature {
     }
 
     public void setLocX(int locX) {
-        if (locX > Cdc.MAP_SIZE_X - 16)
-            locX = Cdc.MAP_SIZE_X - 16;
+        if (locX > Cdc.MAP_SIZE_X - Cdc.BOX_SIZE)
+            locX = Cdc.MAP_SIZE_X - Cdc.BOX_SIZE;
         else if (locX < 0)
             locX = 0;
         this.locX = locX;
@@ -99,8 +99,8 @@ public class ClientPlayerFeature {
     }
 
     public void setLocY(int locY) {
-        if (locY > Cdc.MAP_SIZE_Y - 16)
-            locY = Cdc.MAP_SIZE_Y - 16;
+        if (locY > Cdc.MAP_SIZE_Y - Cdc.BOX_SIZE)
+            locY = Cdc.MAP_SIZE_Y - Cdc.BOX_SIZE;
         else if (locY < 0)
             locY = 0;
         this.locY = locY;
