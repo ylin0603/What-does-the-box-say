@@ -226,41 +226,6 @@ public class Cdc {
         }
     }
 
-    private void checkSupplement() {
-        long now = System.currentTimeMillis();
-        if (allItems.get(BLOODPACKGE).isDead()
-                && allItems.get(BLOODPACKGE).getRebornTime() < now) {
-            System.out.println(
-                    allItems.get(BLOODPACKGE).getRebornTime() + " " + now);
-            rebornFunctionalPack(allItems.get(BLOODPACKGE));
-        }
-        if (allItems.get(BULLETPACKGE).isDead()
-                && allItems.get(BULLETPACKGE).getRebornTime() < now) {
-            System.out.println(
-                    allItems.get(BLOODPACKGE).getRebornTime() + " " + now);
-            rebornFunctionalPack(allItems.get(BULLETPACKGE));
-        }
-    }
-
-    private void checkResurrection() {// 檢查復活
-        for (ClientPlayerFeature player : allPlayers) {
-            if (player.isDead()) {
-                if (player.checkResurrection()) {
-                    int[] loc = Cdc.getInstance().giveRandomLocation();
-                    player.reborn(loc[0], loc[1]);
-                }
-            }
-        }
-        for (ClientItemFeature item : allItems) {
-            if (item.isReborn()) {// initial at next round
-                int[] loc = giveRandomLocation();
-                item.init(loc[0], loc[1]);
-            }
-            if (item.getItemType() == 0 && item.isDead())// don't initial at dead
-                item.setReborn(true);
-        }
-    }
-
     private boolean moveCollision(int x, int y, ClientPlayerFeature player) {
         boolean isImpacted = false;
         boolean colliHappened = false;
@@ -382,5 +347,36 @@ public class Cdc {
 
     private void movingBullet() {
         new Attack().attackLongRangeUpdate(allPlayers, allItems, allBullets);
+    }
+
+    private void checkResurrection() {// 檢查復活
+        for (ClientPlayerFeature player : allPlayers) {
+            if (player.isDead()) {
+                if (player.checkResurrection()) {
+                    int[] loc = Cdc.getInstance().giveRandomLocation();
+                    player.reborn(loc[0], loc[1]);
+                }
+            }
+        }
+        for (ClientItemFeature item : allItems) {
+            if (item.isReborn()) {// initial at next round
+                int[] loc = giveRandomLocation();
+                item.init(loc[0], loc[1]);
+            }
+            if (item.getItemType() == 0 && item.isDead())// don't initial at dead
+                item.setReborn(true);
+        }
+    }
+
+    private void checkSupplement() {
+        long now = System.currentTimeMillis();
+        if (allItems.get(BLOODPACKGE).isDead()
+                && allItems.get(BLOODPACKGE).getRebornTime() < now) {
+            rebornFunctionalPack(allItems.get(BLOODPACKGE));
+        }
+        if (allItems.get(BULLETPACKGE).isDead()
+                && allItems.get(BULLETPACKGE).getRebornTime() < now) {
+            rebornFunctionalPack(allItems.get(BULLETPACKGE));
+        }
     }
 }
