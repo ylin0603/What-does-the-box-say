@@ -32,6 +32,7 @@ public class Cdc {
     private long startTime;
     private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
     private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
+    private ArrayList<ClientBulletFeature> allBullets = new ArrayList<>();
 
     public static void main(String[] args) throws InterruptedException {
         // tcp
@@ -147,12 +148,8 @@ public class Cdc {
 
     // to reborn bullet or blood packages
     public void rebornFunctionalPack(ClientItemFeature item) {
-        item.setFaceAngle(0.0);
-        item.setDead(false);
-        item.setCollision(false);
         int[] loc = giveRandomLocation();
-        item.setLocX(loc[0]);
-        item.setLocY(loc[1]);
+        item.init(loc[0], loc[1]);
     }
 
     public void gameItemsInital() {
@@ -167,38 +164,6 @@ public class Cdc {
         // 目前是將所有按住的按鍵記下來
 
         allPlayers.get(clientNo).setDirection(moveCode);
-    }
-
-    // TODO: 碰到物體則等於吃到，感覺要每秒去確認，但感覺會很慢？
-    private void checkGetItem(ClientPlayerFeature player) {
-        int itemSize = allItems.size();
-        int itemType;
-        boolean isImpacted = false;
-        for (int currItem = BLOODPACKGE; currItem < itemSize; currItem++) {
-            if (allItems.get(currItem).isDead())
-                continue;
-            isImpacted = Collision.isCollison(allItems.get(currItem), player);
-            if (isImpacted) {
-                itemType = allItems.get(currItem).getItemType();
-                switch (itemType) {
-                    case 1:
-                        player.addHP(60);
-                        allItems.get(currItem).setDead(true);
-                        allItems.get(currItem).setRebornTime(
-                                System.currentTimeMillis() + 10 * 1000);
-                        break;
-                    case 2:
-                        player.addBullet(1);
-                        allItems.get(currItem).setDead(true);
-                        allItems.get(currItem).setRebornTime(
-                                System.currentTimeMillis() + 10 * 1000);
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            }
-        }
     }
 
     public void movingPlayer() {
@@ -224,7 +189,7 @@ public class Cdc {
                 spin++;
             }
             if (keys[ATTACK])
-                attack(player.getClientNo());
+                attack(player);
             else
                 player.setAttackFlag(false);
             if (keys[CHANGEWEAPON]) {
@@ -265,10 +230,14 @@ public class Cdc {
         long now = System.currentTimeMillis();
         if (allItems.get(BLOODPACKGE).isDead()
                 && allItems.get(BLOODPACKGE).getRebornTime() < now) {
+            System.out.println(
+                    allItems.get(BLOODPACKGE).getRebornTime() + " " + now);
             rebornFunctionalPack(allItems.get(BLOODPACKGE));
         }
         if (allItems.get(BULLETPACKGE).isDead()
                 && allItems.get(BULLETPACKGE).getRebornTime() < now) {
+            System.out.println(
+                    allItems.get(BLOODPACKGE).getRebornTime() + " " + now);
             rebornFunctionalPack(allItems.get(BULLETPACKGE));
         }
     }
@@ -287,7 +256,7 @@ public class Cdc {
                 int[] loc = giveRandomLocation();
                 item.init(loc[0], loc[1]);
             }
-            if (item.isDead())// don't initial at dead
+            if (item.getItemType() == 0 && item.isDead())// don't initial at dead
                 item.setReborn(true);
         }
     }
@@ -352,6 +321,38 @@ public class Cdc {
         checkGetItem(player);// 只考慮前進後退才會吃到，旋轉不會碰到補給
     }
 
+    // TODO: 碰到物體則等於吃到，感覺要每秒去確認，但感覺會很慢？
+    private void checkGetItem(ClientPlayerFeature player) {
+        int itemSize = allItems.size();
+        int itemType;
+        boolean isImpacted = false;
+        for (int currItem = BLOODPACKGE; currItem < itemSize; currItem++) {
+            if (allItems.get(currItem).isDead())
+                continue;
+            isImpacted = Collision.isCollison(allItems.get(currItem), player);
+            if (isImpacted) {
+                itemType = allItems.get(currItem).getItemType();
+                switch (itemType) {
+                    case 1:
+                        player.addHP(60);
+                        allItems.get(currItem).setDead(true);
+                        allItems.get(currItem).setRebornTime(
+                                System.currentTimeMillis() + 10 * 1000);
+                        break;
+                    case 2:
+                        player.addBullet(1);
+                        allItems.get(currItem).setDead(true);
+                        allItems.get(currItem).setRebornTime(
+                                System.currentTimeMillis() + 10 * 1000);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            }
+        }
+    }
+
     private void turnRight(ClientPlayerFeature player, double faceAngle) {
         // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
         player.setFaceAngle(faceAngle + ANGLEVEL);
@@ -362,14 +363,14 @@ public class Cdc {
         player.setFaceAngle(faceAngle - ANGLEVEL);
     }
 
-    public void attack(int clientNo) {
-        if (!allPlayers.get(clientNo).isAttackCD()) {
-            allPlayers.get(clientNo).setAttackFlag(false);
+    public void attack(ClientPlayerFeature player) {
+        if (!player.isAttackCD()) {
+            player.setAttackFlag(false);
             return;
         } else {
-            allPlayers.get(clientNo).setAttackFlag(true);
-            allPlayers.get(clientNo).setAttackCD();
-            new Attack(clientNo, allPlayers, allItems);
+            player.setAttackFlag(true);
+            player.setAttackCD();
+            new Attack(player, allPlayers, allItems, allBullets);
         }
     }
 
@@ -380,11 +381,6 @@ public class Cdc {
     }
 
     private void movingBullet() {
-        return;
-        /*
-         * for (ClientItemFeature bullet : allItems) {
-         * 
-         * }
-         */
+        new Attack().attackLongRangeUpdate(allPlayers, allItems, allBullets);
     }
 }
