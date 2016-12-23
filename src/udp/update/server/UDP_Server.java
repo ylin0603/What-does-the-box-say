@@ -31,7 +31,6 @@ public class UDP_Server implements Runnable {
 				DatagramPacket receivePacket =
 						new DatagramPacket(receiveData, receiveData.length);
 				serverSocket.receive(receivePacket);
-				System.out.println("package");
 				// get EncodedData in ArrayList and parse.
 				String receiveString =
 						new String(receivePacket.getData()).trim();
@@ -51,7 +50,6 @@ public class UDP_Server implements Runnable {
 		ClientPlayerFeature player = null;
 		ClientItemFeature item = null;
 		DynamicObjectManager instance = DynamicObjectManager.getInstance();
-		System.out.println("udp start");
 		for (EncodedData eachEnData : encodedData) {
 			switch (eachEnData.getType()) {
 				case "UpdateP":
