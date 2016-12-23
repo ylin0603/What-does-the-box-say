@@ -10,11 +10,10 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 
 import CDC.Cdc;
-import udp.broadcast.client.UDP_Client;
 
 public class TcpServerThread implements Runnable {
     private int ClientID = 0;
-    volatile static int totalClient;
+    volatile static private int totalClient;
     private PrintWriter output;
     private BufferedReader input;
     volatile static public boolean load = false;
@@ -22,14 +21,13 @@ public class TcpServerThread implements Runnable {
     volatile static private int loadNum = 0;
     Gson gson;
 
-
     TcpServerThread() {
         gson = new Gson();
     }
 
     public TcpServerThread(Socket sc, int ClientID) {
         this.ClientID = ClientID;
-        TcpServerThread.totalClient = ClientID + 1;
+        TcpServerThread.totalClient++;
         try {
             output = new PrintWriter(sc.getOutputStream(), true);
             input = new BufferedReader(
@@ -102,7 +100,6 @@ public class TcpServerThread implements Runnable {
         loadNum++;
         if (recv(input).equals("Get Number")) {
             output.println(totalClient);
-            output.flush();
         }
         while (loadNum != totalClient) {
             Thread.sleep(100);

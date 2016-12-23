@@ -73,11 +73,11 @@ public class Attack {
         fakeY = player.getLocY() - cos * Cdc.BOX_SIZE
                 - sin * Cdc.BOX_SIZE * 0.5;
         // attack area 2
-        ClientBulletFeature attackArea2 =
-                new ClientBulletFeature(SWORD, (int) Math.round(fakeX),
-                        (int) Math.round(fakeY), 0, player.getClientNo());
-        attackBulletToPlayer(attackArea2, clientPlayerFeature);
-        attackBulletToBox(attackArea2, clientPlayerFeature, clientItemFeature);
+        attackArea1.setLocX((int) Math.round(fakeX));
+        attackArea1.setLocY((int) Math.round(fakeY));
+
+        attackBulletToPlayer(attackArea1, clientPlayerFeature);
+        attackBulletToBox(attackArea1, clientPlayerFeature, clientItemFeature);
     }
 
     public boolean attackBulletToPlayer(ClientBulletFeature bullet,
@@ -100,6 +100,7 @@ public class Attack {
 
                         kill(player2);
                     }
+                    bullet.setIsAttacked(isAttacked);
                 }
             }
         }
