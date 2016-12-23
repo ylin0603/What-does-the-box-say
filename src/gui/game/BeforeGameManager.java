@@ -87,19 +87,20 @@ public class BeforeGameManager {
         timer.purge();
     }
     
-    public boolean isRoomOwner() {
-        return realTcpClient.getClientNo() == 0;
-    }
-    
     // Only called when game start!
     public void setGameCanvas() {
+        stopTimer();
         frame.getContentPane().removeAll();
+        
+        DynamicObjectManager dom = DynamicObjectManager.getInstance();
+        RealTcpClient.getInstance().recvedGameLoad();
+        int clientTotalNum = RealTcpClient.getInstance().getTotalPlayerNumer();
+        while (dom.getCharacterList().size() != clientTotalNum);
+        System.out.println("game start");
         Game game = new Game();
         frame.add(game);
         frame.getContentPane().repaint();
         frame.setVisible(true);
-        DynamicObjectManager dom = DynamicObjectManager.getInstance();
-        while (dom.getCharacterList().size() == 0) ;
         game.start();
     }
     

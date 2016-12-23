@@ -10,11 +10,10 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 
 import CDC.Cdc;
-import udp.broadcast.client.UDP_Client;
 
 public class TcpServerThread implements Runnable {
     private int ClientID = 0;
-    static int totalClient;
+    volatile static private int totalClient = 0;
     private PrintWriter output;
     private BufferedReader input;
     volatile static public boolean load = false;
@@ -22,14 +21,13 @@ public class TcpServerThread implements Runnable {
     volatile static private int loadNum = 0;
     Gson gson;
 
-
     TcpServerThread() {
         gson = new Gson();
     }
 
     public TcpServerThread(Socket sc, int ClientID) {
         this.ClientID = ClientID;
-        TcpServerThread.totalClient = ClientID + 1;
+        totalClientSet();
         try {
             output = new PrintWriter(sc.getOutputStream(), true);
             input = new BufferedReader(
@@ -50,7 +48,6 @@ public class TcpServerThread implements Runnable {
             while (true) {
                 String buf = recv(input);
                 Gson gson = new Gson();
-                System.out.println(ClientID + " " + buf + " in game");
                 boolean[] keys = gson.fromJson(buf, boolean[].class);
                 // "wsad j"
                 Cdc.getInstance().updateKeys(ClientID, keys);
@@ -83,30 +80,57 @@ public class TcpServerThread implements Runnable {
                     break;
                 case "game load?":
                     send(output, String.valueOf(load));
-                    localLoad = true;
+                    localLoad = false;
                     break;
                 case "Start":
-                    send(output, "true");
                     load = true;
                     localLoad = false;
+                    break;
+                case "game load":
+                    localLoad = true;
                     break;
             }
         }
     }
 
-    void loadGame(PrintWriter output, String nickName)
+    synchronized void loadGame(PrintWriter output, String nickName)
             throws IOException, InterruptedException {
         // loading state
+        Cdc cdc = Cdc.getInstance();
         Cdc.getInstance().addVirtualCharacter(ClientID, nickName);
-        if (ClientID == 0) {
-            Cdc.getInstance().gameItemsInital();
-            Cdc.getInstance().startUpdatingTimer();
+        // System.out.println(loadNumGet());
+        if (recv(input).equals("Get Number")) {
+            output.println(totalClientGet());
         }
-        loadNum++;
-        while (loadNum != totalClient) {
-            Thread.sleep(20);
+        loadNumSet();
+        while (loadNumGet() != totalClientGet());
+        System.out.println(ClientID + " start");
+        if (ClientID == 0) {
+            System.out.println(ClientID + " room start");
+            cdc.gameItemsInital();
+            System.out.println(
+                    "Cdc player num" + cdc.getPlayersUpdateInfo().size());
+            cdc.startUpdatingTimer();
         }
     }
+
+    synchronized int totalClientGet() {
+        return totalClient;
+    }
+
+    synchronized int totalClientSet() {
+        return totalClient++;
+    }
+
+    synchronized int loadNumGet() {
+        return loadNum;
+    }
+
+    synchronized int loadNumSet() {
+        return loadNum++;
+    }
+
+
 
     void send(PrintWriter output, String outputString) {
         output.println(outputString);

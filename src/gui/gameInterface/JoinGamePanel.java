@@ -16,15 +16,14 @@ public class JoinGamePanel extends JPanel {
     private String name, serverIp;
 
     public JoinGamePanel() {
-        name = JOptionPane.showInputDialog(frame,
-                "Please input your nickname :", "Join Room",
-                JOptionPane.QUESTION_MESSAGE);
+        name = JOptionPane.showInputDialog(frame, "Please input your nickname :",
+                "Join Room", JOptionPane.QUESTION_MESSAGE);
         if (name == null || name.isEmpty())
             BeforeGameManager.getInstance().addInitialPanel();
         else
             askServerIp();
     }
-
+    
     private void askServerIp() {
         serverIp = JOptionPane.showInputDialog(frame, "Please input server ip:",
                 "Server IP", JOptionPane.QUESTION_MESSAGE);
@@ -36,15 +35,17 @@ public class JoinGamePanel extends JPanel {
 
     private void connectServer() {
         realTcpClient = BeforeGameManager.getInstance().getTcpClient();
-        boolean isConnect = realTcpClient.connectServer("192.168.1.5");
+        boolean isConnect = realTcpClient.connectServer("127.0.0.1");
         if (!isConnect) {
             JOptionPane.showMessageDialog(frame, "Connect fail!!!",
                     "Connect Fail", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
         UDP_Server.initUDPServer();
-        realTcpClient.joinRoom("robert");
+        realTcpClient.joinRoom(name);
         BeforeGameManager.getInstance().startTimer();
+
+
     }
 
 }

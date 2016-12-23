@@ -1,6 +1,8 @@
 package CDC;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.lang.Math;
 import java.util.Timer;
@@ -30,9 +32,12 @@ public class Cdc {
 
     Random random = new Random();
     private long startTime;
-    private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
-    private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
-    private ArrayList<ClientBulletFeature> allBullets = new ArrayList<>();
+    private List<ClientPlayerFeature> allPlayers =
+            Collections.synchronizedList(new ArrayList<>());
+    private List<ClientItemFeature> allItems =
+            Collections.synchronizedList(new ArrayList<>());
+    private List<ClientBulletFeature> allBullets =
+            Collections.synchronizedList(new ArrayList<>());
 
     public static void main(String[] args) throws InterruptedException {
         // tcp
@@ -73,11 +78,11 @@ public class Cdc {
 
     private void Cdc() {}
 
-    public ArrayList<ClientPlayerFeature> getPlayersUpdateInfo() {
+    public List<ClientPlayerFeature> getPlayersUpdateInfo() {
         return allPlayers;
     }
 
-    public ArrayList<ClientItemFeature> getItemsUpdateInfo() {
+    public List<ClientItemFeature> getItemsUpdateInfo() {
         return allItems;
     }
 
