@@ -85,7 +85,6 @@ public class TcpServerThread implements Runnable {
                     localLoad = false;
                     break;
                 case "Start":
-                    send(output, "true");
                     load = true;
                     localLoad = false;
                     break;
@@ -101,7 +100,7 @@ public class TcpServerThread implements Runnable {
         // loading state
         Cdc.getInstance().addVirtualCharacter(ClientID, nickName);
         loadNum++;
-        while (recv(input).equals("Get Number")) {
+        if (recv(input).equals("Get Number")) {
             output.println(totalClient);
             output.flush();
         }
