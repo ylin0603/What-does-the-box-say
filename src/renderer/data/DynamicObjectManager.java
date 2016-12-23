@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DynamicObjectManager {
-    volatile private List<Character> characterList = Collections.synchronizedList(new ArrayList<Character>());
+    private List<Character> characterList = Collections.synchronizedList(new ArrayList<Character>());
     private List<Item> itemList = Collections.synchronizedList(new ArrayList<Item>());
 
     private static DynamicObjectManager instance = null;

@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.List;
 
 import CDC.ClientItemFeature;
 import CDC.ClientPlayerFeature;
@@ -31,11 +32,11 @@ public class UDP_Client {
 		broadcast(allIPAddress, stopFlag);
 	}
 
-	public ArrayList<EncodedData> encapsulateData(
-			ArrayList<ClientPlayerFeature> updatePlayers,
-			ArrayList<ClientItemFeature> updateItems) {
-		String type;
-		ArrayList<EncodedData> encodedData = new ArrayList<>();
+    public ArrayList<EncodedData> encapsulateData(
+            List<ClientPlayerFeature> updatePlayers,
+            List<ClientItemFeature> updateItems) {
+        String type;
+        ArrayList<EncodedData> encodedData = new ArrayList<>();
 
 		for (ClientPlayerFeature player : updatePlayers) {
 			if (clientNo >= player.getClientNo()) {
