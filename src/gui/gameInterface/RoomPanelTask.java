@@ -15,7 +15,6 @@ public class RoomPanelTask extends TimerTask {
             bgm.addRoomPanel();
         } else {
             bgm.setGameCanvas();
-            //BeforeGameManager.getInstance().stopTimer();
         }
     }
 

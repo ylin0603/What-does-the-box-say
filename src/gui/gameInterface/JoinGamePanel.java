@@ -25,8 +25,9 @@ public class JoinGamePanel extends JPanel {
     }
     
     private void askServerIp() {
-        serverIp = JOptionPane.showInputDialog(frame, "Please input server ip:",
-                "Server IP", JOptionPane.QUESTION_MESSAGE);
+        serverIp = (String) JOptionPane.showInputDialog(frame,
+                "Please input server ip:", "Server IP",
+                JOptionPane.QUESTION_MESSAGE, null, null, "127.0.0.1");
         if (serverIp == null || serverIp.isEmpty())
             BeforeGameManager.getInstance().addInitialPanel();
         else
@@ -44,8 +45,6 @@ public class JoinGamePanel extends JPanel {
         UDP_Server.initUDPServer();
         realTcpClient.joinRoom(name);
         BeforeGameManager.getInstance().startTimer();
-
-
     }
 
 }
