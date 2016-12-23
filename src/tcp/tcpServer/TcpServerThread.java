@@ -86,8 +86,6 @@ public class TcpServerThread implements Runnable {
                     localLoad = true;
                     break;
                 case "Start":
-                    Cdc.getInstance().gameItemsInital();
-                    Cdc.getInstance().startUpdatingTimer();
                     send(output, "true");
                     load = true;
                     localLoad = false;
@@ -100,6 +98,10 @@ public class TcpServerThread implements Runnable {
             throws IOException, InterruptedException {
         // loading state
         Cdc.getInstance().addVirtualCharacter(ClientID, nickName);
+        if (ClientID == 0) {
+            Cdc.getInstance().gameItemsInital();
+            Cdc.getInstance().startUpdatingTimer();
+        }
         loadNum++;
         while (loadNum != totalClient) {
             Thread.sleep(20);
