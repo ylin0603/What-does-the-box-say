@@ -16,7 +16,8 @@ public class DynamicObjectManager {
             Collections.synchronizedList(new ArrayList<Character>());
     private List<Item> itemList =
             Collections.synchronizedList(new ArrayList<Item>());
-
+    private List<Entity> totalList =
+            Collections.synchronizedList(new ArrayList<Entity>());
     private static DynamicObjectManager instance = null;
 
     private DynamicObjectManager() {}
@@ -30,7 +31,9 @@ public class DynamicObjectManager {
 
     public void addVirtualCharacter(int clientno, String nickName) {
         assert clientno >= 0;
-        this.characterList.add(new Character(clientno, nickName));
+        Character c = new Character(clientno, nickName);
+        this.characterList.add(c);
+        this.totalList.add(c);
     }
 
     public void addItem(int itemType, int index, boolean isDead, int x, int y) {
@@ -49,6 +52,7 @@ public class DynamicObjectManager {
                 assert false;
 
         }
+        totalList.add(item);
         this.itemList.add(item);
     }
 
@@ -69,10 +73,7 @@ public class DynamicObjectManager {
     }
 
     public List<Entity> getAllDynamicObjects() {
-        List<Entity> joinList =
-                Stream.concat(characterList.stream(), itemList.stream())
-                        .collect(Collectors.toList());
-        return joinList;
+        return totalList;
     }
 
     public List<Character> getCharacterList() {
