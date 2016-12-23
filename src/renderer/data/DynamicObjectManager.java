@@ -5,19 +5,13 @@ import renderer.data.entity.Character;
 import tcp.tcpClient.RealTcpClient;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class DynamicObjectManager {
-    private List<Character> characterList =
-            Collections.synchronizedList(new ArrayList<Character>());
-    private List<Item> itemList =
-            Collections.synchronizedList(new ArrayList<Item>());
-    private List<Entity> totalList =
-            Collections.synchronizedList(new ArrayList<Entity>());
+    private List<Character> characterList = new CopyOnWriteArrayList<>();
+    private List<Item> itemList = new CopyOnWriteArrayList<>();
+    private List<Entity> totalList = new CopyOnWriteArrayList<>();
     private static DynamicObjectManager instance = null;
 
     private DynamicObjectManager() {}
