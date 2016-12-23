@@ -82,12 +82,15 @@ public class TcpServerThread implements Runnable {
                     break;
                 case "game load?":
                     send(output, String.valueOf(load));
-                    localLoad = true;
+                    localLoad = false;
                     break;
                 case "Start":
                     send(output, "true");
                     load = true;
                     localLoad = false;
+                    break;
+                case "game load":
+                    localLoad = true;
                     break;
             }
         }
@@ -98,8 +101,9 @@ public class TcpServerThread implements Runnable {
         // loading state
         Cdc.getInstance().addVirtualCharacter(ClientID, nickName);
         loadNum++;
-        while (recv(input) == "Get Number") {
+        while (recv(input).equals("Get Number")) {
             output.println(totalClient);
+            output.flush();
         }
         while (loadNum != totalClient) {
             Thread.sleep(100);

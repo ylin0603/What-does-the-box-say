@@ -74,6 +74,10 @@ public class RealTcpClient {
         output.println("Start");
     }
 
+    public void recvedGameLoad() {
+        output.println("game load");
+    }
+
     public int getTotalPlayerNumer() {
         output.println("Get Number");
         return Integer.valueOf(recv(input));
