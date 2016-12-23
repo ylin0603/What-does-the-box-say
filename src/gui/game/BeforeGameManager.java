@@ -93,6 +93,7 @@ public class BeforeGameManager {
         frame.getContentPane().removeAll();
         
         DynamicObjectManager dom = DynamicObjectManager.getInstance();
+        RealTcpClient.getInstance().recvedGameLoad();
         int clientTotalNum = RealTcpClient.getInstance().getTotalPlayerNumer();
         while (dom.getCharacterList().size() != clientTotalNum);
         System.out.println("game start");
