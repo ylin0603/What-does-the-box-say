@@ -13,7 +13,7 @@ import CDC.Cdc;
 
 public class TcpServerThread implements Runnable {
     private int ClientID = 0;
-    volatile static private int totalClient = 0;
+    volatile static public int totalClient = 0;
     private PrintWriter output;
     private BufferedReader input;
     volatile static public boolean load = false;
