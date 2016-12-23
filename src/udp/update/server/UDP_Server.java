@@ -14,11 +14,13 @@ public class UDP_Server implements Runnable {
 	private Gson gson = new Gson();
 
 	public static void initUDPServer() {
-		Thread serverThread = new Thread(new UDP_Server()); // 產生Thread物件
+	    
+		Thread serverThread = new Thread(new UDP_Server()); // ���hread�隞�
 		serverThread.start();
 	}
 
 	public void run() {
+	    System.out.println("udp server");
 		DatagramSocket serverSocket = null;
 		try {
 			byte[] receiveData;
@@ -29,7 +31,7 @@ public class UDP_Server implements Runnable {
 				DatagramPacket receivePacket =
 						new DatagramPacket(receiveData, receiveData.length);
 				serverSocket.receive(receivePacket);
-
+				System.out.println("package");
 				// get EncodedData in ArrayList and parse.
 				String receiveString =
 						new String(receivePacket.getData()).trim();
@@ -49,6 +51,7 @@ public class UDP_Server implements Runnable {
 		ClientPlayerFeature player = null;
 		ClientItemFeature item = null;
 		DynamicObjectManager instance = DynamicObjectManager.getInstance();
+		System.out.println("udp start");
 		for (EncodedData eachEnData : encodedData) {
 			switch (eachEnData.getType()) {
 				case "UpdateP":
@@ -95,7 +98,7 @@ public class UDP_Server implements Runnable {
 
 					break;
 				case "STOP":
-					//call Game的function跳出總計分板，停止遊戲
+					//call Game��unction頝喳蝮質��嚗�迫��
 
 					System.out.println(eachEnData.getData());
 

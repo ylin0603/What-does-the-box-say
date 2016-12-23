@@ -10,13 +10,13 @@ public class RoomPanelTask extends TimerTask {
     @Override
     public void run() {
         BeforeGameManager bgm = BeforeGameManager.getInstance();
-        bgm.updateNameList();
-        if (!bgm.isRoomOwner()) {
-            if (RealTcpClient.getInstance().isGameload())
-                bgm.setGameCanvas();
+        if (!RealTcpClient.getInstance().isGameload()) {
+            bgm.updateNameList();
+            bgm.addRoomPanel();
+        } else {
+            bgm.setGameCanvas();
+            //BeforeGameManager.getInstance().stopTimer();
         }
-        bgm.addRoomPanel();
-
     }
 
 }

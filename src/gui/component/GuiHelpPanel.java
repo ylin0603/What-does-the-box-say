@@ -5,7 +5,7 @@ import java.awt.Graphics;
 
 public class GuiHelpPanel extends GuiPanel {
 
-    private final String[] helpInfo = {
+    private final String[] keyInfo = {
             "BOX", 
             "W : Forward", 
             "S : Backward",
@@ -13,7 +13,8 @@ public class GuiHelpPanel extends GuiPanel {
             "D : Rotate Right", 
             "J : Change Weapon",
             "SPACE : Attack", 
-            "TAB : Score Board"};
+            "TAB : Show Score Board"
+    };
 
     public GuiHelpPanel() {
 
@@ -24,8 +25,8 @@ public class GuiHelpPanel extends GuiPanel {
             g.setColor(this.backgroundColor);
             g.fillRoundRect(x, y, 400, 420, arcWidth, arcWidth);
             g.setColor(Color.WHITE);
-            for (int i = 0; i < helpInfo.length; i++) {
-                g.drawString(helpInfo[i], this.infoX, this.infoY + i * 30);
+            for (int i = 0; i < keyInfo.length; i++) {
+                g.drawString(keyInfo[i], this.infoX, this.infoY + i * 30);
             }
         }
     }

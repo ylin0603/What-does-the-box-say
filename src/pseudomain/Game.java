@@ -35,7 +35,7 @@ public class Game extends Canvas implements Runnable {
         keyInput = new KeyboardInput();
         this.addKeyListener(keyInput);
         setPreferredSize(size);
-        frame = new JFrame();
+        //frame = new JFrame();
         this.setFocusTraversalKeysEnabled(false);
     }
 

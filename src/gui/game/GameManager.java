@@ -19,18 +19,18 @@ public class GameManager {
     private GuiBloodBar bloodBar;
     private GuiStatusBar statusBar;
     private GuiSmallMap smallMap;
+    private GuiPlayerAngle playerAngle;
     private GuiHelpPanel helpPanel;
     private GuiScoreBoard scoreBoard;
-    private GuiPlayerAngle playerAngle;
 
     private GameManager() {
         init();
         componentList.add(bloodBar);
         componentList.add(statusBar);
         componentList.add(smallMap);
+        componentList.add(playerAngle);
         componentList.add(helpPanel);
         componentList.add(scoreBoard);
-        componentList.add(playerAngle);
     }
 
     public static GameManager getInstance() {
@@ -44,9 +44,9 @@ public class GameManager {
         bloodBar = new GuiBloodBar();
         statusBar = new GuiStatusBar();
         smallMap = new GuiSmallMap();
+        playerAngle = new GuiPlayerAngle();
         helpPanel = new GuiHelpPanel();
         scoreBoard = new GuiScoreBoard();
-        playerAngle = new GuiPlayerAngle();
     }
 
     public void render(Graphics g) {
