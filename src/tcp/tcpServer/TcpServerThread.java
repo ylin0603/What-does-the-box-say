@@ -47,9 +47,17 @@ public class TcpServerThread implements Runnable {
             // game state
             while (true) {
                 String buf = recv(input);
-                Gson gson = new Gson();
-                boolean[] keys = gson.fromJson(buf, boolean[].class);
+                int moveCode = Integer.valueOf(buf);
                 // "wsad j"
+                boolean[] keys = new boolean[6];
+                for (int i = 0; i < keys.length && moveCode != 0; i++) {
+                    if ((moveCode - 1) % 2 == 0) {
+                        moveCode = (moveCode - 1) / 2;
+                        keys[i] = true;
+                    } else {
+                        moveCode = (moveCode) / 2;
+                    }
+                }
                 Cdc.getInstance().updateKeys(ClientID, keys);
             }
         } catch (Exception e) {
@@ -72,7 +80,6 @@ public class TcpServerThread implements Runnable {
         boolean localLoad = false;
         while (!load || !localLoad) {
             String action = recv(input);
-            System.out.println(ClientID + " " + action + " in while");
             switch (action) {
                 case "Get list":
                     send(output, new Gson().toJson(nameList));

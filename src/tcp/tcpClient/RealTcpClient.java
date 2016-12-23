@@ -85,9 +85,13 @@ public class RealTcpClient {
 
     public void inputMoves(boolean[] keys) throws Exception {
         // "wsad j"
-        Gson gson = new Gson();
-        String SedMsg = gson.toJson(keys);
-        realTcpClient.output.println(SedMsg);
+        int sendCode = 0;
+        for (int i = 0; i < keys.length; i++) {
+            if (keys[i]) {
+                sendCode += (int) (Math.pow(2, i));
+            }
+        }
+        realTcpClient.output.println(sendCode);
         realTcpClient.output.flush();
         if (sc.isClosed())
             throw new Exception();
