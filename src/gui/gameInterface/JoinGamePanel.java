@@ -35,7 +35,7 @@ public class JoinGamePanel extends JPanel {
 
     private void connectServer() {
         realTcpClient = BeforeGameManager.getInstance().getTcpClient();
-        boolean isConnect = realTcpClient.connectServer("127.0.0.1");
+        boolean isConnect = realTcpClient.connectServer(serverIp);
         if (!isConnect) {
             JOptionPane.showMessageDialog(frame, "Connect fail!!!",
                     "Connect Fail", JOptionPane.ERROR_MESSAGE);

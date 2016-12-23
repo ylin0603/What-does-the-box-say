@@ -73,7 +73,7 @@ public class Cdc {
                                 getItemsUpdateInfo()));// broadcast
             }
         };
-        gameTimer.schedule(startUpdating, 0, 17);
+        gameTimer.schedule(startUpdating, 0, 33);
     }
 
     private void Cdc() {}
@@ -89,6 +89,7 @@ public class Cdc {
     public void addVirtualCharacter(int clientNo, String nickName) {
         assert clientNo > -1;
         assert !nickName.isEmpty();
+        System.out.println(clientNo + " addVirtualCharacter");
         int[] loc = giveRandomLocation(); // initial position
         allPlayers.add(
                 new ClientPlayerFeature(clientNo, nickName, loc[0], loc[1]));
@@ -231,7 +232,7 @@ public class Cdc {
         boolean isImpacted = false;
         boolean colliHappened = false;
         for (ClientPlayerFeature collisionPlayer : allPlayers) {
-            if (collisionPlayer.getClientNo() == player.getClientNo())
+            if (collisionPlayer.equals(player) || collisionPlayer.isDead())
                 continue;
             isImpacted = Collision.isCollison(x, y, collisionPlayer);
             if (isImpacted) {
