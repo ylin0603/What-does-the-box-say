@@ -1,6 +1,7 @@
 package CDC;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Attack {
     final static int BULLETVEL = 4;
@@ -23,9 +24,9 @@ public class Attack {
     final static int SWORD = 1;
 
     public Attack(ClientPlayerFeature player,
-            ArrayList<ClientPlayerFeature> clientPlayerFeature,
-            ArrayList<ClientItemFeature> clientItemFeature,
-            ArrayList<ClientBulletFeature> clientBulletFeature) {
+            List<ClientPlayerFeature> clientPlayerFeature,
+            List<ClientItemFeature> clientItemFeature,
+            List<ClientBulletFeature> clientBulletFeature) {
         switch (player.getWeaponType()) {
             case SHORTRANGE:
                 attackShortRange(player, clientPlayerFeature,
@@ -45,8 +46,8 @@ public class Attack {
     }
 
     public void attackShortRange(ClientPlayerFeature player,
-            ArrayList<ClientPlayerFeature> clientPlayerFeature,
-            ArrayList<ClientItemFeature> clientItemFeature) {
+            List<ClientPlayerFeature> clientPlayerFeature,
+            List<ClientItemFeature> clientItemFeature) {
         double faceAngle = player.getFaceAngle();
         double radianAngle = Math.toRadians(faceAngle);
         double sin = Math.sin(radianAngle);
@@ -80,7 +81,7 @@ public class Attack {
     }
 
     public boolean attackBulletToPlayer(ClientBulletFeature bullet,
-            ArrayList<ClientPlayerFeature> clientPlayerFeature) {
+            List<ClientPlayerFeature> clientPlayerFeature) {
         boolean isThisAttack = false;
         boolean[] isAttacked = bullet.getIsAttacked();
         ClientPlayerFeature player1 =
@@ -127,8 +128,8 @@ public class Attack {
     }
 
     public boolean attackBulletToBox(ClientBulletFeature bullet,
-            ArrayList<ClientPlayerFeature> clientPlayerFeature,
-            ArrayList<ClientItemFeature> clientItemFeature) {
+            List<ClientPlayerFeature> clientPlayerFeature,
+            List<ClientItemFeature> clientItemFeature) {
         boolean isAttack = false;
         for (ClientItemFeature item2 : clientItemFeature) {
             if (item2.getItemType() != 0 || item2.isDead())
@@ -143,7 +144,7 @@ public class Attack {
     }
 
     public void boxRevenge(ClientItemFeature item2,
-            ArrayList<ClientPlayerFeature> clientPlayerFeature) {
+            List<ClientPlayerFeature> clientPlayerFeature) {
         double fakeX = item2.getLocX();
         double fakeY = item2.getLocY();
         for (ClientPlayerFeature player2 : clientPlayerFeature) {
@@ -158,9 +159,9 @@ public class Attack {
     }
 
     private void attackLongRange(ClientPlayerFeature player,
-            ArrayList<ClientPlayerFeature> clientPlayerFeature,
-            ArrayList<ClientItemFeature> clientItemFeature,
-            ArrayList<ClientBulletFeature> clientBulletFeature) {
+            List<ClientPlayerFeature> clientPlayerFeature,
+            List<ClientItemFeature> clientItemFeature,
+            List<ClientBulletFeature> clientBulletFeature) {
         if (player.getBulletCount() > 0) {
             player.setBulletCount(player.getBulletCount() - 1);
             int LocX = player.getLocX();
@@ -173,9 +174,9 @@ public class Attack {
     }
 
     public void attackLongRangeUpdate(
-            ArrayList<ClientPlayerFeature> clientPlayerFeature,
-            ArrayList<ClientItemFeature> clientItemFeature,
-            ArrayList<ClientBulletFeature> clientBulletFeature) {
+            List<ClientPlayerFeature> clientPlayerFeature,
+            List<ClientItemFeature> clientItemFeature,
+            List<ClientBulletFeature> clientBulletFeature) {
         for (ClientBulletFeature bullet : clientBulletFeature) {
             if (bullet.getItemType() != 0 || bullet.isDead())
                 continue;

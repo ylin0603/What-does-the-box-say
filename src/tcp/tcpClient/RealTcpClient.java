@@ -74,6 +74,11 @@ public class RealTcpClient {
         output.println("Start");
     }
 
+    public int getTotalPlayerNumer() {
+        output.println("Get Number");
+        return Integer.valueOf(recv(input));
+    }
+
     public void inputMoves(boolean[] keys) throws Exception {
         // "wsad j"
         Gson gson = new Gson();
