@@ -18,6 +18,17 @@ public class TcpServerThread implements Runnable {
     volatile static public boolean load = false;
     private static ArrayList<String> nameList = new ArrayList<String>();
     Gson gson;
+    private final static int W = 0;
+    private final static int S = 1;
+    private final static int A = 2;
+    private final static int D = 3;
+    private final static int SPACE = 4;
+    private final static int J = 5;
+
+    private final static int MOVE = 0;
+    private final static int SPIN = 1;
+    private final static int ATTACK = 2;
+    private final static int CHANGEWEAPON = 3;
 
     TcpServerThread() {
         gson = new Gson();
@@ -45,18 +56,39 @@ public class TcpServerThread implements Runnable {
             // game state
             while (true) {
                 String buf = recv(input);
-                int moveCode = Integer.valueOf(buf);
-                // "wsad j"
+                int recvCode = Integer.valueOf(buf);
                 boolean[] keys = new boolean[6];
-                for (int i = 0; i < keys.length && moveCode != 0; i++) {
-                    if ((moveCode - 1) % 2 == 0) {
-                        moveCode = (moveCode - 1) / 2;
+                // "wsad j"
+                for (int i = 0; i < keys.length && recvCode != 0; i++) {
+                    if ((recvCode - 1) % 2 == 0) {
+                        recvCode = (recvCode - 1) / 2;
                         keys[i] = true;
                     } else {
-                        moveCode = (moveCode) / 2;
+                        recvCode = (recvCode) / 2;
                     }
                 }
-                Cdc.getInstance().updateKeys(ClientID, keys);
+                
+                int[] moveCode = new int[4];
+                // "move,spin,attack,change weapon"
+                if (keys[W]) {
+                    moveCode[MOVE]++;
+                }
+                if (keys[S]) {
+                    moveCode[MOVE]--;
+                }
+                if (keys[A]) {
+                    moveCode[SPIN]--;
+                }
+                if (keys[D]) {
+                    moveCode[SPIN]++;
+                }
+                if (keys[SPACE]) {
+                    moveCode[ATTACK] = 1;
+                }
+                if (keys[J]) {
+                    moveCode[CHANGEWEAPON] = 1;
+                }
+                Cdc.getInstance().updateKeys(ClientID, moveCode);
             }
         } catch (Exception e) {
             e.printStackTrace();

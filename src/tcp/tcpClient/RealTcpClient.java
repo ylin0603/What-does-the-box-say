@@ -91,8 +91,8 @@ public class RealTcpClient {
                 sendCode += (int) (Math.pow(2, i));
             }
         }
-        realTcpClient.output.println(sendCode);
-        realTcpClient.output.flush();
+        output.println(sendCode);
+        output.flush();
         if (sc.isClosed())
             throw new Exception();
     }
