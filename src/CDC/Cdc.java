@@ -224,6 +224,8 @@ public class Cdc {
                 continue;
             isImpacted = Collision.isCollison(x, y, collisionPlayer);
             if (isImpacted) {
+                player.setCollisionFlag(true);
+                collisionPlayer.setCollisionFlag(true);
                 colliHappened = true;
                 break;
             }
@@ -258,10 +260,8 @@ public class Cdc {
                 player)) {
             player.setLocX((int) Math.round(diffX));
             player.setLocY((int) Math.round(diffY));
-            checkGetItem(player); // 只考慮前進後退才會吃到，旋轉不會碰到補給
-        } else {
-            player.setCollisionFlag(true);
         }
+        checkGetItem(player); // 只考慮前進後退才會吃到，旋轉不會碰到補給
     }
 
     private void backward(ClientPlayerFeature player, double radianAngle) {
@@ -273,10 +273,8 @@ public class Cdc {
                 player)) {
             player.setLocX((int) Math.round(diffX));
             player.setLocY((int) Math.round(diffY));
-            checkGetItem(player); // 只考慮前進後退才會吃到，旋轉不會碰到補給
-        } else {
-            player.setCollisionFlag(true);
         }
+        checkGetItem(player); // 只考慮前進後退才會吃到，旋轉不會碰到補給
     }
 
     // TODO: 碰到物體則等於吃到，感覺要每秒去確認，但感覺會很慢？
