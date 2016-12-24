@@ -7,7 +7,8 @@ public class SceneManager {
 	private int[] pixels;
 
 	public static final int MAP_SIZE = 256 * 256;
-	public static final int MAP_SQUARE_SIDE = 256;
+	public final static int MAP_SIZE_X = 640;
+    public final static int MAP_SIZE_Y = 1200;
 
 	private Level level = new SpawnLevel("/levels/spawn.png");
 	public int[] tiles = new int[MAP_SIZE];
