@@ -83,8 +83,8 @@ public class UDP_Server implements Runnable {
 					instance.updateItem(item.getItemID(), item.isDead(),
 										item.getItemOwner(), item.getLocX(), item.getLocY());
 
-					if(item.isDead())
-						System.out.println("Item dead");
+					//if(item.isDead())
+					//	System.out.println("Item dead");
 
 					break;
 				case "AddI":
@@ -99,13 +99,13 @@ public class UDP_Server implements Runnable {
 				case "Bullet":
 					allBullet = gson.fromJson(eachEnData.getData(),
 							new TypeToken<ArrayList<ClientBulletFeature>>() {}.getType());
+
 					instance.updateBullets(allBullet);
-
-
+					break;
 				case "STOP":
 					//call Game的function跳出總計分板，停止遊戲
 
-					System.out.println(eachEnData.getData());
+					System.out.println("STOP: " + eachEnData.getData());
 
 					break;
 				default:
