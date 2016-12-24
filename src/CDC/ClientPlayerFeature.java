@@ -227,20 +227,19 @@ public class ClientPlayerFeature {
         }
     }
 
-    public boolean checkRecover() { // 檢查是否停在原地
-        long stopSecond = System.currentTimeMillis() - lastMoveTime;
-        if (stopSecond >= 5000) {
-            lastMoveTime += 1000;
-            return true;
-        }
-        return false;
-    }
-
     public boolean checkResurrection() { // 檢查復活
         if (System.currentTimeMillis() >= resurrectionTime)
             return true;
         else
             return false;
+    }
+
+    public long getLastMoveTime() {
+        return lastMoveTime;
+    }
+
+    public void setLastMoveTime(long lastMoveTime) {
+        this.lastMoveTime = lastMoveTime;
     }
 
     public void setLastMoveTime() {
