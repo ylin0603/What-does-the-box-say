@@ -82,10 +82,6 @@ public class UDP_Server implements Runnable {
 							ClientItemFeature.class);
 					instance.updateItem(item.getItemID(), item.isDead(),
 										item.getItemOwner(), item.getLocX(), item.getLocY());
-
-					//if(item.isDead())
-					//	System.out.println("Item dead");
-
 					break;
 				case "AddI":
 					item = gson.fromJson(eachEnData.getData(),

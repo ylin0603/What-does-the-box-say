@@ -89,7 +89,8 @@ public class Attack {
                 clientPlayerFeature.get(bullet.getItemOwner());
         for (ClientPlayerFeature player2 : clientPlayerFeature) {
             if (player2.getClientNo() == bullet.getItemOwner()
-                    || isAttacked[clientPlayerFeature.indexOf(player2)]) {
+                    || isAttacked[clientPlayerFeature.indexOf(player2)]
+                    || player2.isDead()) {
                 continue;// for prevent synchronize problem
             } else {
                 if (Collision.isCollison(bullet, player2)) {
@@ -150,6 +151,8 @@ public class Attack {
         double fakeX = item2.getLocX();
         double fakeY = item2.getLocY();
         for (ClientPlayerFeature player2 : clientPlayerFeature) {
+            if (player2.isDead())
+                continue;
             if (Collision.isCollison((int) Math.round(fakeX),
                     (int) Math.round(fakeY), revengeSize, player2)) {
                 player2.setAttackedFlag(true);
@@ -183,7 +186,6 @@ public class Attack {
         Iterator<ClientBulletFeature> clientBulletFeatureIterator =
                 clientBulletFeature.iterator();
         while (clientBulletFeatureIterator.hasNext()) {
-            System.out.println("bullet update");
             ClientBulletFeature bullet = clientBulletFeatureIterator.next();
             if (bullet.getItemType() != 0 || bullet.isDead())
                 continue;
