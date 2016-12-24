@@ -57,7 +57,6 @@ public class Character extends Entity {
         this.isDead = isDead;
         if (this.attackFlag)
             animationFinished = false;
-
         //this.sprite = Sprite.rotate(Sprite.PLAYER,angle);
     }
 
