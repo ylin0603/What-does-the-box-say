@@ -1,15 +1,14 @@
 package tcp.tcpServer;
 
+import CDC.Cdc;
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-
-import com.google.gson.Gson;
-
-import CDC.Cdc;
 
 public class TcpServerThread implements Runnable {
     private int ClientID = 0;
@@ -37,8 +36,7 @@ public class TcpServerThread implements Runnable {
         }
     }
 
-    @Override
-    public void run() {
+    @Override public void run() {
         try {
             String nickName = initGame(input, output);
             Cdc.getInstance().addVirtualCharacter(ClientID, nickName);

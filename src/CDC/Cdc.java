@@ -67,7 +67,7 @@ public class Cdc {
 
                 UDPinstance.broadcast(realTcpServer.getClientIPTable(),
                         UDPinstance.encapsulateData(getPlayersUpdateInfo(),
-                                getItemsUpdateInfo()));// broadcast
+                                getItemsUpdateInfo(), getAllBullets()));// broadcast
             }
         };
         gameTimer.schedule(startUpdating, 0, 33);
@@ -82,6 +82,8 @@ public class Cdc {
     public List<ClientItemFeature> getItemsUpdateInfo() {
         return allItems;
     }
+
+    public List<ClientBulletFeature> getAllBullets() { return allBullets; }
 
     public void addVirtualCharacter(int clientNo, String nickName) {
         assert clientNo > -1;

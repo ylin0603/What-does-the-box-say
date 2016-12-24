@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UDP_Server implements Runnable {
 
@@ -48,6 +49,7 @@ public class UDP_Server implements Runnable {
 
 		ClientPlayerFeature player = null;
 		ClientItemFeature item = null;
+		List<ClientBulletFeature> allBullet;
 		DynamicObjectManager instance = DynamicObjectManager.getInstance();
 		for (EncodedData eachEnData : encodedData) {
 			switch (eachEnData.getType()) {
@@ -94,6 +96,12 @@ public class UDP_Server implements Runnable {
 					System.out.println("Add Item");
 
 					break;
+				case "Bullet":
+					allBullet = gson.fromJson(eachEnData.getData(),
+							new TypeToken<ArrayList<ClientBulletFeature>>() {}.getType());
+					instance.updateBullets(allBullet);
+
+
 				case "STOP":
 					//call Game的function跳出總計分板，停止遊戲
 

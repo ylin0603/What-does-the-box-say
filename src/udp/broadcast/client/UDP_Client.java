@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import CDC.ClientBulletFeature;
 import CDC.ClientItemFeature;
 import CDC.ClientPlayerFeature;
 
@@ -37,7 +38,8 @@ public class UDP_Client {
 
     public ArrayList<EncodedData> encapsulateData(
             List<ClientPlayerFeature> updatePlayers,
-            List<ClientItemFeature> updateItems) {
+            List<ClientItemFeature> updateItems,
+            List<ClientBulletFeature> allBullets) {
         String type;
         ArrayList<EncodedData> encodedData = new ArrayList<>();
 
@@ -61,6 +63,8 @@ public class UDP_Client {
 
             encodedData.add(new EncodedData(type, gson.toJson(item)));
         }
+
+        encodedData.add(new EncodedData("Bullet", gson.toJson(allBullets)));
 
         return encodedData;
     }
