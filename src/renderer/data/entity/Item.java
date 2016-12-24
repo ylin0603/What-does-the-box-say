@@ -8,7 +8,8 @@ public class Item extends Entity {
     private int index;
     private int owner;
 
-    public Item(int type, int index, boolean isDead, int x, int y) {
+    public Item(int type, int index, boolean isDead, int x, int y, Sprite s) {
+        super(s);
         this.itemType = type;
         this.index = index;
         this.isDead = isDead;
@@ -18,6 +19,7 @@ public class Item extends Entity {
 
 
     public void update(boolean isDead, int owner, int x, int y) {
+        super.update();
         this.isDead = isDead;
         this.owner = owner;
         this.x = x;

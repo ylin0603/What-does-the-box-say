@@ -7,7 +7,6 @@ import tcp.tcpClient.RealTcpClient;
 import java.awt.Point;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 public class DynamicObjectManager {
     private List<Character> characterList = new CopyOnWriteArrayList<>();
     private List<Item> itemList = new CopyOnWriteArrayList<>();
@@ -71,12 +70,10 @@ public class DynamicObjectManager {
     }
 
     public List<Character> getCharacterList() {
-        assert characterList.size() > 0;
         return characterList;
     }
 
     public List<Item> getItemList() {
-        assert itemList.size() > 0;
         return itemList;
     }
 

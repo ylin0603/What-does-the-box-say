@@ -24,7 +24,7 @@ public class Cdc {
     private final static int CHANGEWEAPON = 5;
     private final static int BLOODPACKGEINDEX = 30;
     private final static int BULLETPACKGEINDEX = 31;
-    private final static int VEL = 2;
+    private final static int VEL = 4;
     private final static double ANGLEVEL = 7;// degree
     private static Cdc instance;
     private static RealTcpServer realTcpServer;

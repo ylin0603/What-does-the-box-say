@@ -13,8 +13,8 @@ public class FakeBox extends Item {
     private int deadPosX = 0;
     private int deadPosY = 0;
     public FakeBox(int type, int index, boolean isDead, int x, int y) {
-        super(type, index, isDead, x, y);
-        this.sprite = Sprite.PLAYER;
+        super(type, index, isDead, x, y, Sprite.PLAYER);
+        //this.sprite = Sprite.PLAYER;
     }
 
     @Override
@@ -50,4 +50,5 @@ public class FakeBox extends Item {
         super.render(pixels);
         ep.render(pixels);
     }
+
 }

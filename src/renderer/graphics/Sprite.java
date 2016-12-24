@@ -16,15 +16,16 @@ public class Sprite {
     //for demo
     public static Sprite BLOOD_PACKAGE = new Sprite(16, 4, 0, SpriteSheet.character);
     public static Sprite AMMO_PACKAGE = new Sprite(16, 3, 0, SpriteSheet.character);
-    public static Sprite PLAYER = new Sprite(16, 0, 0, SpriteSheet.character);
+    public static Sprite PLAYER = new Sprite(16, 1, 0, SpriteSheet.character);
+    public static Sprite DEAD_PLAYER = new Sprite(16, 3, 2, SpriteSheet.character);
 
     //Spawn Level Sprites here:
-    public static Sprite SPWAN_GRASS = new Sprite(16, 0, 0, SpriteSheet.SPWAN_LEVEL);
-    public static Sprite SPWAN_GRASS_2 = new Sprite(16, 1, 0, SpriteSheet.SPWAN_LEVEL);
-    public static Sprite SPWAN_HEDGE = new Sprite(16, 0, 1, SpriteSheet.SPWAN_LEVEL);
-    public static Sprite SPWAN_WATER = new Sprite(16, 2, 2, SpriteSheet.SPWAN_LEVEL);
-    public static Sprite SPWAN_WALL = new Sprite(16, 1, 1, SpriteSheet.SPWAN_LEVEL);
-    public static Sprite SPWAN_FLOOR = new Sprite(16, 2, 1, SpriteSheet.SPWAN_LEVEL);
+    public static Sprite SPAWN_GRASS = new Sprite(16, 0, 0, SpriteSheet.SPWAN_LEVEL);
+    public static Sprite SPAWN_GRASS_2 = new Sprite(16, 1, 0, SpriteSheet.SPWAN_LEVEL);
+    public static Sprite SPAWN_HEDGE = new Sprite(16, 0, 1, SpriteSheet.SPWAN_LEVEL);
+    public static Sprite SPAWN_WATER = new Sprite(16, 2, 2, SpriteSheet.SPWAN_LEVEL);
+    public static Sprite SPAWN_WALL = new Sprite(16, 1, 1, SpriteSheet.SPWAN_LEVEL);
+    public static Sprite SPAWN_FLOOR = new Sprite(16, 2, 1, SpriteSheet.SPWAN_LEVEL);
 
     // below is for animation, dear StanleyLin.
 
