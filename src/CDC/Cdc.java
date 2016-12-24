@@ -83,7 +83,9 @@ public class Cdc {
         return allItems;
     }
 
-    public List<ClientBulletFeature> getAllBullets() { return allBullets; }
+    public List<ClientBulletFeature> getAllBullets() {
+        return allBullets;
+    }
 
     public void addVirtualCharacter(int clientNo, String nickName) {
         assert clientNo > -1;
@@ -185,8 +187,7 @@ public class Cdc {
                     backward(player, radianAngle);
                     break;
                 case 0:
-                    if (player.checkRecover())
-                        player.addHP(5);
+                    recovery(player);
                     break;
                 default:
                     throw new Error("Out of Move direction!");
@@ -263,6 +264,7 @@ public class Cdc {
             player.setLocX((int) Math.round(diffX));
             player.setLocY((int) Math.round(diffY));
         }
+        player.setLastMoveTime();
         checkGetItem(player); // 只考慮前進後退才會吃到，旋轉不會碰到補給
     }
 
@@ -276,6 +278,7 @@ public class Cdc {
             player.setLocX((int) Math.round(diffX));
             player.setLocY((int) Math.round(diffY));
         }
+        player.setLastMoveTime();
         checkGetItem(player); // 只考慮前進後退才會吃到，旋轉不會碰到補給
     }
 
@@ -311,13 +314,19 @@ public class Cdc {
         }
     }
 
+    private void recovery(ClientPlayerFeature player) {
+        // 檢查是否停在原地
+        if (System.currentTimeMillis() - player.getLastMoveTime() >= 5000) {
+            player.addHP(5);
+            player.setLastMoveTime(player.getLastMoveTime() + 1000);
+        }
+    }
+
     private void turnRight(ClientPlayerFeature player, double faceAngle) {
-        // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
         player.setFaceAngle(faceAngle + ANGLEVEL);
     }
 
     private void turnLeft(ClientPlayerFeature player, double faceAngle) {
-        // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
         player.setFaceAngle(faceAngle - ANGLEVEL);
     }
 

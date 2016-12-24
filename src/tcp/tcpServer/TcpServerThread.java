@@ -47,7 +47,8 @@ public class TcpServerThread implements Runnable {
         }
     }
 
-    @Override public void run() {
+    @Override
+    public void run() {
         try {
             String nickName = initGame(input, output);
             Cdc.getInstance().addVirtualCharacter(ClientID, nickName);
@@ -67,7 +68,7 @@ public class TcpServerThread implements Runnable {
                         recvCode = (recvCode) / 2;
                     }
                 }
-                
+
                 int[] moveCode = new int[4];
                 // "move,spin,attack,change weapon"
                 if (keys[W]) {
