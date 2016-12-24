@@ -12,13 +12,14 @@ public class ClientPlayerFeature {
     private long resurrectionTime = 0;
     private final int resurrectionCD = 4000;
 
-    private boolean[] direction = new boolean[6];// "wsad j"
+    private int[] direction = new int[4];// "move,spin,attack,change weapon"
     private double faceAngle = 0; // (degree) => use Math.toRadium();
     private int HP = 100;
     private int killCount = 0, deadCount = 0;
     private int bulletCount = 2;
     private int maxBulletCount = 3;
-    private boolean attackFlag = false; // TCP設成true，傳送一次後設回false
+    private boolean attackFlag = false; // attack.java在成功攻擊時設成true，
+    // CD中 false 放開 false 人死 false
     private boolean attackedFlag = false; // CDC設成true，UDP傳回一次後再設回false
     private boolean collisionFlag = false; // 同上
     private boolean isDead = false; // Bear will do it.
@@ -35,6 +36,10 @@ public class ClientPlayerFeature {
         this.attackCD = 0;
         this.changeWeaponCD = 0;
         faceAngle = 0.0;
+        resetPerRound();
+    }
+
+    public void resetPerRound() {
         this.attackFlag = false;
         this.attackedFlag = false;
         this.collisionFlag = false;
@@ -73,11 +78,11 @@ public class ClientPlayerFeature {
         this.nickname = nickname;
     }
 
-    public boolean[] getDirection() {
+    public int[] getDirection() {
         return direction;
     }
 
-    public void setDirection(boolean[] direction) {
+    public void setDirection(int[] direction) {
         this.direction = direction;
     }
 
@@ -146,6 +151,10 @@ public class ClientPlayerFeature {
         return deadCount;
     }
 
+    public void setDeadCount(int deadCount) {
+        this.deadCount = deadCount;
+    }
+
     public boolean isAttackCD() {
         if (attackCD <= System.currentTimeMillis())
             return true;
@@ -165,11 +174,7 @@ public class ClientPlayerFeature {
     }
 
     public void setChangeWeaponCD() {
-        attackCD = System.currentTimeMillis() + 1000;
-    }
-
-    public void setDeadCount(int deadCount) {
-        this.deadCount = deadCount;
+        changeWeaponCD = System.currentTimeMillis() + 1000;
     }
 
     public int getBulletCount() {

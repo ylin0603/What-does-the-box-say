@@ -2,6 +2,7 @@ package renderer.engine;
 
 import pseudomain.Game;
 import renderer.data.DynamicObjectManager;
+import renderer.data.entity.Bullet;
 import renderer.data.entity.Character;
 import renderer.data.entity.Entity;
 import renderer.data.entity.Item;
@@ -22,13 +23,19 @@ public class EntityRenderEngine {
 
     public void render(int pixels[]) {
         this.pixels = pixels;
+
         List<Character> allCharacter = dom.getCharacterList();
         List<Item> allItem = dom.getItemList();
+        List<Bullet> allBullets = dom.getBullets();
         for(Item i : allItem){
             i.render(pixels);
         }
         for(Character c : allCharacter){
             c.render(pixels);
+        }
+        dom.setBullet();
+        for(Bullet b : allBullets){
+            b.render(pixels);
         }
         //allCharacter.stream().filter(e -> !e.isDead()).forEach(e -> e.render(pixels));
     }

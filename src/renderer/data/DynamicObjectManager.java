@@ -1,6 +1,7 @@
 package renderer.data;
 
-import CDC.ClientBulletFeature;
+import udp.update.server.ClientBulletFeature;
+
 import renderer.data.entity.*;
 import renderer.data.entity.Character;
 import tcp.tcpClient.RealTcpClient;
@@ -69,18 +70,18 @@ public class DynamicObjectManager {
         item.update(isDead, owner, x, y);
     }
 
-    public void updateBullet(List<ClientBulletFeature> originData){
+    public void updateBullets(List<ClientBulletFeature> originData){
+        bulletTempList.clear();
         ArrayList<ClientBulletFeature> temp = new ArrayList<>(originData);
         for(ClientBulletFeature cbf : temp){
-            bulletTempList.add(new Bullet(cbf.getLocX(),cbf.getLocX(),cbf.getFaceAngle()));
+            bulletTempList.add(new Bullet(cbf.getLocX(),cbf.getLocY(),cbf.getFaceAngle()));
         }
     }
 
     public void setBullet(){
         bulletList = new ArrayList<>(bulletTempList);
-        bulletTempList.clear();
     }
-    
+
     public List<Entity> getAllDynamicObjects() {
         return totalList;
     }
@@ -104,6 +105,10 @@ public class DynamicObjectManager {
         assert characterList.size() > 0;
         int localClientNo = RealTcpClient.getInstance().getClientNo();
         return this.characterList.get(localClientNo);
+    }
+
+    public List<Bullet> getBullets(){
+        return bulletList;
     }
 
     public void keyGETPressed() {
