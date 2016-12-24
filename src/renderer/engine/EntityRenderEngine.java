@@ -2,8 +2,10 @@ package renderer.engine;
 
 import pseudomain.Game;
 import renderer.data.DynamicObjectManager;
+import renderer.data.entity.Bullet;
+import renderer.data.entity.Character;
 import renderer.data.entity.Entity;
-import renderer.data.entity.ExplosionParticle;
+import renderer.data.entity.Item;
 import renderer.graphics.Sprite;
 
 import java.util.List;
@@ -21,17 +23,30 @@ public class EntityRenderEngine {
 
     public void render(int pixels[]) {
         this.pixels = pixels;
-        List<Entity> allCharacter = dom.getAllDynamicObjects();
-        allCharacter.stream().filter(e -> !e.isDead()).forEach(e -> e.render(pixels));
+
+        List<Character> allCharacter = dom.getCharacterList();
+        List<Item> allItem = dom.getItemList();
+        List<Bullet> allBullets = dom.getBullets();
+        for(Item i : allItem){
+            i.render(pixels);
+        }
+        for(Character c : allCharacter){
+            c.render(pixels);
+        }
+        dom.setBullet();
+        for(Bullet b : allBullets){
+            b.render(pixels);
+        }
+        //allCharacter.stream().filter(e -> !e.isDead()).forEach(e -> e.render(pixels));
     }
-    public static void renderEntity(Entity character, int pixels[]){
+    public static void renderEntity(Entity entity, int pixels[]){
         int offsetX = DynamicObjectManager.getInstance().getVirtualCharacterXY().x - Game.WIDTH / 2;
         int offsetY = DynamicObjectManager.getInstance().getVirtualCharacterXY().y - Game.HEIGHT / 2;
-        int xp = character.x;
-        int yp = character.y;
+        int xp = entity.x;
+        int yp = entity.y;
         xp -= offsetX;
         yp -= offsetY;
-        Sprite s = character.getSprite();
+        Sprite s = entity.getSprite();
         for (int y = 0; y < s.SIZE; y++) {
             int ya = y + yp;
             for (int x = 0; x < s.SIZE; x++) {

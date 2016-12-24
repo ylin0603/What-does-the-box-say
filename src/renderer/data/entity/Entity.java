@@ -16,15 +16,31 @@ public abstract class Entity {
     protected double dir;
     protected boolean isDead;
     protected Sprite sprite;
+    private Sprite deadSprite = Sprite.EMPTY;
+    private Sprite currentSprite;
+
+    public Entity(Sprite s){
+        sprite = s;
+        currentSprite = s;
+    }
+    public Entity(){
+        this.sprite=Sprite.EMPTY;
+        this.currentSprite=Sprite.EMPTY;
+    }
 
     public void update() {
-
+        if (isDead) currentSprite = deadSprite;
+        else currentSprite = sprite;
     }
 
     public void render(int pixels[]) {
-        EntityRenderEngine.renderEntity(this,pixels);
+        EntityRenderEngine.renderEntity(this, pixels);
     }
 
+
+    protected void setDeadSprite(Sprite deadSprite) {
+        this.deadSprite = deadSprite;
+    }
 
     public void remove() {
         isDead = true;
@@ -33,7 +49,12 @@ public abstract class Entity {
     public double getDirection() {
         return dir;
     }
-    public Sprite getSprite() {return sprite;}
+
+    public Sprite getSprite() {
+        assert currentSprite != null;
+        return currentSprite;
+    }
+
     public boolean isDead() {
         return isDead;
     }

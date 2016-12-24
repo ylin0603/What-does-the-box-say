@@ -17,54 +17,57 @@ public class Sprite {
     public static Sprite BLOOD_PACKAGE = new Sprite(16, 4, 0, SpriteSheet.character);
     public static Sprite AMMO_PACKAGE = new Sprite(16, 3, 0, SpriteSheet.character);
     public static Sprite PLAYER = new Sprite(16, 1, 0, SpriteSheet.character);
+    public static Sprite DEAD_PLAYER = new Sprite(16, 3, 2, SpriteSheet.character);
 
     //Spawn Level Sprites here:
-    public static Sprite SPWAN_GRASS = new Sprite(16, 0, 0, SpriteSheet.SPWAN_LEVEL);
-    public static Sprite SPWAN_GRASS_2 = new Sprite(16, 1, 0, SpriteSheet.SPWAN_LEVEL);
-    public static Sprite SPWAN_HEDGE = new Sprite(16, 0, 1, SpriteSheet.SPWAN_LEVEL);
-    public static Sprite SPWAN_WATER = new Sprite(16, 2, 2, SpriteSheet.SPWAN_LEVEL);
-    public static Sprite SPWAN_WALL = new Sprite(16, 1, 1, SpriteSheet.SPWAN_LEVEL);
-    public static Sprite SPWAN_FLOOR = new Sprite(16, 2, 1, SpriteSheet.SPWAN_LEVEL);
+    public static Sprite SPAWN_GRASS = new Sprite(16, 0, 0, SpriteSheet.SPWAN_LEVEL);
+    public static Sprite SPAWN_GRASS_2 = new Sprite(16, 1, 0, SpriteSheet.SPWAN_LEVEL);
+    public static Sprite SPAWN_HEDGE = new Sprite(16, 0, 1, SpriteSheet.SPWAN_LEVEL);
+    public static Sprite SPAWN_WATER = new Sprite(16, 2, 2, SpriteSheet.SPWAN_LEVEL);
+    public static Sprite SPAWN_WALL = new Sprite(16, 1, 1, SpriteSheet.SPWAN_LEVEL);
+    public static Sprite SPAWN_FLOOR = new Sprite(16, 2, 1, SpriteSheet.SPWAN_LEVEL);
 
+    public static Sprite BULLET = new Sprite(16,3,4,SpriteSheet.character);
     // below is for animation, dear StanleyLin.
 
     public static Sprite[] SWORD_UPWARD_ATTACK = {
             new Sprite(32, 4, 5, SpriteSheet.character),
-			new Sprite(32, 5, 5, SpriteSheet.character),
-			new Sprite(32, 6, 5, SpriteSheet.character),
+            new Sprite(32, 5, 5, SpriteSheet.character),
+            new Sprite(32, 6, 5, SpriteSheet.character),
             new Sprite(32, 7, 5, SpriteSheet.character),
             new Sprite(32, 0, 4, SpriteSheet.character),
-	};
+    };
 
-	public static Sprite SWORD_RIGHT_ATTACK[] = {
+    public static Sprite SWORD_RIGHT_ATTACK[] = {
             new Sprite(32, 0, 4, SpriteSheet.character),
             new Sprite(32, 1, 4, SpriteSheet.character),
             new Sprite(32, 2, 4, SpriteSheet.character),
             new Sprite(32, 3, 4, SpriteSheet.character),
             new Sprite(32, 4, 4, SpriteSheet.character),
-	};
-	public static Sprite SWORD_DOWNWARD_ATTCK[] = {
+    };
+    public static Sprite SWORD_DOWNWARD_ATTCK[] = {
             new Sprite(32, 4, 4, SpriteSheet.character),
             new Sprite(32, 5, 4, SpriteSheet.character),
             new Sprite(32, 6, 4, SpriteSheet.character),
             new Sprite(32, 7, 4, SpriteSheet.character),
             new Sprite(32, 0, 5, SpriteSheet.character),
-	};
-	public static Sprite SWORD_LEFT_ATTACK[] = {
+    };
+    public static Sprite SWORD_LEFT_ATTACK[] = {
             new Sprite(32, 0, 5, SpriteSheet.character),
             new Sprite(32, 1, 5, SpriteSheet.character),
             new Sprite(32, 2, 5, SpriteSheet.character),
             new Sprite(32, 3, 5, SpriteSheet.character),
             new Sprite(32, 4, 5, SpriteSheet.character),
 
-	};
+    };
 
     public static Sprite BOX_EXPLOSION[] = {
-            new Sprite(16,6,1,SpriteSheet.character),
-            new Sprite(16,5,1,SpriteSheet.character),
-            new Sprite(16,4,1,SpriteSheet.character),
-            new Sprite(16,3,1,SpriteSheet.character),
+            new Sprite(16, 6, 1, SpriteSheet.character),
+            new Sprite(16, 5, 1, SpriteSheet.character),
+            new Sprite(16, 4, 1, SpriteSheet.character),
+            new Sprite(16, 3, 1, SpriteSheet.character),
     };
+
     public Sprite(int size, int x, int y, SpriteSheet sheet) {
         SIZE = size;
         this.sheetX = x * size;

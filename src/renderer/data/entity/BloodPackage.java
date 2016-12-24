@@ -7,7 +7,6 @@ import renderer.graphics.Sprite;
  */
 public class BloodPackage extends Item {
     public BloodPackage(int type, int index, boolean isDead, int x, int y) {
-        super(type, index, isDead, x, y);
-        this.sprite = Sprite.BLOOD_PACKAGE;
+        super(type, index, isDead, x, y, Sprite.BLOOD_PACKAGE );
     }
 }
