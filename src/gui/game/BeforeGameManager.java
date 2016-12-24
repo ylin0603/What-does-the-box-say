@@ -96,8 +96,8 @@ public class BeforeGameManager {
         DynamicObjectManager dom = DynamicObjectManager.getInstance();
         RealTcpClient.getInstance().recvedGameLoad();
         int clientTotalNum = RealTcpClient.getInstance().getTotalPlayerNumer();
-        while (dom.getCharacterList().size() != clientTotalNum &&
-                dom.getItemList().size() != 32 );
+        //while (dom.getCharacterList().size() != clientTotalNum &&
+        //    dom.getItemList().size() != 32 );
         System.out.println("game start");
         Game game = new Game();
         frame.add(game);

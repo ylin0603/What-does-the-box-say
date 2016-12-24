@@ -89,7 +89,7 @@ public class Game extends Canvas implements Runnable {
 
     public void update() {
 
-
+        UDP_Server.getInstance().receiveData();
         DynamicObjectManager.getInstance().getAllDynamicObjects().forEach(Entity::update);
 
         GameManager.getInstance().update();

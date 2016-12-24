@@ -10,37 +10,36 @@ import java.net.DatagramSocket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UDP_Server implements Runnable {
+public class UDP_Server {
 
+	private byte[] recData;
+	private DatagramSocket serverSocket = null;
 	private Gson gson = new Gson();
+	private static UDP_Server instance = null;
 
-	public static void initUDPServer() {
-		Thread serverThread = new Thread(new UDP_Server()); // 產生Thread物件
-		serverThread.start();
+	public static UDP_Server getInstance() {
+		if(instance == null)
+			instance = new UDP_Server();
+		return instance;
 	}
 
-	public void run() {
-		DatagramSocket serverSocket = null;
+	public void initUDPServer() {
 		try {
-			byte[] receiveData;
 			serverSocket = new DatagramSocket(3335);
+		} catch (IOException e) {}
+	}
 
-			while (true) {
-				receiveData = new byte[10240];
-				DatagramPacket receivePacket =
-						new DatagramPacket(receiveData, receiveData.length);
-				serverSocket.receive(receivePacket);
+	public void receiveData() {
+		try {
+			recData = new byte[10240];
+			DatagramPacket receivePacket = new DatagramPacket(recData, recData.length);
+			serverSocket.receive(receivePacket);
 
-				// get EncodedData in ArrayList and parse.
-				String receiveString =
-						new String(receivePacket.getData()).trim();
-				parseData(receiveString);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			serverSocket.close();
-		}
+			// get EncodedData in ArrayList and parse.
+			String receiveString =
+					new String(receivePacket.getData()).trim();
+			parseData(receiveString);
+		} catch (IOException e) {}
 	}
 
 	private void parseData(String receiveString) {
@@ -83,9 +82,6 @@ public class UDP_Server implements Runnable {
 					instance.updateItem(item.getItemID(), item.isDead(),
 										item.getItemOwner(), item.getLocX(), item.getLocY());
 
-					//if(item.isDead())
-					//	System.out.println("Item dead");
-
 					break;
 				case "AddI":
 					item = gson.fromJson(eachEnData.getData(),
@@ -100,7 +96,7 @@ public class UDP_Server implements Runnable {
 					allBullet = gson.fromJson(eachEnData.getData(),
 							new TypeToken<ArrayList<ClientBulletFeature>>() {}.getType());
 
-					instance.updateBullets(allBullet);
+					//instance.updateBullets(allBullet);
 					break;
 				case "STOP":
 					//call Game的function跳出總計分板，停止遊戲
