@@ -1,5 +1,7 @@
 package CDC;
 
+import tcp.tcpServer.TcpServerThread;
+
 public class ClientBulletFeature {
     private int itemType;
     // 0: Moving Bullet, 1: Moving Sword, 2: Revenge Box
@@ -8,7 +10,7 @@ public class ClientBulletFeature {
     private double faceAngle = 0; // (degree) => use Math.toRadium();
     private boolean isDead = false;// useless
     private int itemOwner;
-    boolean[] isAttacked = new boolean[4];
+    boolean[] isAttacked = new boolean[TcpServerThread.totalClient];
 
     ClientBulletFeature(int itemType, int locX, int locY, double faceAngle,
             int itemOwner) {
