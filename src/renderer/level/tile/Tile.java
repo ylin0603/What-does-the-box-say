@@ -9,12 +9,12 @@ public class Tile {
 	public Sprite sprite;
 	
 	public static Tile VOID_TILE = new VoidTile(Sprite.VOID_SPRITE);
-	public static Tile SPAWN_GRASS = new SpawnLevelGrassTile(Sprite.SPWAN_GRASS);
-	public static Tile SPAWN_GRASS_2 = new SpawnLevelGrassTile(Sprite.SPWAN_GRASS_2);
-	public static Tile SPAWN_HEDGE = new SpawnLevelHedgeTile(Sprite.SPWAN_HEDGE);
-	public static Tile SPAWN_WATER = new SpawnLevelWaterTile(Sprite.SPWAN_WATER);
-	public static Tile SPAWN_WALL = new SpawnLevelWallTile(Sprite.SPWAN_WALL);
-	public static Tile SPAWN_FLOOR = new SpawnLevelFloorTile(Sprite.SPWAN_FLOOR);
+	public static Tile SPAWN_GRASS = new SpawnLevelGrassTile(Sprite.SPAWN_GRASS);
+	public static Tile SPAWN_GRASS_2 = new SpawnLevelGrassTile(Sprite.SPAWN_GRASS_2);
+	public static Tile SPAWN_HEDGE = new SpawnLevelHedgeTile(Sprite.SPAWN_HEDGE);
+	public static Tile SPAWN_WATER = new SpawnLevelWaterTile(Sprite.SPAWN_WATER);
+	public static Tile SPAWN_WALL = new SpawnLevelWallTile(Sprite.SPAWN_WALL);
+	public static Tile SPAWN_FLOOR = new SpawnLevelFloorTile(Sprite.SPAWN_FLOOR);
 
 	public final static int COLOR_SPAWN_GRASS = 0xff00ff00;
 	public final static int COLOR_SPAWN_GRASS_2 = 0xffffff00;

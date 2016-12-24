@@ -10,7 +10,7 @@ public class ExplosionParticle extends Entity {
     final static int FAKEBOX_SIZE = Sprite.PLAYER.SIZE;
 
     public ExplosionParticle() {
-        this.sprite = Sprite.EMPTY;
+        super(Sprite.EMPTY);
     }
 
     @Override

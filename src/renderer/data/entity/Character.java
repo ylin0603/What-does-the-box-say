@@ -23,6 +23,7 @@ public class Character extends Entity {
     private Sword sword = new Sword();
 
     public Character(int clientno, String nickName) {
+        super(Sprite.PLAYER);
         this.clientno = clientno;
         this.nickName = nickName;
         Initialize();
@@ -34,8 +35,8 @@ public class Character extends Entity {
         this.dir = 0;
         this.HP = 100;
 
-        sprite = Sprite.PLAYER;
         sword.sprite = Sprite.EMPTY;
+        setDeadSprite(Sprite.DEAD_PLAYER);
     }
 
     public void set(int weaponType, String nickName, int x, int y,
@@ -57,11 +58,12 @@ public class Character extends Entity {
         this.isDead = isDead;
         if (this.attackFlag)
             animationFinished = false;
-
         //this.sprite = Sprite.rotate(Sprite.PLAYER,angle);
     }
 
+    @Override
     public void update() {
+        super.update();
         timer++;
         if (timer % 6 == 0) {
             count++;
@@ -96,6 +98,7 @@ public class Character extends Entity {
 
     }
 
+    @Override
     public void render(int[] pixels) {
         //TODO: If attack flag == true, draw addition animation
         //TODO: bullet should have additional class and draw additionally.

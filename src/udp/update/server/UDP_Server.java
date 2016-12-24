@@ -66,7 +66,8 @@ public class UDP_Server implements Runnable {
 							player.isDead());
 					if(player.isAttackFlag())
 						System.out.println("ATTACK is true");
-
+					if(player.isAttackedFlag())
+						System.out.println("IsATTACKED is true");
 					break;
 				case "AddP":
 					player = gson.fromJson(eachEnData.getData(),
@@ -82,6 +83,7 @@ public class UDP_Server implements Runnable {
 							ClientItemFeature.class);
 					instance.updateItem(item.getItemID(), item.isDead(),
 										item.getItemOwner(), item.getLocX(), item.getLocY());
+
 					break;
 				case "AddI":
 					item = gson.fromJson(eachEnData.getData(),

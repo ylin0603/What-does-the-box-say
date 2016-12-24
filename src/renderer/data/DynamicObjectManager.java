@@ -1,17 +1,21 @@
 package renderer.data;
 
+import udp.update.server.ClientBulletFeature;
+
 import renderer.data.entity.*;
 import renderer.data.entity.Character;
 import tcp.tcpClient.RealTcpClient;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 public class DynamicObjectManager {
     private List<Character> characterList = new CopyOnWriteArrayList<>();
     private List<Item> itemList = new CopyOnWriteArrayList<>();
     private List<Entity> totalList = new CopyOnWriteArrayList<>();
+    private List<Bullet> bulletList = new ArrayList<>();
+    private List<Bullet> bulletTempList = new ArrayList<>();
     private static DynamicObjectManager instance = null;
 
     private DynamicObjectManager() {}
@@ -66,17 +70,27 @@ public class DynamicObjectManager {
         item.update(isDead, owner, x, y);
     }
 
+    public void updateBullets(List<ClientBulletFeature> originData){
+        bulletTempList.clear();
+        ArrayList<ClientBulletFeature> temp = new ArrayList<>(originData);
+        for(ClientBulletFeature cbf : temp){
+            bulletTempList.add(new Bullet(cbf.getLocX(),cbf.getLocY(),cbf.getFaceAngle()));
+        }
+    }
+
+    public void setBullet(){
+        bulletList = new ArrayList<>(bulletTempList);
+    }
+
     public List<Entity> getAllDynamicObjects() {
         return totalList;
     }
 
     public List<Character> getCharacterList() {
-        assert characterList.size() > 0;
         return characterList;
     }
 
     public List<Item> getItemList() {
-        assert itemList.size() > 0;
         return itemList;
     }
 
@@ -91,6 +105,10 @@ public class DynamicObjectManager {
         assert characterList.size() > 0;
         int localClientNo = RealTcpClient.getInstance().getClientNo();
         return this.characterList.get(localClientNo);
+    }
+
+    public List<Bullet> getBullets(){
+        return bulletList;
     }
 
     public void keyGETPressed() {
