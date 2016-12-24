@@ -27,6 +27,7 @@ public class Sprite {
     public static Sprite SPAWN_WALL = new Sprite(16, 1, 1, SpriteSheet.SPWAN_LEVEL);
     public static Sprite SPAWN_FLOOR = new Sprite(16, 2, 1, SpriteSheet.SPWAN_LEVEL);
 
+    public static Sprite BULLET = new Sprite(16,3,4,SpriteSheet.character);
     // below is for animation, dear StanleyLin.
 
     public static Sprite[] SWORD_UPWARD_ATTACK = {

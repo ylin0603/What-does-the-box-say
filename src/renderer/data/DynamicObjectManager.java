@@ -1,16 +1,20 @@
 package renderer.data;
 
+import CDC.ClientBulletFeature;
 import renderer.data.entity.*;
 import renderer.data.entity.Character;
 import tcp.tcpClient.RealTcpClient;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 public class DynamicObjectManager {
     private List<Character> characterList = new CopyOnWriteArrayList<>();
     private List<Item> itemList = new CopyOnWriteArrayList<>();
     private List<Entity> totalList = new CopyOnWriteArrayList<>();
+    private List<Bullet> bulletList = new ArrayList<>();
+    private List<Bullet> bulletTempList = new ArrayList<>();
     private static DynamicObjectManager instance = null;
 
     private DynamicObjectManager() {}
@@ -65,6 +69,18 @@ public class DynamicObjectManager {
         item.update(isDead, owner, x, y);
     }
 
+    public void updateBullet(List<ClientBulletFeature> originData){
+        ArrayList<ClientBulletFeature> temp = new ArrayList<>(originData);
+        for(ClientBulletFeature cbf : temp){
+            bulletTempList.add(new Bullet(cbf.getLocX(),cbf.getLocX(),cbf.getFaceAngle()));
+        }
+    }
+
+    public void setBullet(){
+        bulletList = new ArrayList<>(bulletTempList);
+        bulletTempList.clear();
+    }
+    
     public List<Entity> getAllDynamicObjects() {
         return totalList;
     }
