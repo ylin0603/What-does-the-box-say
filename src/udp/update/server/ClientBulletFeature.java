@@ -1,4 +1,4 @@
-package CDC;
+package udp.update.server;
 
 import tcp.tcpServer.TcpServerThread;
 

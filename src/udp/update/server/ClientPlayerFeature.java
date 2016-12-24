@@ -1,17 +1,19 @@
 package udp.update.server;
 
+import CDC.Cdc;
+
 public class ClientPlayerFeature {
     private int clientNo;
     private int weaponType = 0; // 0 for knife, 1 for gun
     private String nickname;
     private int locX, locY;
-    private long lastMoveTime;
+    private long lastMoveTime = System.currentTimeMillis();
     private long attackCD = 0;
     private long changeWeaponCD = 0;
     private long resurrectionTime = 0;
     private final int resurrectionCD = 4000;
 
-    private boolean[] direction = new boolean[6];// "wsad j"
+    private int[] direction = new int[4];// "move,spin,attack,change weapon"
     private double faceAngle = 0; // (degree) => use Math.toRadium();
     private int HP = 100;
     private int killCount = 0, deadCount = 0;
@@ -26,9 +28,30 @@ public class ClientPlayerFeature {
             int locY) {
         this.clientNo = clientNo;
         this.nickname = nickName;
+        init();
+        reborn(locX, locY);
+    }
+
+    public void init() {
+        this.attackCD = 0;
+        this.changeWeaponCD = 0;
+        faceAngle = 0.0;
+        resetPerRound();
+    }
+
+    public void resetPerRound() {
+        this.attackFlag = false;
+        this.attackedFlag = false;
+        this.collisionFlag = false;
+    }
+
+    public void reborn(int locX, int locY) {
         this.locX = locX;
         this.locY = locY;
         this.HP = 100;
+        this.bulletCount = 2;
+        isDead = false;
+        setLastMoveTime();
     }
 
     public int getClientNo() {
@@ -55,11 +78,11 @@ public class ClientPlayerFeature {
         this.nickname = nickname;
     }
 
-    public boolean[] getDirection() {
+    public int[] getDirection() {
         return direction;
     }
 
-    public void setDirection(boolean[] direction) {
+    public void setDirection(int[] direction) {
         this.direction = direction;
     }
 
@@ -68,8 +91,8 @@ public class ClientPlayerFeature {
     }
 
     public void setLocX(int locX) {
-        if (locX > 1985)
-            locX = 1984;
+        if (locX > Cdc.MAP_SIZE_X - Cdc.BOX_SIZE)
+            locX = Cdc.MAP_SIZE_X - Cdc.BOX_SIZE;
         else if (locX < 0)
             locX = 0;
         this.locX = locX;
@@ -81,8 +104,8 @@ public class ClientPlayerFeature {
     }
 
     public void setLocY(int locY) {
-        if (locY > 1985)
-            locY = 1985;
+        if (locY > Cdc.MAP_SIZE_Y - Cdc.BOX_SIZE)
+            locY = Cdc.MAP_SIZE_Y - Cdc.BOX_SIZE;
         else if (locY < 0)
             locY = 0;
         this.locY = locY;
@@ -164,8 +187,8 @@ public class ClientPlayerFeature {
 
     public void addBullet(int bullet) {
         this.bulletCount += bullet;
-        if (this.bulletCount > 3) {
-            this.bulletCount = 3;
+        if (this.bulletCount > maxBulletCount) {
+            this.bulletCount = maxBulletCount;
         }
     }
 
@@ -204,12 +227,13 @@ public class ClientPlayerFeature {
         }
     }
 
-    public void checkRecover() { // 檢查是否停在原地
+    public boolean checkRecover() { // 檢查是否停在原地
         long stopSecond = System.currentTimeMillis() - lastMoveTime;
         if (stopSecond >= 5000) {
-            HP += 5;
             lastMoveTime += 1000;
+            return true;
         }
+        return false;
     }
 
     public boolean checkResurrection() { // 檢查復活
@@ -217,5 +241,9 @@ public class ClientPlayerFeature {
             return true;
         else
             return false;
+    }
+
+    public void setLastMoveTime() {
+        lastMoveTime = System.currentTimeMillis();
     }
 }

@@ -1,5 +1,8 @@
 package tcp.tcpServer;
 
+import CDC.Cdc;
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,19 +10,25 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import com.google.gson.Gson;
-
-import CDC.Cdc;
-
 public class TcpServerThread implements Runnable {
     private int ClientID = 0;
-    volatile static private int totalClient;
+    volatile static public int totalClient = 0;
     private PrintWriter output;
     private BufferedReader input;
     volatile static public boolean load = false;
     private static ArrayList<String> nameList = new ArrayList<String>();
-    volatile static private int loadNum = 0;
     Gson gson;
+    private final static int W = 0;
+    private final static int S = 1;
+    private final static int A = 2;
+    private final static int D = 3;
+    private final static int SPACE = 4;
+    private final static int J = 5;
+
+    private final static int MOVE = 0;
+    private final static int SPIN = 1;
+    private final static int ATTACK = 2;
+    private final static int CHANGEWEAPON = 3;
 
     TcpServerThread() {
         gson = new Gson();
@@ -27,7 +36,7 @@ public class TcpServerThread implements Runnable {
 
     public TcpServerThread(Socket sc, int ClientID) {
         this.ClientID = ClientID;
-        TcpServerThread.totalClient++;
+        totalClient++;
         try {
             output = new PrintWriter(sc.getOutputStream(), true);
             input = new BufferedReader(
@@ -42,15 +51,45 @@ public class TcpServerThread implements Runnable {
     public void run() {
         try {
             String nickName = initGame(input, output);
+            Cdc.getInstance().addVirtualCharacter(ClientID, nickName);
             waitLoad(input, output);
             loadGame(output, nickName);
             // game state
             while (true) {
                 String buf = recv(input);
-                Gson gson = new Gson();
-                boolean[] keys = gson.fromJson(buf, boolean[].class);
+                int recvCode = Integer.valueOf(buf);
+                boolean[] keys = new boolean[6];
                 // "wsad j"
-                Cdc.getInstance().updateKeys(ClientID, keys);
+                for (int i = 0; i < keys.length && recvCode != 0; i++) {
+                    if ((recvCode - 1) % 2 == 0) {
+                        recvCode = (recvCode - 1) / 2;
+                        keys[i] = true;
+                    } else {
+                        recvCode = (recvCode) / 2;
+                    }
+                }
+
+                int[] moveCode = new int[4];
+                // "move,spin,attack,change weapon"
+                if (keys[W]) {
+                    moveCode[MOVE]++;
+                }
+                if (keys[S]) {
+                    moveCode[MOVE]--;
+                }
+                if (keys[A]) {
+                    moveCode[SPIN]--;
+                }
+                if (keys[D]) {
+                    moveCode[SPIN]++;
+                }
+                if (keys[SPACE]) {
+                    moveCode[ATTACK] = 1;
+                }
+                if (keys[J]) {
+                    moveCode[CHANGEWEAPON] = 1;
+                }
+                Cdc.getInstance().updateKeys(ClientID, moveCode);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,7 +111,6 @@ public class TcpServerThread implements Runnable {
         boolean localLoad = false;
         while (!load || !localLoad) {
             String action = recv(input);
-            System.out.println(ClientID + " " + action + " in while");
             switch (action) {
                 case "Get list":
                     send(output, new Gson().toJson(nameList));
@@ -93,22 +131,20 @@ public class TcpServerThread implements Runnable {
         }
     }
 
-    void loadGame(PrintWriter output, String nickName)
+    synchronized void loadGame(PrintWriter output, String nickName)
             throws IOException, InterruptedException {
         // loading state
-        Cdc.getInstance().addVirtualCharacter(ClientID, nickName);
-        loadNum++;
         if (recv(input).equals("Get Number")) {
             output.println(totalClient);
-        }
-        while (loadNum != totalClient) {
-            Thread.sleep(100);
         }
         System.out.println(ClientID + " start");
         if (ClientID == 0) {
             System.out.println(ClientID + " room start");
-            Cdc.getInstance().gameItemsInital();
-            Cdc.getInstance().startUpdatingTimer();
+            Cdc cdc = Cdc.getInstance();
+            cdc.gameItemsInital();
+            System.out.println(
+                    "Cdc player num" + cdc.getPlayersUpdateInfo().size());
+            cdc.startUpdatingTimer();
         }
     }
 

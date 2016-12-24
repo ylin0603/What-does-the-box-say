@@ -87,7 +87,6 @@ public class Collision {
     public static boolean isCollison(int p1LocX, int p1LocY, double p1Size,
             ClientPlayerFeature player2) {
         double size = ((PlayerSize + p1Size) * 1.2);
-        System.out.println(size + " " + (PlayerSize + p1Size) * 1.2);
         // this may change to not either 內切圓 外切圓 should be 混和圓
         int p2LocX = player2.getLocX();
         int p2LocY = player2.getLocY();

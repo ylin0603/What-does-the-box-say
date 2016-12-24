@@ -1,6 +1,6 @@
 package CDC;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Attack {
@@ -48,6 +48,7 @@ public class Attack {
     public void attackShortRange(ClientPlayerFeature player,
             List<ClientPlayerFeature> clientPlayerFeature,
             List<ClientItemFeature> clientItemFeature) {
+        player.setAttackFlag(true);
         double faceAngle = player.getFaceAngle();
         double radianAngle = Math.toRadians(faceAngle);
         double sin = Math.sin(radianAngle);
@@ -55,7 +56,7 @@ public class Attack {
         double fakeX = 0;
         double fakeY = 0;
 
-        // 先往前走一步，再轉90度走半步
+        // �����粥銝�甇伐����90摨西粥��郊
         fakeX = player.getLocX() + sin * Cdc.BOX_SIZE
                 + cos * Cdc.BOX_SIZE * 0.5;
         fakeY = player.getLocY() - cos * Cdc.BOX_SIZE
@@ -67,7 +68,7 @@ public class Attack {
         attackBulletToPlayer(attackArea1, clientPlayerFeature);
         attackBulletToBox(attackArea1, clientPlayerFeature, clientItemFeature);
 
-        // 先往前走一步，轉另一方向的90度
+        // �����粥銝�甇伐��銝������90摨�
         fakeX = player.getLocX() + sin * Cdc.BOX_SIZE
                 - cos * Cdc.BOX_SIZE * 0.5;
         fakeY = player.getLocY() - cos * Cdc.BOX_SIZE
@@ -88,7 +89,8 @@ public class Attack {
                 clientPlayerFeature.get(bullet.getItemOwner());
         for (ClientPlayerFeature player2 : clientPlayerFeature) {
             if (player2.getClientNo() == bullet.getItemOwner()
-                    || isAttacked[clientPlayerFeature.indexOf(player2)]) {
+                    || isAttacked[clientPlayerFeature.indexOf(player2)]
+                    || player2.isDead()) {
                 continue;// for prevent synchronize problem
             } else {
                 if (Collision.isCollison(bullet, player2)) {
@@ -110,7 +112,7 @@ public class Attack {
     private boolean subBlood(ClientPlayerFeature player2, int attackType) {
         int HP = player2.getHP();
         boolean isDead = false;
-        int minusBlood = (attackType) * +10 + 40;// 0:子彈:40, 1:刀:50 2:假箱爆:60
+        int minusBlood = (attackType) * +10 + 40;// 0:摮��:40, 1:��:50 2:��拳���:60
         HP -= minusBlood;
         if (HP <= 0) {
             HP = 0;
@@ -149,6 +151,8 @@ public class Attack {
         double fakeX = item2.getLocX();
         double fakeY = item2.getLocY();
         for (ClientPlayerFeature player2 : clientPlayerFeature) {
+            if (player2.isDead())
+                continue;
             if (Collision.isCollison((int) Math.round(fakeX),
                     (int) Math.round(fakeY), revengeSize, player2)) {
                 player2.setAttackedFlag(true);
@@ -164,6 +168,7 @@ public class Attack {
             List<ClientItemFeature> clientItemFeature,
             List<ClientBulletFeature> clientBulletFeature) {
         if (player.getBulletCount() > 0) {
+            player.setAttackFlag(true);
             player.setBulletCount(player.getBulletCount() - 1);
             int LocX = player.getLocX();
             int LocY = player.getLocY();
@@ -178,7 +183,10 @@ public class Attack {
             List<ClientPlayerFeature> clientPlayerFeature,
             List<ClientItemFeature> clientItemFeature,
             List<ClientBulletFeature> clientBulletFeature) {
-        for (ClientBulletFeature bullet : clientBulletFeature) {
+        Iterator<ClientBulletFeature> clientBulletFeatureIterator =
+                clientBulletFeature.iterator();
+        while (clientBulletFeatureIterator.hasNext()) {
+            ClientBulletFeature bullet = clientBulletFeatureIterator.next();
             if (bullet.getItemType() != 0 || bullet.isDead())
                 continue;
             double faceAngle = bullet.getFaceAngle();
@@ -190,8 +198,8 @@ public class Attack {
             oriLocX = bullet.getOriLocX();
             if (locX > MAP_SIZE_X || locX < 0 || locX > oriLocX + WINDOWSIZEX
                     || locX < oriLocX - WINDOWSIZEX) {
-                clientBulletFeature.remove(bullet);
-                return;
+                clientBulletFeatureIterator.remove();
+                continue;
             }
 
             loxY = (int) Math.round(
@@ -199,7 +207,8 @@ public class Attack {
             oriLocY = bullet.getOriLocY();
             if (loxY > MAP_SIZE_Y || loxY < 0 || loxY > oriLocY + WINDOWSIZEY
                     || loxY < oriLocY - WINDOWSIZEY) {
-                clientBulletFeature.remove(bullet);
+                clientBulletFeatureIterator.remove();
+                continue;
             }
 
             bullet.setLocX(locX);
@@ -207,7 +216,7 @@ public class Attack {
             if (attackBulletToPlayer(bullet, clientPlayerFeature)
                     || attackBulletToBox(bullet, clientPlayerFeature,
                             clientItemFeature))
-                clientBulletFeature.remove(bullet);
+                clientBulletFeatureIterator.remove();
         }
     }
 }

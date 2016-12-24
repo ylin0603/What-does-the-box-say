@@ -16,16 +16,14 @@ public class Cdc {
     public final static int MAP_SIZE_X = 640;
     public final static int MAP_SIZE_Y = 1200;
     // TODO: reset these
-    private final static int FORWARD = 0;
-    private final static int BACKWARD = 1;
-    private final static int TURNLEFT = 2;
-    private final static int TURNRIGHT = 3;
-    private final static int ATTACK = 4;
-    private final static int CHANGEWEAPON = 5;
+    private final static int MOVE = 0;
+    private final static int SPIN = 1;
+    private final static int ATTACK = 2;
+    private final static int CHANGEWEAPON = 3;
     private final static int BLOODPACKGEINDEX = 30;
     private final static int BULLETPACKGEINDEX = 31;
     private final static int VEL = 2;
-    private final static double ANGLEVEL = 7;// degree
+    private final static double ANGLEVEL = 6;// degree
     private static Cdc instance;
     private static RealTcpServer realTcpServer;
     private static UDP_Client UDPinstance;
@@ -62,7 +60,6 @@ public class Cdc {
                 if (finishGame(300)) {// 5分鐘就是300秒
                     // do something
                 }
-
                 movingPlayer();
                 movingBullet();
                 checkResurrection();// 檢查復活
@@ -70,10 +67,10 @@ public class Cdc {
 
                 UDPinstance.broadcast(realTcpServer.getClientIPTable(),
                         UDPinstance.encapsulateData(getPlayersUpdateInfo(),
-                                getItemsUpdateInfo()));// broadcast
+                                getItemsUpdateInfo(), getAllBullets()));// broadcast
             }
         };
-        gameTimer.schedule(startUpdating, 0, 17);
+        gameTimer.schedule(startUpdating, 0, 33);
     }
 
     private void Cdc() {}
@@ -86,9 +83,14 @@ public class Cdc {
         return allItems;
     }
 
+    public List<ClientBulletFeature> getAllBullets() {
+        return allBullets;
+    }
+
     public void addVirtualCharacter(int clientNo, String nickName) {
         assert clientNo > -1;
         assert !nickName.isEmpty();
+        System.out.println(clientNo + " addVirtualCharacter");
         int[] loc = giveRandomLocation(); // initial position
         allPlayers.add(
                 new ClientPlayerFeature(clientNo, nickName, loc[0], loc[1]));
@@ -159,10 +161,10 @@ public class Cdc {
         initBulletPackge();
     }
 
-    public void updateKeys(int clientNo, boolean[] moveCode) {
+    public void updateKeys(int clientNo, int[] moveCode) {
         assert clientNo > -1;
-        assert moveCode.length == 6;
-        // 目前是將所有按住的按鍵記下來
+        assert moveCode.length == 4;
+        // "move,spin,attack,change weapon"
 
         allPlayers.get(clientNo).setDirection(moveCode);
     }
@@ -171,33 +173,13 @@ public class Cdc {
         for (ClientPlayerFeature player : allPlayers) {
             if (player.isDead())
                 continue;
+            player.resetPerRound();
             // TODO: key parsing should be out of this function
             double faceAngle = player.getFaceAngle();
             double radianAngle = Math.toRadians(faceAngle);
-            boolean[] keys = player.getDirection();
-            // keys "wsad j"
-            int move = 0, spin = 0;
-            if (keys[FORWARD]) {
-                move++;
-            }
-            if (keys[BACKWARD]) {
-                move--;
-            }
-            if (keys[TURNLEFT]) {
-                spin--;
-            }
-            if (keys[TURNRIGHT]) {
-                spin++;
-            }
-            if (keys[ATTACK])
-                attack(player);
-            else
-                player.setAttackFlag(false);
-            if (keys[CHANGEWEAPON]) {
-                keys[CHANGEWEAPON] = false;
-                changeWeapon(player);
-            }
-            switch (move) {
+            int[] moveCode = player.getDirection();
+            // "move,spin,attack,change weapon"
+            switch (moveCode[MOVE]) {
                 case 1:
                     forward(player, radianAngle);
                     break;
@@ -205,13 +187,12 @@ public class Cdc {
                     backward(player, radianAngle);
                     break;
                 case 0:
-                    if (player.checkRecover())
-                        player.addHP(5);
+                    recovery(player);
                     break;
                 default:
                     throw new Error("Out of Move direction!");
             }
-            switch (spin) {
+            switch (moveCode[SPIN]) {
                 case 1:
                     turnRight(player, faceAngle);
                     break;
@@ -224,6 +205,17 @@ public class Cdc {
                 default:
                     throw new Error("Out of Spin direction!");
             }
+            if (moveCode[ATTACK] == 1)
+                attack(player);
+            else
+                player.setAttackFlag(false);
+            if (moveCode[CHANGEWEAPON] == 1) {
+                // moveCode[CHANGEWEAPON] = 0;
+                if (player.isChangeWeaponCD()) {
+                    player.setChangeWeaponCD();
+                    changeWeapon(player);
+                }
+            }
         }
     }
 
@@ -231,10 +223,12 @@ public class Cdc {
         boolean isImpacted = false;
         boolean colliHappened = false;
         for (ClientPlayerFeature collisionPlayer : allPlayers) {
-            if (collisionPlayer.getClientNo() == player.getClientNo())
+            if (collisionPlayer.equals(player) || collisionPlayer.isDead())
                 continue;
             isImpacted = Collision.isCollison(x, y, collisionPlayer);
             if (isImpacted) {
+                player.setCollisionFlag(true);
+                collisionPlayer.setCollisionFlag(true);
                 colliHappened = true;
                 break;
             }
@@ -270,6 +264,7 @@ public class Cdc {
             player.setLocX((int) Math.round(diffX));
             player.setLocY((int) Math.round(diffY));
         }
+        player.setLastMoveTime();
         checkGetItem(player); // 只考慮前進後退才會吃到，旋轉不會碰到補給
     }
 
@@ -283,14 +278,13 @@ public class Cdc {
             player.setLocX((int) Math.round(diffX));
             player.setLocY((int) Math.round(diffY));
         }
-
-        checkGetItem(player);// 只考慮前進後退才會吃到，旋轉不會碰到補給
+        player.setLastMoveTime();
+        checkGetItem(player); // 只考慮前進後退才會吃到，旋轉不會碰到補給
     }
 
     // TODO: 碰到物體則等於吃到，感覺要每秒去確認，但感覺會很慢？
     private void checkGetItem(ClientPlayerFeature player) {
         int itemSize = allItems.size();
-        int itemType;
         boolean isImpacted = false;
         for (int currItemIndex =
                 BLOODPACKGEINDEX; currItemIndex < itemSize; currItemIndex++) {
@@ -320,13 +314,19 @@ public class Cdc {
         }
     }
 
+    private void recovery(ClientPlayerFeature player) {
+        // 檢查是否停在原地
+        if (System.currentTimeMillis() - player.getLastMoveTime() >= 5000) {
+            player.addHP(5);
+            player.setLastMoveTime(player.getLastMoveTime() + 1000);
+        }
+    }
+
     private void turnRight(ClientPlayerFeature player, double faceAngle) {
-        // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
         player.setFaceAngle(faceAngle + ANGLEVEL);
     }
 
     private void turnLeft(ClientPlayerFeature player, double faceAngle) {
-        // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
         player.setFaceAngle(faceAngle - ANGLEVEL);
     }
 
@@ -335,7 +335,6 @@ public class Cdc {
             player.setAttackFlag(false);
             return;
         } else {
-            player.setAttackFlag(true);
             player.setAttackCD();
             new Attack(player, allPlayers, allItems, allBullets);
         }
