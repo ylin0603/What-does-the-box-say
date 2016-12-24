@@ -1,5 +1,6 @@
 package CDC;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class Attack {
@@ -47,6 +48,7 @@ public class Attack {
     public void attackShortRange(ClientPlayerFeature player,
             List<ClientPlayerFeature> clientPlayerFeature,
             List<ClientItemFeature> clientItemFeature) {
+        player.setAttackFlag(true);
         double faceAngle = player.getFaceAngle();
         double radianAngle = Math.toRadians(faceAngle);
         double sin = Math.sin(radianAngle);
@@ -163,6 +165,7 @@ public class Attack {
             List<ClientItemFeature> clientItemFeature,
             List<ClientBulletFeature> clientBulletFeature) {
         if (player.getBulletCount() > 0) {
+            player.setAttackFlag(true);
             player.setBulletCount(player.getBulletCount() - 1);
             int LocX = player.getLocX();
             int LocY = player.getLocY();
@@ -177,7 +180,11 @@ public class Attack {
             List<ClientPlayerFeature> clientPlayerFeature,
             List<ClientItemFeature> clientItemFeature,
             List<ClientBulletFeature> clientBulletFeature) {
-        for (ClientBulletFeature bullet : clientBulletFeature) {
+        Iterator<ClientBulletFeature> clientBulletFeatureIterator =
+                clientBulletFeature.iterator();
+        while (clientBulletFeatureIterator.hasNext()) {
+            System.out.println("bullet update");
+            ClientBulletFeature bullet = clientBulletFeatureIterator.next();
             if (bullet.getItemType() != 0 || bullet.isDead())
                 continue;
             double faceAngle = bullet.getFaceAngle();
@@ -189,8 +196,8 @@ public class Attack {
             oriLocX = bullet.getOriLocX();
             if (locX > MAP_SIZE_X || locX < 0 || locX > oriLocX + WINDOWSIZEX
                     || locX < oriLocX - WINDOWSIZEX) {
-                clientBulletFeature.remove(bullet);
-                return;
+                clientBulletFeatureIterator.remove();
+                continue;
             }
 
             loxY = (int) Math.round(
@@ -198,7 +205,8 @@ public class Attack {
             oriLocY = bullet.getOriLocY();
             if (loxY > MAP_SIZE_Y || loxY < 0 || loxY > oriLocY + WINDOWSIZEY
                     || loxY < oriLocY - WINDOWSIZEY) {
-                clientBulletFeature.remove(bullet);
+                clientBulletFeatureIterator.remove();
+                continue;
             }
 
             bullet.setLocX(locX);
@@ -206,7 +214,7 @@ public class Attack {
             if (attackBulletToPlayer(bullet, clientPlayerFeature)
                     || attackBulletToBox(bullet, clientPlayerFeature,
                             clientItemFeature))
-                clientBulletFeature.remove(bullet);
+                clientBulletFeatureIterator.remove();
         }
     }
 }

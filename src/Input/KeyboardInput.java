@@ -2,7 +2,6 @@ package Input;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Arrays;
 
 import gui.game.GameManager;
 import tcp.tcpClient.RealTcpClient;
@@ -29,50 +28,117 @@ public class KeyboardInput implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyChar() == 'w')
-            keys[W] = true;
-        if (e.getKeyChar() == 's')
-            keys[S] = true;
-        if (e.getKeyChar() == 'a')
-            keys[A] = true;
-        if (e.getKeyChar() == 'd')
-            keys[D] = true;
-        if (e.getKeyChar() == ' ')
-            keys[ATTACK] = true;
-        if (e.getKeyChar() == 'j')
-            keys[J] = true;
-        if (e.getKeyChar() == 'h')
-            GameManager.getInstance().openInfo(HELP);
-        if (e.getKeyCode() == KeyEvent.VK_TAB)
-            GameManager.getInstance().openInfo(TAB);
-        RealTcpClient realTcpClient = RealTcpClient.getInstance();
-        try {
-            realTcpClient.inputMoves(getKeys());
-        } catch (Exception e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            System.out.println("TCP connetction error");
+        switch (e.getKeyChar()) {
+            case 'w':
+            case 'W':
+                if (!keys[W]) {
+                    keys[W] = true;
+                    send();
+                }
+                break;
+            case 's':
+            case 'S':
+                if (!keys[S]) {
+                    keys[S] = true;
+                    send();
+                }
+                break;
+            case 'a':
+            case 'A':
+                if (!keys[A]) {
+                    keys[A] = true;
+                    send();
+                }
+                break;
+            case 'd':
+            case 'D':
+                if (!keys[D]) {
+                    keys[D] = true;
+                    send();
+                }
+                break;
+            case ' ':
+                if (!keys[ATTACK]) {
+                    keys[ATTACK] = true;
+                    send();
+                }
+                break;
+            case 'j':
+            case 'J':
+                if (!keys[J]) {
+                    keys[J] = true;
+                    send();
+                }
+                break;
+            case 'h':
+            case 'H':
+                GameManager.getInstance().openInfo(HELP);
+                break;
+            case KeyEvent.VK_TAB:
+                GameManager.getInstance().openInfo(TAB);
+                break;
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyChar() == 'w')
-            keys[W] = false;
-        if (e.getKeyChar() == 's')
-            keys[S] = false;
-        if (e.getKeyChar() == 'a')
-            keys[A] = false;
-        if (e.getKeyChar() == 'd')
-            keys[D] = false;
-        if (e.getKeyChar() == ' ')
-            keys[ATTACK] = false;
-        if (e.getKeyChar() == 'j')
-            keys[J] = false;
-        if (e.getKeyChar() == 'h')
-            GameManager.getInstance().closeInfo(HELP);
-        if (e.getKeyCode() == KeyEvent.VK_TAB)
-            GameManager.getInstance().closeInfo(TAB);
+        switch (e.getKeyChar()) {
+            case 'w':
+            case 'W':
+                if (keys[W]) {
+                    keys[W] = false;
+                    send();
+                }
+                break;
+            case 's':
+            case 'S':
+                if (keys[S]) {
+                    keys[S] = false;
+                    send();
+                }
+                break;
+            case 'a':
+            case 'A':
+                if (keys[A]) {
+                    keys[A] = false;
+                    send();
+                }
+                break;
+            case 'd':
+            case 'D':
+                if (keys[D]) {
+                    keys[D] = false;
+                    send();
+                }
+                break;
+            case ' ':
+                if (keys[ATTACK]) {
+                    keys[ATTACK] = false;
+                    send();
+                }
+                break;
+            case 'j':
+            case 'J':
+                if (keys[J]) {
+                    keys[J] = false;
+                    send();
+                }
+                break;
+            case 'h':
+            case 'H':
+                GameManager.getInstance().closeInfo(HELP);
+                break;
+            case KeyEvent.VK_TAB:
+                GameManager.getInstance().closeInfo(TAB);
+                break;
+        }
+    }
+
+    private boolean[] getKeys() {
+        return keys;
+    }
+
+    private void send() {
         RealTcpClient realTcpClient = RealTcpClient.getInstance();
         try {
             realTcpClient.inputMoves(getKeys());
@@ -81,13 +147,5 @@ public class KeyboardInput implements KeyListener {
             e1.printStackTrace();
             System.out.println("TCP connetction error");
         }
-    }
-
-    public boolean[] getKeys() {
-        return keys;
-    }
-
-    public void reset() {
-        Arrays.fill(keys, false);
     }
 }
