@@ -30,7 +30,6 @@ public class UDP_Server implements Runnable {
 				DatagramPacket receivePacket =
 						new DatagramPacket(receiveData, receiveData.length);
 				serverSocket.receive(receivePacket);
-
 				// get EncodedData in ArrayList and parse.
 				String receiveString =
 						new String(receivePacket.getData()).trim();

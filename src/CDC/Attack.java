@@ -56,7 +56,7 @@ public class Attack {
         double fakeX = 0;
         double fakeY = 0;
 
-        // 先往前走一步，再轉90度走半步
+        // �����粥銝�甇伐����90摨西粥��郊
         fakeX = player.getLocX() + sin * Cdc.BOX_SIZE
                 + cos * Cdc.BOX_SIZE * 0.5;
         fakeY = player.getLocY() - cos * Cdc.BOX_SIZE
@@ -68,7 +68,7 @@ public class Attack {
         attackBulletToPlayer(attackArea1, clientPlayerFeature);
         attackBulletToBox(attackArea1, clientPlayerFeature, clientItemFeature);
 
-        // 先往前走一步，轉另一方向的90度
+        // �����粥銝�甇伐��銝������90摨�
         fakeX = player.getLocX() + sin * Cdc.BOX_SIZE
                 - cos * Cdc.BOX_SIZE * 0.5;
         fakeY = player.getLocY() - cos * Cdc.BOX_SIZE
@@ -112,7 +112,7 @@ public class Attack {
     private boolean subBlood(ClientPlayerFeature player2, int attackType) {
         int HP = player2.getHP();
         boolean isDead = false;
-        int minusBlood = (attackType) * +10 + 40;// 0:子彈:40, 1:刀:50 2:假箱爆:60
+        int minusBlood = (attackType) * +10 + 40;// 0:摮��:40, 1:��:50 2:��拳���:60
         HP -= minusBlood;
         if (HP <= 0) {
             HP = 0;

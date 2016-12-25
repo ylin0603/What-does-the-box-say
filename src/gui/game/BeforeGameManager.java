@@ -15,7 +15,6 @@ import tcp.tcpClient.RealTcpClient;
 
 public class BeforeGameManager {
 
-    private final static int ITEM_NUM = 32;
     private static BeforeGameManager beforeGameManager;
     private RealTcpClient realTcpClient;
     private GuiFrame frame;
@@ -96,8 +95,7 @@ public class BeforeGameManager {
         DynamicObjectManager dom = DynamicObjectManager.getInstance();
         RealTcpClient.getInstance().recvedGameLoad();
         int clientTotalNum = RealTcpClient.getInstance().getTotalPlayerNumer();
-        while (dom.getCharacterList().size() != clientTotalNum &&
-                dom.getItemList().size() != 32 );
+        while (dom.getCharacterList().size() != clientTotalNum);
         System.out.println("game start");
         Game game = new Game();
         frame.add(game);
