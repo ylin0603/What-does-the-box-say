@@ -27,7 +27,7 @@ public class Sprite {
     public static Sprite SPAWN_WALL = new Sprite(16, 1, 1, SpriteSheet.SPWAN_LEVEL);
     public static Sprite SPAWN_FLOOR = new Sprite(16, 2, 1, SpriteSheet.SPWAN_LEVEL);
 
-    public static Sprite BULLET = new Sprite(16,3,4,SpriteSheet.character);
+    public static Sprite BULLET = new Sprite(16, 7, 4, SpriteSheet.character);
     // below is for animation, dear StanleyLin.
 
     public static Sprite[] SWORD_UPWARD_ATTACK = {
@@ -66,6 +66,17 @@ public class Sprite {
             new Sprite(16, 5, 1, SpriteSheet.character),
             new Sprite(16, 4, 1, SpriteSheet.character),
             new Sprite(16, 3, 1, SpriteSheet.character),
+    };
+
+    public static Sprite BULLETS[] = {
+            new Sprite(16, 3, 4, SpriteSheet.character),
+            new Sprite(16, 4, 4, SpriteSheet.character),
+            new Sprite(16, 5, 4, SpriteSheet.character),
+            new Sprite(16, 6, 4, SpriteSheet.character),
+            new Sprite(16, 7, 4, SpriteSheet.character),
+            new Sprite(16, 8, 4, SpriteSheet.character),
+            new Sprite(16, 9, 4, SpriteSheet.character),
+            new Sprite(16, 10, 4, SpriteSheet.character),
     };
 
     public Sprite(int size, int x, int y, SpriteSheet sheet) {
