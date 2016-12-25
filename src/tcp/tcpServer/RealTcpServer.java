@@ -38,10 +38,13 @@ public class RealTcpServer implements Runnable {
         }
     }
 
-    public void destory() {
-        // setWaitLoad(false);
+    public void stop() {
         if (thisThread != null)
             thisThread.stop();
+    }
+
+    public void destory() {
+        stop();
         if (serverSocket != null)
             try {
                 serverSocket.close();

@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class ClientBulletFeature {
     private int itemType;
-    // 0: Moving Sword, 1: Moving Bullet, 2: Revenge Box
+    // 0: Moving Bullet, 1: Moving Sword, 2: Revenge Box
     private int locX, locY;
     private int oriLocX, oriLocY;
     private double faceAngle = 0; // (degree) => use Math.toRadium();
@@ -17,6 +17,7 @@ public class ClientBulletFeature {
     ClientBulletFeature(int itemType, int locX, int locY, double faceAngle,
             int itemOwner) {
         assert itemType == 0 || itemType == 1;
+        this.itemType = itemType;
         this.locX = locX;
         this.locY = locY;
         this.oriLocX = locX;

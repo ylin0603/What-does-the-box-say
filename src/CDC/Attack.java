@@ -4,12 +4,12 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Attack {
-    final static int BULLETVEL = 4;
+    final static int BULLETVEL = 10;
     final static int BOXSIZE = 16;
     final static int MAP_SIZE_X = Cdc.MAP_SIZE_X - BOXSIZE;
     final static int MAP_SIZE_Y = Cdc.MAP_SIZE_Y - BOXSIZE;
-    final static int WINDOWSIZEX = 150;
-    final static int WINDOWSIZEY = 72;
+    final static int BULLETRANGEX = 150 * 2;
+    final static int BULLETRANGEY = 72 * 2;
     final static double revengeSize =
             Math.pow((Math.pow(1.2 * BOXSIZE, 2) - Math.pow(BOXSIZE / 2, 2)),
                     (0.5)) + 8 * (2 - 1.2);
@@ -20,8 +20,8 @@ public class Attack {
     final static int SHORTRANGE = 0;
     final static int LONGRANGE = 1;
 
-    final static int SWORD = 0;
-    final static int BULLET = 1;
+    final static int BULLET = 0;
+    final static int SWORD = 1;
 
     public Attack(ClientPlayerFeature player,
             List<ClientPlayerFeature> clientPlayerFeature,
@@ -110,7 +110,7 @@ public class Attack {
     private boolean subBlood(ClientPlayerFeature player2, int attackType) {
         int HP = player2.getHP();
         boolean isDead = false;
-        int minusBlood = (attackType) * +10 + 40;// 0:刀:40, 1:子彈:50 2:假箱爆:60
+        int minusBlood = (attackType) * +10 + 40;// 0:子彈:40, 1:刀:50 2:假箱爆:60
         HP -= minusBlood;
         if (HP <= 0) {
             HP = 0;
@@ -193,8 +193,8 @@ public class Attack {
             locX = (int) Math.round(
                     bullet.getLocX() + Math.sin(radianAngle) * BULLETVEL);
             oriLocX = bullet.getOriLocX();
-            if (locX > MAP_SIZE_X || locX < 0 || locX > oriLocX + WINDOWSIZEX
-                    || locX < oriLocX - WINDOWSIZEX) {
+            if (locX > MAP_SIZE_X || locX < 0 || locX > oriLocX + BULLETRANGEX
+                    || locX < oriLocX - BULLETRANGEX) {
                 clientBulletFeatureIterator.remove();
                 continue;
             }
@@ -202,8 +202,8 @@ public class Attack {
             loxY = (int) Math.round(
                     bullet.getLocY() - Math.cos(radianAngle) * BULLETVEL);
             oriLocY = bullet.getOriLocY();
-            if (loxY > MAP_SIZE_Y || loxY < 0 || loxY > oriLocY + WINDOWSIZEY
-                    || loxY < oriLocY - WINDOWSIZEY) {
+            if (loxY > MAP_SIZE_Y || loxY < 0 || loxY > oriLocY + BULLETRANGEY
+                    || loxY < oriLocY - BULLETRANGEY) {
                 clientBulletFeatureIterator.remove();
                 continue;
             }

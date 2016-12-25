@@ -94,6 +94,10 @@ public class TcpServerThread implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(ClientID + " sc close");
+            totalClient--;
+            if (totalClient == 0) {
+                System.exit(0);
+            }
         }
     }
 
@@ -139,6 +143,7 @@ public class TcpServerThread implements Runnable {
         }
         System.out.println(ClientID + " start");
         if (ClientID == 0) {
+            RealTcpServer.getInstance().stop();
             System.out.println(ClientID + " room start");
             Cdc cdc = Cdc.getInstance();
             cdc.gameItemsInital();

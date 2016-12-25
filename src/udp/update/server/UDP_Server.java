@@ -2,6 +2,8 @@ package udp.update.server;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import gui.game.GameManager;
 import renderer.data.DynamicObjectManager;
 
 import java.io.IOException;
@@ -102,7 +104,7 @@ public class UDP_Server implements Runnable {
 					break;
 				case "STOP":
 					//call Game的function跳出總計分板，停止遊戲
-
+                    GameManager.getInstance().openRankBoard();
 					System.out.println("STOP: " + eachEnData.getData());
 
 					break;
