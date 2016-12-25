@@ -56,7 +56,7 @@ public class Character extends Entity {
         this.attackedFlag = attackedFlag;
         this.collisionFlag = collisionFlag;
         this.isDead = isDead;
-        if (this.attackFlag)
+        if (this.attackFlag && weaponType == 0)
             animationFinished = false;
         //this.sprite = Sprite.rotate(Sprite.PLAYER,angle);
     }
