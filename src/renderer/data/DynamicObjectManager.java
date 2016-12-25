@@ -70,7 +70,7 @@ public class DynamicObjectManager {
         item.update(isDead, owner, x, y);
     }
 
-    public void updateBullets(List<ClientBulletFeature> originData){
+    synchronized public void updateBullets(List<ClientBulletFeature> originData){
         bulletTempList.clear();
         ArrayList<ClientBulletFeature> temp = new ArrayList<>(originData);
         for(ClientBulletFeature cbf : temp){
@@ -78,7 +78,7 @@ public class DynamicObjectManager {
         }
     }
 
-    public void setBullet(){
+    synchronized public void setBullet(){
         bulletList = new ArrayList<>(bulletTempList);
     }
 
