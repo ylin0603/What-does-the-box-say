@@ -58,7 +58,7 @@ public class AttackTest {
         test = new Attack(player, clientPlayerFeature, clientItemFeature,
                 clientBulletFeature);
         // System.out.println(attackedPlayer.getHP());
-        assertEquals(oriBlood - 40, attackedPlayer.getHP());
+        assertEquals(oriBlood - 50, attackedPlayer.getHP());
 
         // case2.1 打不到 玩家0 在正北方
         attackedPlayer.setHP(100);
@@ -76,7 +76,7 @@ public class AttackTest {
         oriBlood = attackedPlayer.getHP();
         test = new Attack(player, clientPlayerFeature, clientItemFeature,
                 clientBulletFeature);
-        assertEquals(oriBlood - 40, attackedPlayer.getHP());
+        assertEquals(oriBlood - 50, attackedPlayer.getHP());
     }
 
     @Test
@@ -104,7 +104,7 @@ public class AttackTest {
         test = new Attack(player, clientPlayerFeature, clientItemFeature,
                 clientBulletFeature);
         // System.out.println(attackedPlayer.getHP());
-        assertEquals(oriBlood - 40, attackedPlayer.getHP());
+        assertEquals(oriBlood - 50, attackedPlayer.getHP());
     }
 
     @Test
@@ -121,7 +121,7 @@ public class AttackTest {
         test = new Attack(player, clientPlayerFeature, clientItemFeature,
                 clientBulletFeature);
         // System.out.println(attackedPlayer.getHP());
-        assertEquals(oriBlood - 40, attackedPlayer.getHP());
+        assertEquals(oriBlood - 50, attackedPlayer.getHP());
     }
 
     @Test
@@ -138,7 +138,7 @@ public class AttackTest {
         test = new Attack(player, clientPlayerFeature, clientItemFeature,
                 clientBulletFeature);
         // System.out.println(attackedPlayer.getHP());
-        assertEquals(oriBlood - 40, attackedPlayer.getHP());
+        assertEquals(oriBlood - 50, attackedPlayer.getHP());
     }
 
     @Test

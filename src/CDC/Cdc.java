@@ -57,7 +57,8 @@ public class Cdc {
             @Override
             public void run() {
                 if (finishGame(300)) {// 5分鐘就是300秒
-                    // do something
+                    UDPinstance.stopBroadCast(realTcpServer.getClientIPTable());
+                    System.exit(0);
                 }
                 resetPerRound();// reset change flag, attack 、 collision flag
                 movingPlayer();
