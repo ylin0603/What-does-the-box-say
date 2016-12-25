@@ -28,18 +28,18 @@ public class CollisionTest {
 
     @Test
     public void testIsCollisonClientPlayerFeatureClientPlayerFeature() {
-        ClientPlayerFeature p1 = new ClientPlayerFeature(0, "aaa", 0, 0);
+        ClientPlayerFeature p1 = new ClientPlayerFeature(0, 0, 0);
         ClientPlayerFeature p2;
 
-        p2 = new ClientPlayerFeature(1, "bbb", 0, 0);
+        p2 = new ClientPlayerFeature(1, 0, 0);
         assert Collision.isCollison(p1, p2);
-        p2 = new ClientPlayerFeature(1, "bbb", 0, 8);
+        p2 = new ClientPlayerFeature(1, 0, 8);
         assert Collision.isCollison(p1, p2);
-        p2 = new ClientPlayerFeature(1, "bbb", 0, 16);
+        p2 = new ClientPlayerFeature(1, 0, 16);
         assert Collision.isCollison(p1, p2);
-        p2 = new ClientPlayerFeature(1, "bbb", 0, 19);
+        p2 = new ClientPlayerFeature(1, 0, 19);
         assert Collision.isCollison(p1, p2);
-        p2 = new ClientPlayerFeature(1, "bbb", 0, 20);
+        p2 = new ClientPlayerFeature(1, 0, 20);
         assert !Collision.isCollison(p1, p2);
     }
 
@@ -48,30 +48,30 @@ public class CollisionTest {
         ClientItemFeature i1 = new ClientItemFeature(0, 0, 0, 0);
 
         ClientPlayerFeature p2;
-        p2 = new ClientPlayerFeature(1, "bbb", 0, 0);
+        p2 = new ClientPlayerFeature(1, 0, 0);
         assert Collision.isCollison(i1, p2);
-        p2 = new ClientPlayerFeature(1, "bbb", 0, 8);
+        p2 = new ClientPlayerFeature(1, 0, 8);
         assert Collision.isCollison(i1, p2);
-        p2 = new ClientPlayerFeature(1, "bbb", 0, 16);
+        p2 = new ClientPlayerFeature(1, 0, 16);
         assert Collision.isCollison(i1, p2);
-        p2 = new ClientPlayerFeature(1, "bbb", 0, 19);
+        p2 = new ClientPlayerFeature(1, 0, 19);
         assert Collision.isCollison(i1, p2);
-        p2 = new ClientPlayerFeature(1, "bbb", 0, 20);
+        p2 = new ClientPlayerFeature(1, 0, 20);
         assert !Collision.isCollison(i1, p2);
     }
 
     @Test
     public void testIsCollisonIntIntClientPlayerFeature() {
         ClientPlayerFeature p2;
-        p2 = new ClientPlayerFeature(1, "bbb", 0, 0);
+        p2 = new ClientPlayerFeature(1, 0, 0);
         assert Collision.isCollison(0, 0, p2);
-        p2 = new ClientPlayerFeature(1, "bbb", 0, 8);
+        p2 = new ClientPlayerFeature(1, 0, 8);
         assert Collision.isCollison(0, 0, p2);
-        p2 = new ClientPlayerFeature(1, "bbb", 0, 16);
+        p2 = new ClientPlayerFeature(1, 0, 16);
         assert Collision.isCollison(0, 0, p2);
-        p2 = new ClientPlayerFeature(1, "bbb", 0, 19);
+        p2 = new ClientPlayerFeature(1, 0, 19);
         assert Collision.isCollison(0, 0, p2);
-        p2 = new ClientPlayerFeature(1, "bbb", 0, 20);
+        p2 = new ClientPlayerFeature(1, 0, 20);
         assert !Collision.isCollison(0, 0, p2);
     }
 
@@ -128,7 +128,7 @@ public class CollisionTest {
 
     @Test
     public void testIsCollisonIntIntIntClientPlayerFeature() {
-        ClientPlayerFeature p1 = new ClientPlayerFeature(0, "aaa", 0, 0);
+        ClientPlayerFeature p1 = new ClientPlayerFeature(0, 0, 0);
 
         assert Collision.isCollison(0, 0, 8, p1);
         assert Collision.isCollison(0, 8, 8, p1);

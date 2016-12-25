@@ -24,10 +24,8 @@ public class ClientPlayerFeature {
     private boolean collisionFlag = false; // 同上
     private boolean isDead = false; // Bear will do it.
 
-    public ClientPlayerFeature(int clientNo, String nickName, int locX,
-            int locY) {
+    public ClientPlayerFeature(int clientNo, int locX, int locY) {
         this.clientNo = clientNo;
-        this.nickname = nickName;
         init();
         reborn(locX, locY);
     }
