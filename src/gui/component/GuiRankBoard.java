@@ -62,6 +62,8 @@ public class GuiRankBoard extends GuiPanel {
             }
             score.remove(max);
             rank[i] = max;
+            score.set(max, -99);
+            //score.remove(max);      
         }
         g.setColor(Color.YELLOW);
         g.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
