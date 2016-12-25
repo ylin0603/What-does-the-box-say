@@ -1,4 +1,4 @@
-package gui.gameInterface;
+package gui.task;
 
 import java.util.TimerTask;
 
@@ -14,8 +14,7 @@ public class RoomPanelTask extends TimerTask {
             bgm.updateNameList();
             bgm.addRoomPanel();
         } else {
-            bgm.setGameCanvas();
-            //BeforeGameManager.getInstance().stopTimer();
+            bgm.startLoading();
         }
     }
 
