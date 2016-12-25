@@ -5,99 +5,90 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import CDC.ClientBulletFeature;
 import CDC.ClientItemFeature;
 import CDC.ClientPlayerFeature;
-import CDC.Cdc;
-import tcp.tcpServer.RealTcpServer;
 
 import com.google.gson.Gson;
 
 public class UDP_Client {
 
-	private int clientNo = -1, itemId = -1;
-	private Gson gson = new Gson();
-	private Timer timerBroadcast = new Timer();
+    private Gson gson = new Gson();
+    private Set<Integer> clientNumberSet = new HashSet<Integer>();
+    private Set<Integer> itemNumberSet = new HashSet<Integer>();
+    private static UDP_Client instance;
 
-	public void startUDPBroadCast() {
-		ArrayList<String> allIPAddress =
-				RealTcpServer.getInstance().getClientIPTable();
+    public static UDP_Client getInstance() {
+        if (instance == null)
+            instance = new UDP_Client();
+        return instance;
+    }
 
-		TimerTask startBroadcast = new TimerTask() {
-			@Override
-			public void run() {
-				ArrayList<EncodedData> encodedData = encapsulateData();
-				broadcast(allIPAddress, encodedData);
-			}
-		};
-		timerBroadcast.schedule(startBroadcast, 0, 17); // 20 times/per second
-	}
+    public void stopBroadCast(ArrayList<String> allIPAddress) {
+        // allIPAddress = RealTcpServer.getInstance().getClientIPTable();
+        ArrayList<EncodedData> stopFlag = new ArrayList<>();
+        stopFlag.add(new EncodedData("STOP", "stop client"));
 
-	public void stopBroadCast() {
-		timerBroadcast.cancel();
+        broadcast(allIPAddress, stopFlag);
+    }
 
-		ArrayList<String> allIPAddress =
-				RealTcpServer.getInstance().getClientIPTable();
-		ArrayList<EncodedData> stopFlag = new ArrayList<>();
-		stopFlag.add(new EncodedData("STOP", "stop client"));
+    public ArrayList<EncodedData> encapsulateData(
+            List<ClientPlayerFeature> updatePlayers,
+            List<ClientItemFeature> updateItems,
+            List<ClientBulletFeature> allBullets) {
+        String type;
+        ArrayList<EncodedData> encodedData = new ArrayList<>();
 
-		broadcast(allIPAddress, stopFlag);
-	}
+        for (ClientPlayerFeature player : updatePlayers) {
+            if (clientNumberSet.contains(player.getClientNo())) {
+                type = "UpdateP";
+            } else {
+                type = "AddP";
+                clientNumberSet.add(player.getClientNo());
+            }
+            encodedData.add(new EncodedData(type, gson.toJson(player)));
+        }
 
-	private ArrayList<EncodedData> encapsulateData() {
-		String type;
-		Cdc instance = Cdc.getInstance();
-		ArrayList<ClientPlayerFeature> updatePlayers = instance.getPlayersUpdateInfo();
-		ArrayList<ClientItemFeature> updateItems = instance.getItemsUpdateInfo();
-		ArrayList<EncodedData> encodedData = new ArrayList<>();
+        for (ClientItemFeature item : updateItems) {
+            if (itemNumberSet.contains(item.getItemID())) {
+                type = "UpdateI";
+            } else {
+                type = "AddI";
+                itemNumberSet.add(item.getItemID());
+            }
 
-		for (ClientPlayerFeature player : updatePlayers) {
-			if (clientNo >= player.getClientNo()) {
-				type = "UpdateP";
-			} else {
-				type = "AddP";
-				clientNo = player.getClientNo();
-			}
+            encodedData.add(new EncodedData(type, gson.toJson(item)));
+        }
 
-			encodedData.add(new EncodedData(type, gson.toJson(player)));
-		}
+        encodedData.add(new EncodedData("Bullet", gson.toJson(allBullets)));
 
-		for (ClientItemFeature item : updateItems) {
-			if (itemId >= item.getItemID()) {
-				type = "UpdateI";
-			} else {
-				type = "AddI";
-				itemId = item.getItemID();
-			}
+        return encodedData;
+    }
 
-			encodedData.add(new EncodedData(type, gson.toJson(item)));
-		}
+    public void broadcast(ArrayList<String> allIP,
+            ArrayList<EncodedData> encodedData) {
+        String jsonEncodedData = gson.toJson(encodedData);
+        byte[] sendData = jsonEncodedData.getBytes();
 
-		return encodedData;
-	}
+        DatagramSocket clientSocket = null;
+        InetAddress IPAddress;
+        try {
+            for (String ip : allIP) {
+                clientSocket = new DatagramSocket();
+                IPAddress = InetAddress.getByName(ip);
 
-	private void broadcast(ArrayList<String> allIP,
-			ArrayList<EncodedData> encodedData) {
-		String jsonEncodedData = gson.toJson(encodedData);
-		byte[] sendData = jsonEncodedData.getBytes();
-
-		DatagramSocket clientSocket = null;
-		InetAddress IPAddress;
-		try {
-			for (String ip : allIP) {
-				clientSocket = new DatagramSocket();
-				IPAddress = InetAddress.getByName(ip);
-
-				DatagramPacket sendPacket = new DatagramPacket(sendData,
-						sendData.length, IPAddress, 3335);
-				clientSocket.send(sendPacket);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			clientSocket.close();
-		}
-	}
+                DatagramPacket sendPacket = new DatagramPacket(sendData,
+                        sendData.length, IPAddress, 3335);
+                clientSocket.send(sendPacket);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            clientSocket.close();
+        }
+    }
 }

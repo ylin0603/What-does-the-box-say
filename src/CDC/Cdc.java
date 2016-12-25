@@ -1,48 +1,47 @@
 package CDC;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.lang.Math;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import tcp.tcpServer.RealTcpServer;
+import udp.broadcast.client.UDP_Client;
 
-public class Cdc implements Runnable {
-    Random random = new Random();
-    private long startTime;
-    private ArrayList<ClientPlayerFeature> allPlayers = new ArrayList<>();
-    private ArrayList<ClientItemFeature> allItems = new ArrayList<>();
-
-    // TODO: reset these
-    private final static int FORWARD = 0;
-    private final static int BACKWARD = 1;
-    private final static int TURNLEFT = 2;
-    private final static int TURNRIGHT = 3;
-    private final static int ATTACK = 4;
-    private final static int CHANGEWEAPON = 5;
-
-    private final static int BLOODPACKGE = 30;
-    private final static int BULLETPACKGE = 31;
-    
-    private final static int VEL = 2;
-    private final static double ANGLEVEL = 7;// degree
-
-    private static Cdc instance = null;
-
+public class Cdc {
     public final static int BOX_SIZE = 16;// this is two are read for all server
     public final static int MAP_SIZE_X = 640;
     public final static int MAP_SIZE_Y = 1200;
-    
+    // TODO: reset these
+    private final static int MOVE = 0;
+    private final static int SPIN = 1;
+    private final static int ATTACK = 2;
+    private final static int CHANGEWEAPON = 3;
+    private final static int BLOODPACKGEINDEX = 30;
+    private final static int BULLETPACKGEINDEX = 31;
+    private final static int VEL = 4;
+    private final static double ANGLEVEL = 6;// degree
+    private static Cdc instance;
+    private static RealTcpServer realTcpServer;
+    private static UDP_Client UDPinstance;
+
+    Random random = new Random();
+    private long startTime;
+    private List<ClientPlayerFeature> allPlayers =
+            Collections.synchronizedList(new ArrayList<>());
+    private List<ClientItemFeature> allItems =
+            Collections.synchronizedList(new ArrayList<>());
+    private List<ClientBulletFeature> allBullets =
+            Collections.synchronizedList(new ArrayList<>());
+
     public static void main(String[] args) throws InterruptedException {
         // tcp
-        RealTcpServer realTcpServer = RealTcpServer.getInstance();
+        realTcpServer = RealTcpServer.getInstance();
         realTcpServer.initTCPServer();
     }
-
-    public void startUpdatingThread() {
-        Thread game = new Thread(instance);
-        game.start();
-    }
-
-    private void Cdc() {}
 
     public static Cdc getInstance() {
         if (instance == null)
@@ -50,17 +49,48 @@ public class Cdc implements Runnable {
         return instance;
     }
 
-    public ArrayList<ClientPlayerFeature> getPlayersUpdateInfo() {
+    public void startUpdatingTimer() {
+        Timer gameTimer = new Timer();
+        TimerTask startUpdating = new TimerTask() {
+            @Override
+            public void run() {
+                startTime = System.currentTimeMillis();
+                UDPinstance = UDP_Client.getInstance();
+
+                if (finishGame(300)) {// 5分鐘就是300秒
+                    // do something
+                }
+                movingPlayer();
+                movingBullet();
+                checkResurrection();// 檢查復活
+                checkSupplement();// 每十秒補充補包彈藥包
+
+                UDPinstance.broadcast(realTcpServer.getClientIPTable(),
+                        UDPinstance.encapsulateData(getPlayersUpdateInfo(),
+                                getItemsUpdateInfo(), getAllBullets()));// broadcast
+            }
+        };
+        gameTimer.schedule(startUpdating, 0, 33);
+    }
+
+    private void Cdc() {}
+
+    public List<ClientPlayerFeature> getPlayersUpdateInfo() {
         return allPlayers;
     }
 
-    public ArrayList<ClientItemFeature> getItemsUpdateInfo() {
+    public List<ClientItemFeature> getItemsUpdateInfo() {
         return allItems;
+    }
+
+    public List<ClientBulletFeature> getAllBullets() {
+        return allBullets;
     }
 
     public void addVirtualCharacter(int clientNo, String nickName) {
         assert clientNo > -1;
         assert !nickName.isEmpty();
+        System.out.println(clientNo + " addVirtualCharacter");
         int[] loc = giveRandomLocation(); // initial position
         allPlayers.add(
                 new ClientPlayerFeature(clientNo, nickName, loc[0], loc[1]));
@@ -107,7 +137,7 @@ public class Cdc implements Runnable {
     }
 
     public void initFakeBox() {
-        for (int fakeBoxNum = 0; fakeBoxNum < BLOODPACKGE; fakeBoxNum++) {
+        for (int fakeBoxNum = 0; fakeBoxNum < BLOODPACKGEINDEX; fakeBoxNum++) {
             int[] loc = giveRandomLocation();
             allItems.add(new ClientItemFeature(fakeBoxNum, 0, loc[0], loc[1]));
         }
@@ -115,22 +145,14 @@ public class Cdc implements Runnable {
 
     public void initBloodPackge() {
         int[] loc = giveRandomLocation();
-        allItems.add(new ClientItemFeature(BLOODPACKGE, 1, loc[0], loc[1]));
+        allItems.add(
+                new ClientItemFeature(BLOODPACKGEINDEX, 1, loc[0], loc[1]));
     }
 
     public void initBulletPackge() {
         int[] loc = giveRandomLocation();
-        allItems.add(new ClientItemFeature(BULLETPACKGE, 2, loc[0], loc[1]));
-    }
-
-    // to reborn bullet or blood packages
-    public void rebornFunctionalPack(ClientItemFeature item) {
-        item.setFaceAngle(0.0);
-        item.setDead(false);
-        item.setCollision(false);
-        int[] loc = giveRandomLocation();
-        item.setLocX(loc[0]);
-        item.setLocY(loc[1]);
+        allItems.add(
+                new ClientItemFeature(BULLETPACKGEINDEX, 2, loc[0], loc[1]));
     }
 
     public void gameItemsInital() {
@@ -139,77 +161,25 @@ public class Cdc implements Runnable {
         initBulletPackge();
     }
 
-    public void updateKeys(int clientNo, boolean[] moveCode) {
+    public void updateKeys(int clientNo, int[] moveCode) {
         assert clientNo > -1;
-        assert moveCode.length == 6;
-        // 目前是將所有按住的按鍵記下來
+        assert moveCode.length == 4;
+        // "move,spin,attack,change weapon"
 
         allPlayers.get(clientNo).setDirection(moveCode);
-    }
-
-    // TODO: 碰到物體則等於吃到，感覺要每秒去確認，但感覺會很慢？
-    private void checkGetItem(ClientPlayerFeature player) {
-        int itemSize = allItems.size();
-        int itemType;
-        boolean isImpacted = false;
-        for (int currItem = BLOODPACKGE; currItem < itemSize; currItem++) {
-            if (allItems.get(currItem).isDead())
-                continue;
-            isImpacted = Collision.isCollison(allItems.get(currItem), player);
-            if (isImpacted) {
-                itemType = allItems.get(currItem).getItemType();
-                switch (itemType) {
-                    case 1:
-                        player.addHP(60);
-                        allItems.get(currItem).setDead(true);
-                        allItems.get(currItem).setRebornTime(
-                                System.currentTimeMillis() + 10 * 1000);
-                        break;
-                    case 2:
-                        player.addBullet(1);
-                        allItems.get(currItem).setDead(true);
-                        allItems.get(currItem).setRebornTime(
-                                System.currentTimeMillis() + 10 * 1000);
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            }
-        }
     }
 
     public void movingPlayer() {
         for (ClientPlayerFeature player : allPlayers) {
             if (player.isDead())
                 continue;
-            //TODO: key parsing should be out of this function
+            player.resetPerRound();
+            // TODO: key parsing should be out of this function
             double faceAngle = player.getFaceAngle();
             double radianAngle = Math.toRadians(faceAngle);
-            boolean[] keys = player.getDirection();
-            // keys "wsad j"
-            int move = 0, spin = 0;
-            if (keys[FORWARD]) {
-                move++;
-            }
-            if (keys[BACKWARD]) {
-                move--;
-            }
-            if (keys[TURNLEFT]) {
-                spin--;
-            }
-            if (keys[TURNRIGHT]) {
-                spin++;
-            }
-            if (keys[ATTACK])
-                attack(player.getClientNo());
-            else
-                player.setAttackFlag(false);
-            if (keys[CHANGEWEAPON]) {
-                keys[CHANGEWEAPON] = false;
-                changeWeapon(player);
-            }
-            switch (move) {
+            int[] moveCode = player.getDirection();
+            // "move,spin,attack,change weapon"
+            switch (moveCode[MOVE]) {
                 case 1:
                     forward(player, radianAngle);
                     break;
@@ -217,13 +187,12 @@ public class Cdc implements Runnable {
                     backward(player, radianAngle);
                     break;
                 case 0:
-                    if (player.checkRecover())
-                        player.addHP(5);
+                    recovery(player);
                     break;
                 default:
                     throw new Error("Out of Move direction!");
             }
-            switch (spin) {
+            switch (moveCode[SPIN]) {
                 case 1:
                     turnRight(player, faceAngle);
                     break;
@@ -236,27 +205,15 @@ public class Cdc implements Runnable {
                 default:
                     throw new Error("Out of Spin direction!");
             }
-        }
-    }
-
-    private void checkSupplement() {
-        long now = System.currentTimeMillis();
-        if (allItems.get(BLOODPACKGE).isDead()
-                && allItems.get(BLOODPACKGE).getRebornTime() < now) {
-            rebornFunctionalPack(allItems.get(BLOODPACKGE));
-        }
-        if (allItems.get(BULLETPACKGE).isDead()
-                && allItems.get(BULLETPACKGE).getRebornTime() < now) {
-            rebornFunctionalPack(allItems.get(BULLETPACKGE));
-        }
-    }
-
-    private void checkResurrection() {// 檢查復活
-        for (ClientPlayerFeature player : allPlayers) {
-            if (player.isDead()) {
-                if (player.checkResurrection()) {
-                    int[] loc = Cdc.getInstance().giveRandomLocation();
-                    player.reborn(loc[0], loc[1]);
+            if (moveCode[ATTACK] == 1)
+                attack(player);
+            else
+                player.setAttackFlag(false);
+            if (moveCode[CHANGEWEAPON] == 1) {
+                // moveCode[CHANGEWEAPON] = 0;
+                if (player.isChangeWeaponCD()) {
+                    player.setChangeWeaponCD();
+                    changeWeapon(player);
                 }
             }
         }
@@ -266,10 +223,12 @@ public class Cdc implements Runnable {
         boolean isImpacted = false;
         boolean colliHappened = false;
         for (ClientPlayerFeature collisionPlayer : allPlayers) {
-            if (collisionPlayer.getClientNo() == player.getClientNo())
+            if (collisionPlayer.equals(player) || collisionPlayer.isDead())
                 continue;
             isImpacted = Collision.isCollison(x, y, collisionPlayer);
             if (isImpacted) {
+                player.setCollisionFlag(true);
+                collisionPlayer.setCollisionFlag(true);
                 colliHappened = true;
                 break;
             }
@@ -305,6 +264,7 @@ public class Cdc implements Runnable {
             player.setLocX((int) Math.round(diffX));
             player.setLocY((int) Math.round(diffY));
         }
+        player.setLastMoveTime();
         checkGetItem(player); // 只考慮前進後退才會吃到，旋轉不會碰到補給
     }
 
@@ -318,28 +278,65 @@ public class Cdc implements Runnable {
             player.setLocX((int) Math.round(diffX));
             player.setLocY((int) Math.round(diffY));
         }
+        player.setLastMoveTime();
+        checkGetItem(player); // 只考慮前進後退才會吃到，旋轉不會碰到補給
+    }
 
-        checkGetItem(player);// 只考慮前進後退才會吃到，旋轉不會碰到補給
+    // TODO: 碰到物體則等於吃到，感覺要每秒去確認，但感覺會很慢？
+    private void checkGetItem(ClientPlayerFeature player) {
+        int itemSize = allItems.size();
+        boolean isImpacted = false;
+        for (int currItemIndex =
+                BLOODPACKGEINDEX; currItemIndex < itemSize; currItemIndex++) {
+            if (allItems.get(currItemIndex).isDead())
+                continue;
+            isImpacted =
+                    Collision.isCollison(allItems.get(currItemIndex), player);
+            if (isImpacted) {
+                switch (currItemIndex) {
+                    case BLOODPACKGEINDEX:
+                        player.addHP(60);
+                        allItems.get(currItemIndex).setDead(true);
+                        allItems.get(currItemIndex).setRebornTime(
+                                System.currentTimeMillis() + 10 * 1000);
+                        break;
+                    case BULLETPACKGEINDEX:
+                        player.addBullet(1);
+                        allItems.get(currItemIndex).setDead(true);
+                        allItems.get(currItemIndex).setRebornTime(
+                                System.currentTimeMillis() + 10 * 1000);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            }
+        }
+    }
+
+    private void recovery(ClientPlayerFeature player) {
+        // 檢查是否停在原地
+        if (System.currentTimeMillis() - player.getLastMoveTime() >= 5000) {
+            player.addHP(5);
+            player.setLastMoveTime(player.getLastMoveTime() + 1000);
+        }
     }
 
     private void turnRight(ClientPlayerFeature player, double faceAngle) {
-        // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
         player.setFaceAngle(faceAngle + ANGLEVEL);
     }
 
     private void turnLeft(ClientPlayerFeature player, double faceAngle) {
-        // 攻擊範圍判斷依照此邏輯複製，如有修改，請一併確認 attackShortRange()
         player.setFaceAngle(faceAngle - ANGLEVEL);
     }
 
-    public void attack(int clientNo) {
-        if (!allPlayers.get(clientNo).isAttackCD()) {
-            allPlayers.get(clientNo).setAttackFlag(false);
+    public void attack(ClientPlayerFeature player) {
+        if (!player.isAttackCD()) {
+            player.setAttackFlag(false);
             return;
         } else {
-            allPlayers.get(clientNo).setAttackFlag(true);
-            allPlayers.get(clientNo).setAttackCD();
-            new Attack(clientNo, allPlayers, allItems);
+            player.setAttackCD();
+            new Attack(player, allPlayers, allItems, allBullets);
         }
     }
 
@@ -350,30 +347,43 @@ public class Cdc implements Runnable {
     }
 
     private void movingBullet() {
-        return;
-        /*
-         * for (ClientItemFeature bullet : allItems) {
-         * 
-         * }
-         */
+        new Attack().attackLongRangeUpdate(allPlayers, allItems, allBullets);
     }
 
-    @Override
-    public void run() {
-        startTime = System.currentTimeMillis();
-        while (true) {
-            if (finishGame(300)) {// 5分鐘就是300秒
-                // do something
-            }
-            movingPlayer();
-            movingBullet();
-            checkResurrection();// 檢查復活
-            checkSupplement();// 每十秒補充補包彈藥包
-            try {
-                Thread.sleep(17); // while(true) + sleep = timer嗎?
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    private void checkResurrection() {// 檢查復活
+        for (ClientPlayerFeature player : allPlayers) {
+            if (player.isDead()) {
+                if (player.checkResurrection()) {
+                    int[] loc = Cdc.getInstance().giveRandomLocation();
+                    player.reborn(loc[0], loc[1]);
+                }
             }
         }
+        for (ClientItemFeature item : allItems) {
+            if (item.isReborn()) {// initial at next round
+                int[] loc = giveRandomLocation();
+                item.init(loc[0], loc[1]);
+            }
+            if (item.getItemType() == 0 && item.isDead())// don't initial at dead
+                item.setReborn(true);
+        }
+    }
+
+    private void checkSupplement() {
+        long now = System.currentTimeMillis();
+        if (allItems.get(BLOODPACKGEINDEX).isDead()
+                && allItems.get(BLOODPACKGEINDEX).getRebornTime() < now) {
+            rebornFunctionalPack(allItems.get(BLOODPACKGEINDEX));
+        }
+        if (allItems.get(BULLETPACKGEINDEX).isDead()
+                && allItems.get(BULLETPACKGEINDEX).getRebornTime() < now) {
+            rebornFunctionalPack(allItems.get(BULLETPACKGEINDEX));
+        }
+    }
+
+    // to reborn bullet or blood packages
+    public void rebornFunctionalPack(ClientItemFeature item) {
+        int[] loc = giveRandomLocation();
+        item.init(loc[0], loc[1]);
     }
 }

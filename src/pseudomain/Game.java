@@ -35,7 +35,7 @@ public class Game extends Canvas implements Runnable {
         keyInput = new KeyboardInput();
         this.addKeyListener(keyInput);
         setPreferredSize(size);
-        frame = new JFrame();
+        //frame = new JFrame();
         this.setFocusTraversalKeysEnabled(false);
     }
 
@@ -96,7 +96,7 @@ public class Game extends Canvas implements Runnable {
         
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    /*public static void main(String[] args) throws InterruptedException {
         // before game initial
         RealTcpClient realTcpClient = RealTcpClient.getInstance();
         boolean isConnect =
@@ -116,6 +116,6 @@ public class Game extends Canvas implements Runnable {
         game.frame.setVisible(true);
 
         game.start();
-    }
+    }*/
 
 }

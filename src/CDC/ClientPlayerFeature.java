@@ -12,13 +12,14 @@ public class ClientPlayerFeature {
     private long resurrectionTime = 0;
     private final int resurrectionCD = 4000;
 
-    private boolean[] direction = new boolean[6];// "wsad j"
+    private int[] direction = new int[4];// "move,spin,attack,change weapon"
     private double faceAngle = 0; // (degree) => use Math.toRadium();
     private int HP = 100;
     private int killCount = 0, deadCount = 0;
     private int bulletCount = 2;
     private int maxBulletCount = 3;
-    private boolean attackFlag = false; // TCP設成true，傳送一次後設回false
+    private boolean attackFlag = false; // attack.java在成功攻擊時設成true，
+    // CD中 false 放開 false 人死 false
     private boolean attackedFlag = false; // CDC設成true，UDP傳回一次後再設回false
     private boolean collisionFlag = false; // 同上
     private boolean isDead = false; // Bear will do it.
@@ -35,6 +36,10 @@ public class ClientPlayerFeature {
         this.attackCD = 0;
         this.changeWeaponCD = 0;
         faceAngle = 0.0;
+        resetPerRound();
+    }
+
+    public void resetPerRound() {
         this.attackFlag = false;
         this.attackedFlag = false;
         this.collisionFlag = false;
@@ -73,11 +78,11 @@ public class ClientPlayerFeature {
         this.nickname = nickname;
     }
 
-    public boolean[] getDirection() {
+    public int[] getDirection() {
         return direction;
     }
 
-    public void setDirection(boolean[] direction) {
+    public void setDirection(int[] direction) {
         this.direction = direction;
     }
 
@@ -86,8 +91,8 @@ public class ClientPlayerFeature {
     }
 
     public void setLocX(int locX) {
-        if (locX > Cdc.MAP_SIZE_X - 16)
-            locX = Cdc.MAP_SIZE_X - 16;
+        if (locX > Cdc.MAP_SIZE_X - Cdc.BOX_SIZE)
+            locX = Cdc.MAP_SIZE_X - Cdc.BOX_SIZE;
         else if (locX < 0)
             locX = 0;
         this.locX = locX;
@@ -99,8 +104,8 @@ public class ClientPlayerFeature {
     }
 
     public void setLocY(int locY) {
-        if (locY > Cdc.MAP_SIZE_Y - 16)
-            locY = Cdc.MAP_SIZE_Y - 16;
+        if (locY > Cdc.MAP_SIZE_Y - Cdc.BOX_SIZE)
+            locY = Cdc.MAP_SIZE_Y - Cdc.BOX_SIZE;
         else if (locY < 0)
             locY = 0;
         this.locY = locY;
@@ -146,6 +151,10 @@ public class ClientPlayerFeature {
         return deadCount;
     }
 
+    public void setDeadCount(int deadCount) {
+        this.deadCount = deadCount;
+    }
+
     public boolean isAttackCD() {
         if (attackCD <= System.currentTimeMillis())
             return true;
@@ -165,11 +174,7 @@ public class ClientPlayerFeature {
     }
 
     public void setChangeWeaponCD() {
-        attackCD = System.currentTimeMillis() + 1000;
-    }
-
-    public void setDeadCount(int deadCount) {
-        this.deadCount = deadCount;
+        changeWeaponCD = System.currentTimeMillis() + 1000;
     }
 
     public int getBulletCount() {
@@ -222,20 +227,19 @@ public class ClientPlayerFeature {
         }
     }
 
-    public boolean checkRecover() { // 檢查是否停在原地
-        long stopSecond = System.currentTimeMillis() - lastMoveTime;
-        if (stopSecond >= 5000) {
-            lastMoveTime += 1000;
-            return true;
-        }
-        return false;
-    }
-
     public boolean checkResurrection() { // 檢查復活
         if (System.currentTimeMillis() >= resurrectionTime)
             return true;
         else
             return false;
+    }
+
+    public long getLastMoveTime() {
+        return lastMoveTime;
+    }
+
+    public void setLastMoveTime(long lastMoveTime) {
+        this.lastMoveTime = lastMoveTime;
     }
 
     public void setLastMoveTime() {

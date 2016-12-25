@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UDP_Server implements Runnable {
 
@@ -48,6 +49,7 @@ public class UDP_Server implements Runnable {
 
 		ClientPlayerFeature player = null;
 		ClientItemFeature item = null;
+		List<ClientBulletFeature> allBullet;
 		DynamicObjectManager instance = DynamicObjectManager.getInstance();
 		for (EncodedData eachEnData : encodedData) {
 			switch (eachEnData.getType()) {
@@ -64,7 +66,8 @@ public class UDP_Server implements Runnable {
 							player.isDead());
 					if(player.isAttackFlag())
 						System.out.println("ATTACK is true");
-
+					if(player.isAttackedFlag())
+						System.out.println("IsATTACKED is true");
 					break;
 				case "AddP":
 					player = gson.fromJson(eachEnData.getData(),
@@ -81,8 +84,6 @@ public class UDP_Server implements Runnable {
 					instance.updateItem(item.getItemID(), item.isDead(),
 										item.getItemOwner(), item.getLocX(), item.getLocY());
 
-					//System.out.println("Update Item");
-
 					break;
 				case "AddI":
 					item = gson.fromJson(eachEnData.getData(),
@@ -93,10 +94,16 @@ public class UDP_Server implements Runnable {
 					System.out.println("Add Item");
 
 					break;
+				case "Bullet":
+					allBullet = gson.fromJson(eachEnData.getData(),
+							new TypeToken<ArrayList<ClientBulletFeature>>() {}.getType());
+
+					instance.updateBullets(allBullet);
+					break;
 				case "STOP":
 					//call Game的function跳出總計分板，停止遊戲
 
-					System.out.println(eachEnData.getData());
+					System.out.println("STOP: " + eachEnData.getData());
 
 					break;
 				default:
