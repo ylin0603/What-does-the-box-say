@@ -37,8 +37,8 @@ public class AttackTest {
                 new ArrayList<ClientBulletFeature>();
         ArrayList<ClientPlayerFeature> clientPlayerFeature =
                 new ArrayList<ClientPlayerFeature>();
-        clientPlayerFeature.add(new ClientPlayerFeature(0, "bbb", 0, 0));
-        clientPlayerFeature.add(new ClientPlayerFeature(1, "bbb", 5000, 5000));
+        clientPlayerFeature.add(new ClientPlayerFeature(0, 0, 0));
+        clientPlayerFeature.add(new ClientPlayerFeature(1, 10, 0));
         int oriBlood = clientPlayerFeature.get(1).getHP();
         // clientItemFeature.add(new ClientItemFeature(1,1, 210, 210));// id =1 ,假箱子
         ClientPlayerFeature player = clientPlayerFeature.get(0);

@@ -112,6 +112,7 @@ public class RealTcpClient {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            System.exit(0);
         }
         return inputLine;
     }

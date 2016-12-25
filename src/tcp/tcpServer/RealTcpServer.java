@@ -13,6 +13,7 @@ public class RealTcpServer implements Runnable {
     private static RealTcpServer realTcpServer;
     private Thread thisThread;
     private Socket serverSocket;
+
     private RealTcpServer() {
 
     }
@@ -63,13 +64,11 @@ public class RealTcpServer implements Runnable {
             // every server thread
             try {
                 serverSocket = ss.accept();
-                String s1 = serverSocket.getInetAddress().toString().replace("/", "");
+                String s1 = serverSocket.getInetAddress().toString()
+                        .replace("/", "");
                 IPtable.add(s1);
                 TcpServerThread tcpServerThread =
                         new TcpServerThread(serverSocket, totalClient);
-                if (totalClient == 0) {
-
-                }
                 Thread t = new Thread(tcpServerThread);
                 t.start();
                 totalClient++;

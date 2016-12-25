@@ -20,8 +20,8 @@ public class Attack {
     final static int SHORTRANGE = 0;
     final static int LONGRANGE = 1;
 
-    final static int BULLET = 0;
-    final static int SWORD = 1;
+    final static int SWORD = 0;
+    final static int BULLET = 1;
 
     public Attack(ClientPlayerFeature player,
             List<ClientPlayerFeature> clientPlayerFeature,
@@ -33,8 +33,7 @@ public class Attack {
                         clientItemFeature);
                 break;
             case LONGRANGE:
-                attackLongRange(player, clientPlayerFeature, clientItemFeature,
-                        clientBulletFeature);
+                attackLongRange(player, clientBulletFeature);
                 break;
             default:
                 new Exception("error Weapon Type");
@@ -84,25 +83,24 @@ public class Attack {
     public boolean attackBulletToPlayer(ClientBulletFeature bullet,
             List<ClientPlayerFeature> clientPlayerFeature) {
         boolean isThisAttack = false;
-        boolean[] isAttacked = bullet.getIsAttacked();
         ClientPlayerFeature player1 =
                 clientPlayerFeature.get(bullet.getItemOwner());
         for (ClientPlayerFeature player2 : clientPlayerFeature) {
             if (player2.getClientNo() == bullet.getItemOwner()
-                    || isAttacked[clientPlayerFeature.indexOf(player2)]
+                    || bullet
+                            .getIsAttacked(clientPlayerFeature.indexOf(player2))
                     || player2.isDead()) {
                 continue;// for prevent synchronize problem
             } else {
                 if (Collision.isCollison(bullet, player2)) {
                     player2.setAttackedFlag(true);
                     isThisAttack = true;
-                    isAttacked[clientPlayerFeature.indexOf(player2)] = true;
+                    bullet.setIsAttacked(clientPlayerFeature.indexOf(player2));
                     if (subBlood(player2, bullet.getItemType())) {
                         player1.setKillCount(player1.getKillCount() + 1);
 
                         kill(player2);
                     }
-                    bullet.setIsAttacked(isAttacked);
                 }
             }
         }
@@ -112,7 +110,7 @@ public class Attack {
     private boolean subBlood(ClientPlayerFeature player2, int attackType) {
         int HP = player2.getHP();
         boolean isDead = false;
-        int minusBlood = (attackType) * +10 + 40;// 0:子彈:40, 1:刀:50 2:假箱爆:60
+        int minusBlood = (attackType) * +10 + 40;// 0:刀:40, 1:子彈:50 2:假箱爆:60
         HP -= minusBlood;
         if (HP <= 0) {
             HP = 0;
@@ -139,6 +137,7 @@ public class Attack {
                 continue;
             if (Collision.isCollison(bullet, item2)) {
                 item2.setDead(true);
+                item2.setChange(true);
                 isAttack = true;
                 boxRevenge(item2, clientPlayerFeature);
             }
@@ -164,8 +163,6 @@ public class Attack {
     }
 
     private void attackLongRange(ClientPlayerFeature player,
-            List<ClientPlayerFeature> clientPlayerFeature,
-            List<ClientItemFeature> clientItemFeature,
             List<ClientBulletFeature> clientBulletFeature) {
         if (player.getBulletCount() > 0) {
             player.setAttackFlag(true);
