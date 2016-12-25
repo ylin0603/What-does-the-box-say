@@ -63,7 +63,7 @@ public class AttackTest {
         // case2.1 打不到 玩家0 在正北方
         attackedPlayer.setHP(100);
         attackedPlayer.setLocX(100);
-        attackedPlayer.setLocY(66);
+        attackedPlayer.setLocY(66);///
         oriBlood = attackedPlayer.getHP();
         test = new Attack(player, clientPlayerFeature, clientItemFeature,
                 clientBulletFeature);
