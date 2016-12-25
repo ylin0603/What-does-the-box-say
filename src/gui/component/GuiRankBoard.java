@@ -54,7 +54,7 @@ public class GuiRankBoard extends GuiPanel {
         int n = 3;
         if (n > score.size()) n = score.size();
         int[] rank = new int[n];
-        for (int i=0; i<n; i++) { // the max of n is 3
+        for (int i = 0; i < n; n--) { // the max of n is 3
             int max = i;
             for (int j=i; j < score.size(); j++) {
                 if (score.get(i) < score.get(j))
