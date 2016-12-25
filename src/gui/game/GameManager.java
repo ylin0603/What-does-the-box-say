@@ -6,6 +6,7 @@ import gui.component.GuiBloodBar;
 import gui.component.GuiComponent;
 import gui.component.GuiHelpPanel;
 import gui.component.GuiPlayerAngle;
+import gui.component.GuiRankBoard;
 import gui.component.GuiStatusBar;
 import gui.component.GuiScoreBoard;
 import gui.component.GuiSmallMap;
@@ -22,6 +23,7 @@ public class GameManager {
     private GuiPlayerAngle playerAngle;
     private GuiHelpPanel helpPanel;
     private GuiScoreBoard scoreBoard;
+    private GuiRankBoard rankBoard;
 
     private GameManager() {
         init();
@@ -31,6 +33,7 @@ public class GameManager {
         componentList.add(playerAngle);
         componentList.add(helpPanel);
         componentList.add(scoreBoard);
+        componentList.add(rankBoard);
     }
 
     public static GameManager getInstance() {
@@ -47,6 +50,7 @@ public class GameManager {
         playerAngle = new GuiPlayerAngle();
         helpPanel = new GuiHelpPanel();
         scoreBoard = new GuiScoreBoard();
+        rankBoard = new GuiRankBoard();
     }
 
     public void render(Graphics g) {
@@ -75,4 +79,7 @@ public class GameManager {
             scoreBoard.setInvisible();
     }
     
+    public void openRankBoard() {
+        rankBoard.setVisible();
+    }
 }

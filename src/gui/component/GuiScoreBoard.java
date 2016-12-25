@@ -9,9 +9,7 @@ import renderer.data.entity.Character;
 public class GuiScoreBoard extends GuiPanel {
 
     private Graphics g;
-
     private List<Character> characterList = null;
-
     private final String[] heading = {"Name", "Kill Count", "Dead Count"};
 
     public GuiScoreBoard() {
