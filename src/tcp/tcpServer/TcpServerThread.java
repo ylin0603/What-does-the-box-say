@@ -36,6 +36,7 @@ public class TcpServerThread implements Runnable {
 
     public TcpServerThread(Socket sc, int ClientID) {
         this.ClientID = ClientID;
+        Cdc.getInstance().addVirtualCharacter(ClientID);
         totalClient++;
         try {
             output = new PrintWriter(sc.getOutputStream(), true);
@@ -51,7 +52,6 @@ public class TcpServerThread implements Runnable {
     public void run() {
         try {
             String nickName = initGame(input, output);
-            Cdc.getInstance().addVirtualCharacter(ClientID, nickName);
             waitLoad(input, output);
             loadGame(output, nickName);
             // game state
@@ -94,7 +94,6 @@ public class TcpServerThread implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(ClientID + " sc close");
-            System.exit(0);
         }
     }
 
@@ -104,6 +103,7 @@ public class TcpServerThread implements Runnable {
         String myName = recv(input);
         nameList.add(myName);
         send(output, String.valueOf(ClientID));
+        Cdc.getInstance().SetName(ClientID, myName);
         return myName;
     }
 

@@ -51,15 +51,15 @@ public class Cdc {
 
     public void startUpdatingTimer() {
         Timer gameTimer = new Timer();
+        startTime = System.currentTimeMillis();
+        UDPinstance = UDP_Client.getInstance();
         TimerTask startUpdating = new TimerTask() {
             @Override
             public void run() {
-                startTime = System.currentTimeMillis();
-                UDPinstance = UDP_Client.getInstance();
-
                 if (finishGame(300)) {// 5分鐘就是300秒
                     // do something
                 }
+                resetPerRound();// reset change flag, attack 、 collision flag
                 movingPlayer();
                 movingBullet();
                 checkResurrection();// 檢查復活
@@ -87,13 +87,20 @@ public class Cdc {
         return allBullets;
     }
 
-    public void addVirtualCharacter(int clientNo, String nickName) {
+    public void addVirtualCharacter(int clientNo) {
         assert clientNo > -1;
-        assert !nickName.isEmpty();
         System.out.println(clientNo + " addVirtualCharacter");
         int[] loc = giveRandomLocation(); // initial position
-        allPlayers.add(
-                new ClientPlayerFeature(clientNo, nickName, loc[0], loc[1]));
+        allPlayers.add(new ClientPlayerFeature(clientNo, loc[0], loc[1]));
+    }
+
+    public void SetName(int clientNo, String nickName) {
+        assert clientNo > -1;
+        assert !nickName.isEmpty();
+        for (ClientPlayerFeature player : allPlayers) {
+            if (player.getClientNo() == clientNo)
+                player.setNickname(nickName);
+        }
     }
 
     public int[] giveRandomLocation() {
@@ -169,11 +176,19 @@ public class Cdc {
         allPlayers.get(clientNo).setDirection(moveCode);
     }
 
+    private void resetPerRound() {
+        for (ClientPlayerFeature player : allPlayers) {
+            player.resetPerRound();
+        }
+        for (ClientItemFeature item : allItems) {
+            item.resetPerRound();
+        }
+    }
+
     public void movingPlayer() {
         for (ClientPlayerFeature player : allPlayers) {
             if (player.isDead())
                 continue;
-            player.resetPerRound();
             // TODO: key parsing should be out of this function
             double faceAngle = player.getFaceAngle();
             double radianAngle = Math.toRadians(faceAngle);
@@ -299,12 +314,14 @@ public class Cdc {
                         allItems.get(currItemIndex).setDead(true);
                         allItems.get(currItemIndex).setRebornTime(
                                 System.currentTimeMillis() + 10 * 1000);
+                        allItems.get(currItemIndex).setChange(true);
                         break;
                     case BULLETPACKGEINDEX:
                         player.addBullet(1);
                         allItems.get(currItemIndex).setDead(true);
                         allItems.get(currItemIndex).setRebornTime(
                                 System.currentTimeMillis() + 10 * 1000);
+                        allItems.get(currItemIndex).setChange(true);
                         break;
                     default:
                         break;
@@ -361,8 +378,7 @@ public class Cdc {
         }
         for (ClientItemFeature item : allItems) {
             if (item.isReborn()) {// initial at next round
-                int[] loc = giveRandomLocation();
-                item.init(loc[0], loc[1]);
+                rebornItem(item);
             }
             if (item.getItemType() == 0 && item.isDead())// don't initial at dead
                 item.setReborn(true);
@@ -373,16 +389,16 @@ public class Cdc {
         long now = System.currentTimeMillis();
         if (allItems.get(BLOODPACKGEINDEX).isDead()
                 && allItems.get(BLOODPACKGEINDEX).getRebornTime() < now) {
-            rebornFunctionalPack(allItems.get(BLOODPACKGEINDEX));
+            rebornItem(allItems.get(BLOODPACKGEINDEX));
         }
         if (allItems.get(BULLETPACKGEINDEX).isDead()
                 && allItems.get(BULLETPACKGEINDEX).getRebornTime() < now) {
-            rebornFunctionalPack(allItems.get(BULLETPACKGEINDEX));
+            rebornItem(allItems.get(BULLETPACKGEINDEX));
         }
     }
 
     // to reborn bullet or blood packages
-    public void rebornFunctionalPack(ClientItemFeature item) {
+    public void rebornItem(ClientItemFeature item) {
         int[] loc = giveRandomLocation();
         item.init(loc[0], loc[1]);
     }
