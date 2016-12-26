@@ -29,6 +29,7 @@ public class FakeBox extends Item {
 
     @Override
     public void update() {
+        super.update();
         timer++;
         if (timer % 6 == 0) {
             counter++;
