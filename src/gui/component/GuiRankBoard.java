@@ -16,6 +16,7 @@ public class GuiRankBoard extends GuiPanel {
     private ArrayList<Integer> score, rank;
     private final String[] heading =
             {"Name", "Kill Count", "Dead Count", "Score", "Rank"};
+    private int rankSize = 3;
 
     public GuiRankBoard() {
         score = new ArrayList<Integer>();
@@ -58,9 +59,10 @@ public class GuiRankBoard extends GuiPanel {
     private void renderRank() {
         g.setColor(Color.YELLOW);
         g.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
+        if (rankSize > score.size()) rankSize = score.size();
         
         int place = 1, maxValue;
-        for (int i=0; i < 3; i++) {
+        for (int i=0; i < rankSize; i++) {
             // Find max score.
             int maxIndex = i;
             for (int j=i; j < score.size(); j++) {
