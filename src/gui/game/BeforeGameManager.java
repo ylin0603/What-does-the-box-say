@@ -93,10 +93,13 @@ public class BeforeGameManager {
         timer.purge();
     }
     
-    // Called by ButtonClick (Start Button).
+    // Called by RoomPanelTask when room owner click start.
     public void startCountDown() {
+        stopTimer();
+        addRoomPanel();
         countTimer = new Timer();
         countTimer.schedule(new CountDownTask(), 0, 1000);
+        startBtn.setVisible(true);
         startBtn.setEnabled(false);
         startBtn.setBackground(Color.BLACK);
     }
@@ -105,10 +108,10 @@ public class BeforeGameManager {
         countTimer.purge();
     }
     
-    // Called by RoomPanelTask. When game is loaded, start loading.
+    // Called by CountDownTask. Start loading.
     public void startLoading() {
-        stopTimer();
-        if (countTimer != null) stopCountDown();
+        stopCountDown();
+        frame.getContentPane().removeAll();
         frame.add(new LoadingPanel());
         frame.getContentPane().repaint();
         frame.setVisible(true);

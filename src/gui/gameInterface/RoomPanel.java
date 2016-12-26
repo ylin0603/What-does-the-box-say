@@ -56,11 +56,11 @@ public class RoomPanel extends JPanel {
         infoPanel.add(addLabel("Room Owner : "+nameList.get(0)));
         int clientNo = RealTcpClient.getInstance().getClientNo();
         infoPanel.add(addLabel("You are : "+nameList.get(clientNo)));
-        if (clientNo == 0) {
-            for (int i=0; i<7; i++)
-                infoPanel.add(Box.createGlue());
-            infoPanel.add(BeforeGameManager.getInstance().getStartButton());
-        }
+        for (int i=0; i<7; i++)
+            infoPanel.add(Box.createGlue());
+        infoPanel.add(BeforeGameManager.getInstance().getStartButton());
+        if (clientNo != 0)
+            BeforeGameManager.getInstance().getStartButton().setVisible(false);
         return infoPanel;
     }
     
