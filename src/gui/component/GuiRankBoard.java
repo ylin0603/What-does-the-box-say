@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import renderer.data.entity.Character;
@@ -12,12 +13,14 @@ public class GuiRankBoard extends GuiPanel {
 
     private Graphics g;
     private List<Character> characterList = null;
-    private ArrayList<Integer> score;
+    private ArrayList<Integer> score, rank;
     private final String[] heading =
             {"Name", "Kill Count", "Dead Count", "Score", "Rank"};
+    private int rankNumber = 3;
 
     public GuiRankBoard() {
         score = new ArrayList<Integer>();
+        rank = new ArrayList<Integer>();
     }
 
     public void render(Graphics g) {
@@ -38,6 +41,8 @@ public class GuiRankBoard extends GuiPanel {
     }
 
     private void renderScore() {
+        score.clear();
+        rank.clear();
         for (int i = 0; i < characterList.size(); i++) {
             Character player = characterList.get(i);
             int rowY = this.infoY + (i + 1) * 30;
@@ -46,30 +51,37 @@ public class GuiRankBoard extends GuiPanel {
             g.drawString(player.getDeadCount() + "", this.infoX + 300, rowY);
             int playerScore = player.getKillCount() * 2 - player.getDeadCount();
             score.add(playerScore);
+            rank.add(i);
             g.drawString(playerScore + "", this.infoX + 450, rowY);
         }
     }
     
     private void renderRank() {
-        int n = 3;
-        if (n > score.size()) n = score.size();
-        int[] rank = new int[n];
-        for (int i = 0; i < n; n--) { // the max of n is 3
+        if (rankNumber > score.size()) rankNumber = score.size();
+        int[] place = new int[rankNumber];
+        
+        for (int i=0; i < rankNumber; i++) { // the max of n is 3
             int max = i;
             for (int j=i; j < score.size(); j++) {
-                if (score.get(i) < score.get(j))
+                if (score.get(max) < score.get(j))
                     max = j;
             }
-            score.remove(max);
-            rank[i] = max;
-            score.set(max, -99);
-            //score.remove(max);      
+            Collections.swap(score, i, max);
+            Collections.swap(rank, i, max);
+            
+            // Find if score is same.
+            place[i] = i+1;
+            if (i > 0) {
+                if (score.get(i) == score.get(i-1))
+                    place[i] = place[i-1];
+            }
         }
+        
         g.setColor(Color.YELLOW);
         g.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
-        for (int i=0; i<n; i++) {
-            int rowY = this.infoY + (rank[i] + 1) * 30;
-            g.drawString(i+1 + "", this.infoX + 600, rowY);
+        for (int i=0; i < rankNumber; i++) {
+            int rowY = this.infoY + (rank.get(i) + 1) * 30;
+            g.drawString(place[i] + "", this.infoX + 600, rowY);
         }
     }
 }
