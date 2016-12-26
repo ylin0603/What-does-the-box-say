@@ -60,7 +60,6 @@ public class Cdc {
                     UDPinstance.stopBroadCast(realTcpServer.getClientIPTable());
                     System.exit(0);
                 }
-                resetPerRound();// reset change flag, attack 、 collision flag
                 movingPlayer();
                 movingBullet();
                 checkResurrection();// 檢查復活
@@ -69,6 +68,8 @@ public class Cdc {
                 UDPinstance.broadcast(realTcpServer.getClientIPTable(),
                         UDPinstance.encapsulateData(getPlayersUpdateInfo(),
                                 getItemsUpdateInfo(), getAllBullets()));// broadcast
+
+                resetPerRound();// reset change flag, attack 、 collision flag
             }
         };
         gameTimer.schedule(startUpdating, 0, 33);
@@ -81,7 +82,12 @@ public class Cdc {
     }
 
     public List<ClientItemFeature> getItemsUpdateInfo() {
-        return allItems;
+        List<ClientItemFeature> updateItems = new ArrayList<>();
+        for(ClientItemFeature item : allItems) {
+            if(item.isChange())
+                updateItems.add(item);
+        }
+        return updateItems;
     }
 
     public List<ClientBulletFeature> getAllBullets() {
