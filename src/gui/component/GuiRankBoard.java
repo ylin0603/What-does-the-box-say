@@ -16,7 +16,6 @@ public class GuiRankBoard extends GuiPanel {
     private ArrayList<Integer> score, rank;
     private final String[] heading =
             {"Name", "Kill Count", "Dead Count", "Score", "Rank"};
-    private int rankNumber = 3;
 
     public GuiRankBoard() {
         score = new ArrayList<Integer>();
@@ -57,31 +56,37 @@ public class GuiRankBoard extends GuiPanel {
     }
     
     private void renderRank() {
-        if (rankNumber > score.size()) rankNumber = score.size();
-        int[] place = new int[rankNumber];
-        
-        for (int i=0; i < rankNumber; i++) { // the max of n is 3
-            int max = i;
-            for (int j=i; j < score.size(); j++) {
-                if (score.get(max) < score.get(j))
-                    max = j;
-            }
-            Collections.swap(score, i, max);
-            Collections.swap(rank, i, max);
-            
-            // Find if score is same.
-            place[i] = i+1;
-            if (i > 0) {
-                if (score.get(i) == score.get(i-1))
-                    place[i] = place[i-1];
-            }
-        }
-        
         g.setColor(Color.YELLOW);
         g.setFont(new Font(Font.DIALOG, Font.BOLD, 20));
-        for (int i=0; i < rankNumber; i++) {
-            int rowY = this.infoY + (rank.get(i) + 1) * 30;
-            g.drawString(place[i] + "", this.infoX + 600, rowY);
+        
+        int place = 1, maxValue;
+        for (int i=0; i < 3; i++) {
+            // Find max score.
+            int maxIndex = i;
+            for (int j=i; j < score.size(); j++) {
+                if (score.get(maxIndex) < score.get(j))
+                    maxIndex = j;
+            }
+            maxValue = score.get(maxIndex);
+            swapAndDraw(i, maxIndex, place);
+            
+            // Find score that is same as max.
+            for (int j=maxIndex+1; j < score.size(); j++) {
+                if (score.get(j) == maxValue) {
+                    i++;
+                    swapAndDraw(i, j, place);
+                }
+            }
+            
+            place++;
+            if (place > 3) break;
         }
+    }
+    
+    private void swapAndDraw(int a, int b, int place) {
+        Collections.swap(score, a, b);
+        Collections.swap(rank, a, b);
+        int rowY = this.infoY + (rank.get(a) + 1) * 30;
+        g.drawString(place + "", this.infoX + 600, rowY);
     }
 }
