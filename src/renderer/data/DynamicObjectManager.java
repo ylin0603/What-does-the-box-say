@@ -111,16 +111,5 @@ public class DynamicObjectManager {
         return bulletList;
     }
 
-    public void keyGETPressed() {
-        // TODO: unify this method with CDC
-        /*
-         * int localClientNo = 0; Character character = this.characterList.get(localClientNo);
-         * 
-         * for (Item item : this.itemList) { if (character.x == item.x && character.y == item.y) {
-         * if (item.getShared()) { item.update(false, localClientNo);
-         * //TCPClientModule.inputMoves("GET"); break; } } }
-         */
-
-    }
 
 }

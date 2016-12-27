@@ -8,9 +8,6 @@ public class Sprite {
 
     public static Sprite EMPTY = new Sprite(32, 0xffffffff);
 
-    public static Sprite GRASS = new Sprite(16, 0, 1, SpriteSheet.tiles);
-    public static Sprite STONE = new Sprite(16, 0, 2, SpriteSheet.tiles);
-    public static Sprite TREE = new Sprite(16, 0, 3, SpriteSheet.tiles);
     public static Sprite VOID_SPRITE = new Sprite(16, 0x1B87E0);
 
     //for demo
@@ -68,16 +65,6 @@ public class Sprite {
             new Sprite(16, 3, 1, SpriteSheet.character),
     };
 
-    public static Sprite BULLETS[] = {
-            new Sprite(16, 3, 4, SpriteSheet.character),
-            new Sprite(16, 4, 4, SpriteSheet.character),
-            new Sprite(16, 5, 4, SpriteSheet.character),
-            new Sprite(16, 6, 4, SpriteSheet.character),
-            new Sprite(16, 7, 4, SpriteSheet.character),
-            new Sprite(16, 8, 4, SpriteSheet.character),
-            new Sprite(16, 9, 4, SpriteSheet.character),
-            new Sprite(16, 10, 4, SpriteSheet.character),
-    };
 
     public Sprite(int size, int x, int y, SpriteSheet sheet) {
         SIZE = size;
