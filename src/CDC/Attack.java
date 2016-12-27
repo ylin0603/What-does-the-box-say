@@ -40,7 +40,7 @@ public class Attack {
         }
     }
 
-    Attack() {
+    public Attack() {
 
     }
 
