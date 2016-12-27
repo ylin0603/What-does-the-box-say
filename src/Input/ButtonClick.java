@@ -24,7 +24,8 @@ public class ButtonClick implements ActionListener {
                 System.exit(0);
                 break;
             case "start_game":
-                BeforeGameManager.getInstance().startCountDown();
+                RealTcpClient.getInstance().startGame();
+                BeforeGameManager.getInstance().addRoomPanel();
                 break;
             default:
                 break;

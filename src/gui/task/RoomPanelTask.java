@@ -14,7 +14,7 @@ public class RoomPanelTask extends TimerTask {
             bgm.updateNameList();
             bgm.addRoomPanel();
         } else {
-            bgm.startLoading();
+            bgm.startCountDown();
         }
     }
 
