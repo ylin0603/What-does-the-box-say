@@ -67,7 +67,7 @@ public class DynamicObjectManager {
     public void updateItem(int index, boolean isDead, int owner, int x, int y) {
 
         Item item = this.itemList.get(index);
-        item.update(isDead, owner, x, y);
+        item.set(isDead, owner, x, y);
     }
 
     synchronized public void updateBullets(List<ClientBulletFeature> originData){
