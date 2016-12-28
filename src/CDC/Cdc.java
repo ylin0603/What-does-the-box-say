@@ -57,7 +57,8 @@ public class Cdc {
             @Override
             public void run() {
                 if (finishGame(300)) {// 5分鐘就是300秒
-                    UDPinstance.stopBroadCast(realTcpServer.getClientIPTable());
+                    UDPinstance.stopBroadCast(realTcpServer.getClientIPTable(),
+                            realTcpServer.getClientPortTable());
                     System.exit(0);
                 }
                 movingPlayer();
@@ -66,6 +67,7 @@ public class Cdc {
                 checkSupplement();// 每十秒補充補包彈藥包
 
                 UDPinstance.broadcast(realTcpServer.getClientIPTable(),
+                        realTcpServer.getClientPortTable(),
                         UDPinstance.encapsulateData(getPlayersUpdateInfo(),
                                 getItemsUpdateInfo(), getAllBullets()));// broadcast
 

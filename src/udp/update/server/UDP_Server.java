@@ -5,45 +5,58 @@ import com.google.gson.reflect.TypeToken;
 
 import gui.game.GameManager;
 import renderer.data.DynamicObjectManager;
+import tcp.tcpServer.RealTcpServer;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UDP_Server implements Runnable {
+    static DatagramSocket serverSocket = null;
+    private Gson gson = new Gson();
+    static private String savedMagicWord;
 
-	private Gson gson = new Gson();
+    public static int initUDPServer(String magicWord) {
+        savedMagicWord = magicWord;
+        Thread serverThread = new Thread(new UDP_Server()); // 產生Thread物件
+        try {
+            serverSocket = new DatagramSocket();
+        } catch (SocketException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        serverThread.start();
+        return serverSocket.getLocalPort();
+    }
 
-	public static void initUDPServer() {
-		Thread serverThread = new Thread(new UDP_Server()); // 產生Thread物件
-		serverThread.start();
-	}
+    public void run() {
+        try {
+            byte[] receiveData;
+            while (true) {
+                receiveData = new byte[10240];
+                DatagramPacket receivePacket =
+                        new DatagramPacket(receiveData, receiveData.length);
+                serverSocket.receive(receivePacket);
 
-	public void run() {
-		DatagramSocket serverSocket = null;
-		try {
-			byte[] receiveData;
-			serverSocket = new DatagramSocket(3335);
-
-			while (true) {
-				receiveData = new byte[10240];
-				DatagramPacket receivePacket =
-						new DatagramPacket(receiveData, receiveData.length);
-				serverSocket.receive(receivePacket);
-
-				// get EncodedData in ArrayList and parse.
-				String receiveString =
-						new String(receivePacket.getData()).trim();
-				parseData(receiveString);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			serverSocket.close();
-		}
-	}
+                // get EncodedData in ArrayList and parse.
+                String receiveString =
+                        new String(receivePacket.getData()).trim();
+                if (receiveString.startsWith(savedMagicWord)) {
+                    receiveString =
+                            receiveString.replaceFirst(savedMagicWord, "");
+                    parseData(receiveString);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            serverSocket.close();
+        }
+    }
 
 	private void parseData(String receiveString) {
 		ArrayList<EncodedData> encodedData = gson.fromJson(receiveString,

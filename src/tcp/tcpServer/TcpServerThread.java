@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class TcpServerThread implements Runnable {
     private int ClientID = 0;
     volatile static public int totalClient = 0;
+    private String IP;
     private PrintWriter output;
     private BufferedReader input;
     volatile static public boolean load = false;
@@ -38,6 +39,7 @@ public class TcpServerThread implements Runnable {
         this.ClientID = ClientID;
         Cdc.getInstance().addVirtualCharacter(ClientID);
         totalClient++;
+        IP = sc.getInetAddress().toString().replace("/", "");
         try {
             output = new PrintWriter(sc.getOutputStream(), true);
             input = new BufferedReader(
@@ -104,8 +106,12 @@ public class TcpServerThread implements Runnable {
     String initGame(BufferedReader input, PrintWriter output)
             throws IOException {
         // room wait
+        output.println(RealTcpServer.magicWord);
         String myName = recv(input);
         nameList.add(myName);
+        int port = Integer.valueOf(recv(input));
+        RealTcpServer.getInstance().setClientIPTable(IP);
+        RealTcpServer.getInstance().setClientPortTable(port);
         send(output, String.valueOf(ClientID));
         Cdc.getInstance().SetName(ClientID, myName);
         return myName;
