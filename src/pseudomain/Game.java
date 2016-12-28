@@ -2,7 +2,8 @@ package pseudomain;
 
 import java.awt.Canvas;
 import java.awt.Dimension;
-import java.awt.KeyboardFocusManager;
+
+import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -11,9 +12,8 @@ import Input.KeyboardInput;
 import gui.game.GameManager;
 import renderer.data.DynamicObjectManager;
 import renderer.data.entity.Entity;
+import renderer.engine.EntityRenderEngine;
 import renderer.engine.RenderEngine;
-import tcp.tcpClient.RealTcpClient;
-import udp.update.server.UDP_Server;
 
 public class Game extends Canvas implements Runnable {
 
@@ -90,8 +90,11 @@ public class Game extends Canvas implements Runnable {
     public void update() {
 
 
-        DynamicObjectManager.getInstance().getAllDynamicObjects().forEach(Entity::update);
-
+        List<Entity> allEntity = DynamicObjectManager.getInstance().getAllDynamicObjects();
+        for(Entity e : allEntity){
+            if(EntityRenderEngine.isRangeInView(e))
+                e.update();
+        }
         GameManager.getInstance().update();
         
     }
