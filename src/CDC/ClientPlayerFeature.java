@@ -16,18 +16,16 @@ public class ClientPlayerFeature {
     private double faceAngle = 0; // (degree) => use Math.toRadium();
     private int HP = 100;
     private int killCount = 0, deadCount = 0;
-    private int bulletCount = 2;
-    private int maxBulletCount = 3;
+    private int bulletCount = 5;
+    private int maxBulletCount = 5;
     private boolean attackFlag = false; // attack.java在成功攻擊時設成true，
     // CD中 false 放開 false 人死 false
     private boolean attackedFlag = false; // CDC設成true，UDP傳回一次後再設回false
     private boolean collisionFlag = false; // 同上
     private boolean isDead = false; // Bear will do it.
 
-    public ClientPlayerFeature(int clientNo, String nickName, int locX,
-            int locY) {
+    public ClientPlayerFeature(int clientNo, int locX, int locY) {
         this.clientNo = clientNo;
-        this.nickname = nickName;
         init();
         reborn(locX, locY);
     }
@@ -46,10 +44,11 @@ public class ClientPlayerFeature {
     }
 
     public void reborn(int locX, int locY) {
+        this.weaponType = 0;
         this.locX = locX;
         this.locY = locY;
         this.HP = 100;
-        this.bulletCount = 2;
+        this.bulletCount = 5;
         isDead = false;
         setLastMoveTime();
     }

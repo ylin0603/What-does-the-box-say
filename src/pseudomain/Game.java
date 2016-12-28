@@ -9,6 +9,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import Input.KeyboardInput;
+import audio.AudioManager;
 import gui.game.GameManager;
 import renderer.data.DynamicObjectManager;
 import renderer.data.entity.Entity;
@@ -64,7 +65,7 @@ public class Game extends Canvas implements Runnable {
         int updates = 0;
 
         requestFocus();
-
+        AudioManager.getInstance().playBackGroundMusic();
         // main game loop
         while (running) {
             long now = System.nanoTime();

@@ -4,12 +4,12 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Attack {
-    final static int BULLETVEL = 4;
+    final static int BULLETVEL = 10;
     final static int BOXSIZE = 16;
     final static int MAP_SIZE_X = Cdc.MAP_SIZE_X - BOXSIZE;
     final static int MAP_SIZE_Y = Cdc.MAP_SIZE_Y - BOXSIZE;
-    final static int WINDOWSIZEX = 150;
-    final static int WINDOWSIZEY = 72;
+    final static int BULLETRANGEX = 150 * 2;
+    final static int BULLETRANGEY = 72 * 2;
     final static double revengeSize =
             Math.pow((Math.pow(1.2 * BOXSIZE, 2) - Math.pow(BOXSIZE / 2, 2)),
                     (0.5)) + 8 * (2 - 1.2);
@@ -33,15 +33,14 @@ public class Attack {
                         clientItemFeature);
                 break;
             case LONGRANGE:
-                attackLongRange(player, clientPlayerFeature, clientItemFeature,
-                        clientBulletFeature);
+                attackLongRange(player, clientBulletFeature);
                 break;
             default:
                 new Exception("error Weapon Type");
         }
     }
 
-    Attack() {
+    public Attack() {
 
     }
 
@@ -84,25 +83,24 @@ public class Attack {
     public boolean attackBulletToPlayer(ClientBulletFeature bullet,
             List<ClientPlayerFeature> clientPlayerFeature) {
         boolean isThisAttack = false;
-        boolean[] isAttacked = bullet.getIsAttacked();
         ClientPlayerFeature player1 =
                 clientPlayerFeature.get(bullet.getItemOwner());
         for (ClientPlayerFeature player2 : clientPlayerFeature) {
             if (player2.getClientNo() == bullet.getItemOwner()
-                    || isAttacked[clientPlayerFeature.indexOf(player2)]
+                    || bullet
+                            .getIsAttacked(clientPlayerFeature.indexOf(player2))
                     || player2.isDead()) {
                 continue;// for prevent synchronize problem
             } else {
                 if (Collision.isCollison(bullet, player2)) {
                     player2.setAttackedFlag(true);
                     isThisAttack = true;
-                    isAttacked[clientPlayerFeature.indexOf(player2)] = true;
+                    bullet.setIsAttacked(clientPlayerFeature.indexOf(player2));
                     if (subBlood(player2, bullet.getItemType())) {
                         player1.setKillCount(player1.getKillCount() + 1);
 
                         kill(player2);
                     }
-                    bullet.setIsAttacked(isAttacked);
                 }
             }
         }
@@ -139,6 +137,7 @@ public class Attack {
                 continue;
             if (Collision.isCollison(bullet, item2)) {
                 item2.setDead(true);
+                item2.setChange(true);
                 isAttack = true;
                 boxRevenge(item2, clientPlayerFeature);
             }
@@ -164,8 +163,6 @@ public class Attack {
     }
 
     private void attackLongRange(ClientPlayerFeature player,
-            List<ClientPlayerFeature> clientPlayerFeature,
-            List<ClientItemFeature> clientItemFeature,
             List<ClientBulletFeature> clientBulletFeature) {
         if (player.getBulletCount() > 0) {
             player.setAttackFlag(true);
@@ -196,8 +193,8 @@ public class Attack {
             locX = (int) Math.round(
                     bullet.getLocX() + Math.sin(radianAngle) * BULLETVEL);
             oriLocX = bullet.getOriLocX();
-            if (locX > MAP_SIZE_X || locX < 0 || locX > oriLocX + WINDOWSIZEX
-                    || locX < oriLocX - WINDOWSIZEX) {
+            if (locX > MAP_SIZE_X || locX < 0 || locX > oriLocX + BULLETRANGEX
+                    || locX < oriLocX - BULLETRANGEX) {
                 clientBulletFeatureIterator.remove();
                 continue;
             }
@@ -205,8 +202,8 @@ public class Attack {
             loxY = (int) Math.round(
                     bullet.getLocY() - Math.cos(radianAngle) * BULLETVEL);
             oriLocY = bullet.getOriLocY();
-            if (loxY > MAP_SIZE_Y || loxY < 0 || loxY > oriLocY + WINDOWSIZEY
-                    || loxY < oriLocY - WINDOWSIZEY) {
+            if (loxY > MAP_SIZE_Y || loxY < 0 || loxY > oriLocY + BULLETRANGEY
+                    || loxY < oriLocY - BULLETRANGEY) {
                 clientBulletFeatureIterator.remove();
                 continue;
             }

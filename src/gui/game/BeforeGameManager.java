@@ -1,13 +1,18 @@
 package gui.game;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Timer;
 
 import Input.ButtonClick;
+import gui.gameInterface.GuiButton;
 import gui.gameInterface.GuiFrame;
 import gui.gameInterface.InitialPanel;
 import gui.gameInterface.JoinGamePanel;
-import gui.gameInterface.RoomPanelTask;
+import gui.gameInterface.LoadingPanel;
+import gui.task.CountDownTask;
+import gui.task.GameStartTask;
+import gui.task.RoomPanelTask;
 import gui.gameInterface.RoomPanel;
 import pseudomain.Game;
 import renderer.data.DynamicObjectManager;
@@ -17,11 +22,11 @@ public class BeforeGameManager {
 
     private final static int ITEM_NUM = 32;
     private static BeforeGameManager beforeGameManager;
-    private RealTcpClient realTcpClient;
     private GuiFrame frame;
     private ButtonClick buttonClick;
     private InitialPanel initialPanel;
-    private Timer timer;
+    private Timer timer, countTimer;
+    private GuiButton startBtn;
     private ArrayList<String> nameList;
     
     private BeforeGameManager() {
@@ -43,14 +48,14 @@ public class BeforeGameManager {
         return buttonClick;
     }
     
-    public RealTcpClient getTcpClient() {
-        return realTcpClient;
+    public GuiButton getStartButton() {
+        return startBtn;
     }
     
     // Only called by Main.
     public void setInitialPanel() {
-        realTcpClient = RealTcpClient.getInstance();
         buttonClick = new ButtonClick();
+        startBtn = new GuiButton("START!", "start_game");
         initialPanel = new InitialPanel();
         frame.add(initialPanel);
         frame.pack();
@@ -78,27 +83,50 @@ public class BeforeGameManager {
         frame.setVisible(true);
     }
     
+    // Called by JoinRoomPanel.
     public void startTimer() {
         timer = new Timer();
         timer.schedule(new RoomPanelTask(), 0, 1000);
     }
-    
     public void stopTimer() {
         timer.cancel();
         timer.purge();
     }
     
-    // Only called when game start!
-    public void setGameCanvas() {
+    // Called by RoomPanelTask when room owner click start.
+    public void startCountDown() {
         stopTimer();
+        addRoomPanel();
+        countTimer = new Timer();
+        countTimer.schedule(new CountDownTask(), 0, 1000);
+        startBtn.setVisible(true);
+        startBtn.setEnabled(false);
+        startBtn.setBackground(Color.BLACK);
+    }
+    public void stopCountDown() {
+        countTimer.cancel();
+        countTimer.purge();
+    }
+    
+    // Called by CountDownTask. Start loading.
+    public void startLoading() {
+        stopCountDown();
         frame.getContentPane().removeAll();
-        
+        frame.add(new LoadingPanel());
+        frame.getContentPane().repaint();
+        frame.setVisible(true);
+        Timer loadingTimer = new Timer();
+        loadingTimer.schedule(new GameStartTask(), 5000);
         DynamicObjectManager dom = DynamicObjectManager.getInstance();
         RealTcpClient.getInstance().recvedGameLoad();
         int clientTotalNum = RealTcpClient.getInstance().getTotalPlayerNumer();
         while (dom.getCharacterList().size() != clientTotalNum &&
-                dom.getItemList().size() != 32 );
-        System.out.println("game start");
+                dom.getItemList().size() != ITEM_NUM );
+    }
+    
+    // Called by GameStartTask when game start!
+    public void setGameCanvas() {
+        frame.getContentPane().removeAll();
         Game game = new Game();
         frame.add(game);
         frame.getContentPane().repaint();

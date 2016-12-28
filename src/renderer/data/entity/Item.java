@@ -18,8 +18,7 @@ public class Item extends Entity {
     }
 
 
-    public void update(boolean isDead, int owner, int x, int y) {
-        super.update();
+    public void set(boolean isDead, int owner, int x, int y) {
         this.isDead = isDead;
         this.owner = owner;
         this.x = x;

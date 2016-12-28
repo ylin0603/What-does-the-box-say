@@ -10,6 +10,7 @@ public class ClientItemFeature {
     private boolean isDead = false;
     private boolean isReborn = false;
     private long rebornTime;
+    private boolean isChange = true;
 
     public ClientItemFeature(int itemID, int itemType, int x, int y) {
         this.itemID = itemID;
@@ -23,6 +24,11 @@ public class ClientItemFeature {
         setDead(false);
         setReborn(false);
         setCollision(false);
+        setChange(true);
+    }
+
+    public void resetPerRound() {
+        setChange(false);
     }
 
     public int getItemID() {
@@ -95,5 +101,13 @@ public class ClientItemFeature {
 
     public void setRebornTime(long rebornTime) {
         this.rebornTime = rebornTime;
+    }
+
+    public boolean isChange() {
+        return isChange;
+    }
+
+    public void setChange(boolean isChange) {
+        this.isChange = isChange;
     }
 }

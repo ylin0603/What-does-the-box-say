@@ -1,6 +1,7 @@
 package CDC;
 
-import tcp.tcpServer.TcpServerThread;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ClientBulletFeature {
     private int itemType;
@@ -10,11 +11,13 @@ public class ClientBulletFeature {
     private double faceAngle = 0; // (degree) => use Math.toRadium();
     private boolean isDead = false;// useless
     private int itemOwner;
-    boolean[] isAttacked = new boolean[TcpServerThread.totalClient];
+    private Set<Integer> isAttackedSet = new HashSet<Integer>();
+
 
     ClientBulletFeature(int itemType, int locX, int locY, double faceAngle,
             int itemOwner) {
         assert itemType == 0 || itemType == 1;
+        this.itemType = itemType;
         this.locX = locX;
         this.locY = locY;
         this.oriLocX = locX;
@@ -87,11 +90,11 @@ public class ClientBulletFeature {
         this.itemOwner = itemOwner;
     }
 
-    public boolean[] getIsAttacked() {
-        return isAttacked;
+    public boolean getIsAttacked(int ClientNo) {
+        return isAttackedSet.contains(ClientNo);
     }
 
-    public void setIsAttacked(boolean[] isAttacked) {
-        this.isAttacked = isAttacked;
+    public void setIsAttacked(int ClientNo) {
+        this.isAttackedSet.add(ClientNo);
     }
 }

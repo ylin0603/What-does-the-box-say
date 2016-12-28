@@ -67,10 +67,10 @@ public class DynamicObjectManager {
     public void updateItem(int index, boolean isDead, int owner, int x, int y) {
 
         Item item = this.itemList.get(index);
-        item.update(isDead, owner, x, y);
+        item.set(isDead, owner, x, y);
     }
 
-    public void updateBullets(List<ClientBulletFeature> originData){
+    synchronized public void updateBullets(List<ClientBulletFeature> originData){
         bulletTempList.clear();
         ArrayList<ClientBulletFeature> temp = new ArrayList<>(originData);
         for(ClientBulletFeature cbf : temp){
@@ -78,7 +78,7 @@ public class DynamicObjectManager {
         }
     }
 
-    public void setBullet(){
+    synchronized public void setBullet(){
         bulletList = new ArrayList<>(bulletTempList);
     }
 
@@ -111,16 +111,5 @@ public class DynamicObjectManager {
         return bulletList;
     }
 
-    public void keyGETPressed() {
-        // TODO: unify this method with CDC
-        /*
-         * int localClientNo = 0; Character character = this.characterList.get(localClientNo);
-         * 
-         * for (Item item : this.itemList) { if (character.x == item.x && character.y == item.y) {
-         * if (item.getShared()) { item.update(false, localClientNo);
-         * //TCPClientModule.inputMoves("GET"); break; } } }
-         */
-
-    }
 
 }

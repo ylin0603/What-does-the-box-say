@@ -1,5 +1,6 @@
 package renderer.data.entity;
 
+import audio.AudioManager;
 import pseudomain.Game;
 import renderer.data.DynamicObjectManager;
 import renderer.engine.EntityRenderEngine;
@@ -39,6 +40,8 @@ public class Character extends Entity {
         setDeadSprite(Sprite.DEAD_PLAYER);
     }
 
+    private boolean audioPlayed = false;
+
     public void set(int weaponType, String nickName, int x, int y,
                     double angle, int HP, int killCount, int deadCount,
                     int bulletCount, boolean attackFlag, boolean attackedFlag,
@@ -56,8 +59,17 @@ public class Character extends Entity {
         this.attackedFlag = attackedFlag;
         this.collisionFlag = collisionFlag;
         this.isDead = isDead;
-        if (this.attackFlag)
+        if (isDead && !audioPlayed) {
+            AudioManager.getInstance().playSoundEffect("die");
+            audioPlayed = true;
+        } else if (!isDead)
+            audioPlayed = false;
+        if (this.attackFlag && weaponType == 0) {
             animationFinished = false;
+            AudioManager.getInstance().playSoundEffect("meleeAttack");
+        } else if (this.attackFlag && weaponType == 1) {
+            AudioManager.getInstance().playSoundEffect("rangeAttack");
+        }
         //this.sprite = Sprite.rotate(Sprite.PLAYER,angle);
     }
 

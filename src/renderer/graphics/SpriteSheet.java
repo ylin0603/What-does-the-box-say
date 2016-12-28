@@ -14,6 +14,7 @@ public class SpriteSheet {
 	public static SpriteSheet character = new SpriteSheet("/textures/character.png", 256);
 	public static SpriteSheet SPWAN_LEVEL = new SpriteSheet("/levels/spawnLevel.png", 48);
 
+	private Sprite[] sprites;
 	
 	public SpriteSheet(String path, int size){
 		this.path = path;
@@ -33,7 +34,6 @@ public class SpriteSheet {
 			e.printStackTrace();
 		}
 	}
-	
 	public int[] getPixels(){
 		return pixels;
 	}
