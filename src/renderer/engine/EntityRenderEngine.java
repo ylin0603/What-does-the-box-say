@@ -30,14 +30,17 @@ public class EntityRenderEngine {
         List<Item> allItem = dom.getItemList();
         List<Bullet> allBullets = dom.getBullets();
         for (Item i : allItem) {
-            i.render(pixels);
+            if(isRangeInView(i))
+                i.render(pixels);
         }
         for (Character c : allCharacter) {
-            c.render(pixels);
+            if(isRangeInView(c))
+                c.render(pixels);
         }
         dom.setBullet();
         for (Bullet b : allBullets) {
-            b.render(pixels);
+            if(isRangeInView(b))
+                b.render(pixels);
         }
         //allCharacter.stream().filter(e -> !e.isDead()).forEach(e -> e.render(pixels));
     }
