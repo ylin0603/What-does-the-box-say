@@ -1,6 +1,5 @@
 package renderer.engine;
 
-import com.sun.java.browser.plugin2.DOM;
 import pseudomain.Game;
 import renderer.data.DynamicObjectManager;
 import renderer.data.entity.Bullet;
