@@ -21,7 +21,7 @@ public class Sprite {
     public static Sprite SPAWN_GRASS_2 = new Sprite(16, 1, 0, SpriteSheet.SPWAN_LEVEL);
     public static Sprite SPAWN_HEDGE = new Sprite(16, 0, 1, SpriteSheet.SPWAN_LEVEL);
     public static Sprite SPAWN_WATER = new Sprite(16, 2, 2, SpriteSheet.SPWAN_LEVEL);
-    public static Sprite SPAWN_WALL = new Sprite(16, 1, 1, SpriteSheet.SPWAN_LEVEL);
+    public static Sprite SPAWN_WALL = new Sprite(16, 0, 1, SpriteSheet.SPWAN_LEVEL);
     public static Sprite SPAWN_FLOOR = new Sprite(16, 2, 1, SpriteSheet.SPWAN_LEVEL);
 
     public static Sprite BULLET = new Sprite(16, 7, 4, SpriteSheet.character);

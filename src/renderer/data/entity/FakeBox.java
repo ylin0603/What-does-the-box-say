@@ -25,7 +25,7 @@ public class FakeBox extends Item {
     public void set(boolean isDead, int owner, int x, int y) {
         super.set(isDead, owner, x, y);
         if(isDead && !audioPlayed) {
-            AudioManager.getInstance().playSoundEffect("explosion", this);
+            //AudioManager.getInstance().playSoundEffect("explosion", this);
             audioPlayed = true;
         }
         else if(!isDead)

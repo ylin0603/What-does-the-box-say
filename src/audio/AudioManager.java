@@ -101,10 +101,8 @@ public class AudioManager {
         if(Math.sqrt(distance) < IN_VIEW_DISTANCE)
             return;
         float volume = -(float) distance * TO_SOUND_CONSTANT;
-        float dieVolume = 0;
         if (volume * DIECLIP_MULTIPLIER < MINIMUM_VOLUME * DIECLIP_MULTIPLIER) {
             volume = -79;
-            dieVolume = -79;
         }
         ((FloatControl) clip.
                 getControl(FloatControl.Type.MASTER_GAIN)).setValue(volume);
