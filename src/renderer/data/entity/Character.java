@@ -60,15 +60,15 @@ public class Character extends Entity {
         this.collisionFlag = collisionFlag;
         this.isDead = isDead;
         if (isDead && !audioPlayed) {
-            AudioManager.getInstance().playSoundEffect("die");
+            AudioManager.getInstance().playSoundEffect("die",this);
             audioPlayed = true;
         } else if (!isDead)
             audioPlayed = false;
         if (this.attackFlag && weaponType == 0) {
             animationFinished = false;
-            AudioManager.getInstance().playSoundEffect("meleeAttack");
+            AudioManager.getInstance().playSoundEffect("meleeAttack",this);
         } else if (this.attackFlag && weaponType == 1) {
-            AudioManager.getInstance().playSoundEffect("rangeAttack");
+            AudioManager.getInstance().playSoundEffect("rangeAttack",this);
         }
         //this.sprite = Sprite.rotate(Sprite.PLAYER,angle);
     }

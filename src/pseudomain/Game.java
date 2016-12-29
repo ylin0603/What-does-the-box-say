@@ -93,8 +93,7 @@ public class Game extends Canvas implements Runnable {
 
         List<Entity> allEntity = DynamicObjectManager.getInstance().getAllDynamicObjects();
         for(Entity e : allEntity){
-            if(EntityRenderEngine.isRangeInView(e))
-                e.update();
+            e.update();
         }
         GameManager.getInstance().update();
         

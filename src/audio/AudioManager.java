@@ -1,6 +1,11 @@
 package audio;
 
 
+import com.sun.java.browser.plugin2.DOM;
+import com.sun.jmx.mbeanserver.DynamicMBean2;
+import com.sun.org.apache.xerces.internal.impl.xs.identity.Selector;
+import renderer.data.DynamicObjectManager;
+import renderer.data.entity.Entity;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
@@ -28,7 +33,7 @@ public class AudioManager {
             backGroundClip.loop(Clip.LOOP_CONTINUOUSLY);
             FloatControl gainControl =
                     (FloatControl) backGroundClip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(-5.0f);
+            gainControl.setValue(-7.0f);
 
 
             meleeAttackClip = AudioSystem.getClip();
@@ -68,17 +73,21 @@ public class AudioManager {
             e.printStackTrace();
         }
     }
-    public static AudioManager getInstance(){
-        if(instance==null)
+
+    public static AudioManager getInstance() {
+        if (instance == null)
             instance = new AudioManager();
         return instance;
     }
-    public void playBackGroundMusic () {
+
+    public void playBackGroundMusic() {
         backGroundClip.start();
     }
-    public void playSoundEffect(String name) {
+
+    public void playSoundEffect(String name, Entity entity) {
         resetAllSoundEffect();
-        switch (name){
+        setVolume(entity);
+        switch (name) {
             case "attacked":
                 attackedClip.start();
                 break;
@@ -91,13 +100,15 @@ public class AudioManager {
                 break;
             case "explosion":
                 explosionClip.start();
+                System.out.println("explosion sound Effect");
                 break;
             case "die":
                 dieClip.start();
                 break;
         }
     }
-    private void resetAllSoundEffect(){
+
+    private void resetAllSoundEffect() {
         attackedClip.setMicrosecondPosition(0);
         meleeAttackClip.setMicrosecondPosition(0);
         rangeAttackCLip.setMicrosecondPosition(0);
@@ -106,4 +117,49 @@ public class AudioManager {
 
     }
 
+    private static final int IN_VIEW_DISTANCE = 170;
+    private static final float TO_SOUND_CONSTANT = 0.01f;
+    private static final float DIECLIP_MULTIPLIER = 1.5f;
+    private static final float MINIMUM_VOLUME = -80.0f;
+
+    public void setVolume(Entity entity) {
+        double x1 = entity.x * 0.1;
+        double y1 = entity.y * 0.1;
+        double x0 = DynamicObjectManager.getInstance().getVirtualCharacterXY().x * 0.1;
+        double y0 = DynamicObjectManager.getInstance().getVirtualCharacterXY().y * 0.1;
+        double xDif = Math.pow(x1 - x0, 2);
+        double yDif = Math.pow(y1 - y0, 2);
+        double distance = xDif + yDif;
+
+        if (distance < IN_VIEW_DISTANCE){
+            ((FloatControl) rangeAttackCLip.
+                    getControl(FloatControl.Type.MASTER_GAIN)).setValue(0);
+            ((FloatControl) explosionClip.
+                    getControl(FloatControl.Type.MASTER_GAIN)).setValue(0);
+            ((FloatControl) meleeAttackClip.
+                    getControl(FloatControl.Type.MASTER_GAIN)).setValue(0);
+            ((FloatControl) dieClip.
+                    getControl(FloatControl.Type.MASTER_GAIN)).setValue(0);
+            return;
+        }
+        else {
+            float volume = -(float) distance * TO_SOUND_CONSTANT;
+            float dieVolume = 0;
+            if (volume * DIECLIP_MULTIPLIER < MINIMUM_VOLUME * DIECLIP_MULTIPLIER) {
+                volume = -79;
+                dieVolume = -79;
+            }
+
+            ((FloatControl) rangeAttackCLip.
+                    getControl(FloatControl.Type.MASTER_GAIN)).setValue(volume);
+            ((FloatControl) explosionClip.
+                    getControl(FloatControl.Type.MASTER_GAIN)).setValue(volume);
+            ((FloatControl) meleeAttackClip.
+                    getControl(FloatControl.Type.MASTER_GAIN)).setValue(volume);
+            ((FloatControl) dieClip.
+                    getControl(FloatControl.Type.MASTER_GAIN)).setValue(dieVolume);
+
+        }
+
+    }
 }
