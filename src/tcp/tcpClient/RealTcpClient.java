@@ -44,9 +44,14 @@ public class RealTcpClient {
         return true;
     }
 
+    public String getMagicWord() {
+        return recv(input);
+    }
+
     // all client join game
-    public int joinRoom(String nickName) {
+    public int joinRoom(String nickName, int port) {
         output.println(nickName);
+        output.println(port);
         String clientNoS = recv(input);
         clientID = Integer.valueOf(clientNoS);
         return clientID;

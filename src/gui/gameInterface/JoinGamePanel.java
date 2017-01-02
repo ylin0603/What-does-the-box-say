@@ -42,8 +42,9 @@ public class JoinGamePanel extends JPanel {
                     "Connect Fail", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
-        UDP_Server.initUDPServer();
-        realTcpClient.joinRoom(name);
+        String magicWord = realTcpClient.getMagicWord();
+        int port = UDP_Server.initUDPServer(magicWord);
+        realTcpClient.joinRoom(name, port);
         BeforeGameManager.getInstance().startTimer();
     }
 

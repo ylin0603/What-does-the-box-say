@@ -8,8 +8,10 @@ import java.util.ArrayList;
 public class RealTcpServer implements Runnable {
     final int port = 8888;
     ServerSocket ss;
+    public static String magicWord = String.valueOf(System.currentTimeMillis());
     static int totalClient = 0;
-    volatile ArrayList<String> IPtable = new ArrayList<String>();
+    volatile ArrayList<String> IPTable = new ArrayList<String>();
+    volatile ArrayList<Integer> portTable = new ArrayList<Integer>();
     private static RealTcpServer realTcpServer;
     private Thread thisThread;
     private Socket serverSocket;
@@ -45,9 +47,9 @@ public class RealTcpServer implements Runnable {
 
     public void destory() {
         stop();
-        if (serverSocket != null)
+        if (ss != null)
             try {
-                serverSocket.close();
+                ss.close();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -56,8 +58,20 @@ public class RealTcpServer implements Runnable {
             realTcpServer = null;
     }
 
+    public void setClientIPTable(String IP) {
+        IPTable.add(IP);
+    }
+
     public ArrayList<String> getClientIPTable() {
-        return IPtable;
+        return IPTable;
+    }
+
+    public void setClientPortTable(int port) {
+        portTable.add(port);
+    }
+
+    public ArrayList<Integer> getClientPortTable() {
+        return portTable;
     }
 
     @Override
@@ -67,9 +81,6 @@ public class RealTcpServer implements Runnable {
             // every server thread
             try {
                 serverSocket = ss.accept();
-                String s1 = serverSocket.getInetAddress().toString()
-                        .replace("/", "");
-                IPtable.add(s1);
                 TcpServerThread tcpServerThread =
                         new TcpServerThread(serverSocket, totalClient);
                 Thread t = new Thread(tcpServerThread);
